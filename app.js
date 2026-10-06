@@ -31,11 +31,13 @@
         'pasca-acara': 'Pra-acara'
     };
     const CATEGORY_COLORS = {
-        'pre-acara': '#f59e0b',
-        'hari-h': '#22c55e',
-        'pra-acara': '#0ea5e9',
-        'pasca-acara': '#8b5cf6'
+        'pre-acara': '#fcb527',
+        'hari-h': '#69ac43',
+        'pra-acara': '#50abe4',
+        'pasca-acara': '#9e89d6'
     };
+    const cssVar = (name, fallback) =>
+        getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
 
     // ====== Supabase Client ======
     function isSupabaseConfigured() {
@@ -193,13 +195,13 @@
         grad.setAttribute('x2', '100%'); grad.setAttribute('y2', '100%');
         const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
         stop1.setAttribute('offset', '0%');
-        stop1.setAttribute('stop-color', '#22c55e');
+        stop1.setAttribute('stop-color', '#2D8F5E');
         const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
         stop2.setAttribute('offset', '50%');
-        stop2.setAttribute('stop-color', '#0ea5e9');
+        stop2.setAttribute('stop-color', '#50ABE4');
         const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
         stop3.setAttribute('offset', '100%');
-        stop3.setAttribute('stop-color', '#8b5cf6');
+        stop3.setAttribute('stop-color', '#9E89D6');
         grad.appendChild(stop1);
         grad.appendChild(stop2);
         grad.appendChild(stop3);
@@ -693,7 +695,7 @@
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         toast.innerHTML = `
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${type === 'success' ? '#10b981' : '#ef4444'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${type === 'success' ? '#69ac43' : '#fb667c'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 ${type === 'success'
                 ? '<polyline points="20 6 9 17 4 12"/>'
                 : '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>'}
@@ -897,10 +899,10 @@
             ctx.beginPath();
             ctx.arc(cx, cy, radius, 0, Math.PI * 2);
             ctx.arc(cx, cy, innerRadius, Math.PI * 2, 0, true);
-            ctx.fillStyle = 'rgba(99, 102, 241, 0.1)';
+            ctx.fillStyle = 'rgba(45, 143, 94, 0.12)';
             ctx.fill();
 
-            ctx.fillStyle = '#64748b';
+            ctx.fillStyle = cssVar('--fg-muted', '#64748b');
             ctx.font = '500 13px Inter, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -925,12 +927,12 @@
             });
 
             // Center text
-            ctx.fillStyle = '#f1f5f9';
+            ctx.fillStyle = cssVar('--fg', '#f1f5f9');
             ctx.font = '800 22px Inter, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(totalHours.toFixed(1), cx, cy - 8);
-            ctx.fillStyle = '#64748b';
+            ctx.fillStyle = cssVar('--fg-muted', '#64748b');
             ctx.font = '500 11px Inter, sans-serif';
             ctx.fillText('Total Jam', cx, cy + 12);
         }
@@ -990,7 +992,7 @@
             const col = document.createElement('div');
             col.className = 'bar-chart-col';
             col.innerHTML = `
-                <div class="bar-chart-bar ${hours > 0 ? 'has-hours' : ''}" style="height:${Math.max(heightPct, 2)}%;background:${hours > 0 ? 'var(--accent-gradient)' : 'rgba(99,102,241,0.1)'}">
+                <div class="bar-chart-bar ${hours > 0 ? 'has-hours' : ''}" style="height:${Math.max(heightPct, 2)}%;background:${hours > 0 ? 'var(--accent-gradient)' : 'rgba(45,143,94,0.12)'}">
                     <span class="bar-chart-bar-tooltip">${hours.toFixed(1)} jam</span>
                 </div>
                 <span class="bar-chart-label">${label}</span>
@@ -1209,7 +1211,7 @@
             if (dayActivities.length > 3) {
                 const more = document.createElement('div');
                 more.className = 'calendar-event';
-                more.style.cssText = 'background:rgba(255,255,255,0.05);color:var(--text-muted)';
+                more.style.cssText = 'background:var(--bg-elevated);color:var(--fg-secondary)';
                 more.textContent = `+${dayActivities.length - 3} lagi`;
                 cell.appendChild(more);
             }
