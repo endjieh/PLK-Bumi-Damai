@@ -1,162 +1,142 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PLK Bumi Damai - Dashboard pelacakan jam pengabdian kampus pengganti KKN">
+    <meta name="description" content="PLK Bumi Damai — Dashboard pelacakan jam pengabdian kampus pengganti KKN">
     <title>PLK Bumi Damai — Dashboard Pengabdian</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Navigasi utama">
         <div class="sidebar-header">
-            <div class="logo">
-                <div class="logo-icon logo-icon-img">
-                    <img src="logo.png" alt="PLK Bumi Damai Logo" class="sidebar-logo-img">
+            <a href="#" class="logo" aria-label="PLK Bumi Damai — Beranda">
+                <div class="logo-icon">
+                    <img src="logo.png" alt="" class="sidebar-logo-img" aria-hidden="true">
                 </div>
-                <span class="logo-text">PLK Bumi Damai</span>
-            </div>
+                <div>
+                    <div class="logo-text">PLK Bumi Damai</div>
+                    <div class="logo-sub">Tracker Pengabdian</div>
+                </div>
+            </a>
+            <span class="sidebar-badge" aria-hidden="true">v2</span>
         </div>
-        <nav class="sidebar-nav">
-            <a href="#" class="nav-item active" data-page="dashboard" id="nav-dashboard">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+
+        <div class="sidebar-section-label" id="nav-section-label">Menu</div>
+
+        <nav class="sidebar-nav" aria-labelledby="nav-section-label">
+            <a href="#" class="nav-item active" data-page="dashboard" id="nav-dashboard" aria-current="page">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
                 </svg>
                 <span>Dashboard</span>
             </a>
             <a href="#" class="nav-item" data-page="activities" id="nav-activities">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="8" y1="6" x2="21" y2="6"/>
-                    <line x1="8" y1="12" x2="21" y2="12"/>
-                    <line x1="8" y1="18" x2="21" y2="18"/>
-                    <line x1="3" y1="6" x2="3.01" y2="6"/>
-                    <line x1="3" y1="12" x2="3.01" y2="12"/>
-                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+                    <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+                    <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
                 </svg>
                 <span>Kegiatan</span>
             </a>
             <a href="#" class="nav-item" data-page="gallery" id="nav-gallery">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
                     <polyline points="21 15 16 10 5 21"/>
                 </svg>
                 <span>Galeri</span>
             </a>
             <a href="#" class="nav-item" data-page="calendar" id="nav-calendar">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
                 </svg>
                 <span>Kalender</span>
             </a>
         </nav>
+
         <div class="sidebar-footer">
             <div class="sidebar-progress-mini">
-                <div class="mini-progress-label">Progress Total</div>
-                <div class="mini-progress-bar">
+                <div class="mini-progress-label">
+                    <span>Progress Total</span>
+                    <span id="sidebar-progress-text" aria-live="polite">0 / 272 jam</span>
+                </div>
+                <div class="mini-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progress total pengabdian">
                     <div class="mini-progress-fill" id="sidebar-progress-fill"></div>
                 </div>
-                <div class="mini-progress-text" id="sidebar-progress-text">0 / 272 jam</div>
+            </div>
+            <div class="theme-toggle-row">
+                <span class="theme-toggle-label">Tema</span>
+                <button class="btn-icon btn-icon-sm btn-ghost" id="theme-toggle-btn"
+                    aria-label="Ganti tema gelap/terang" title="Ganti Tema">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
             </div>
         </div>
     </aside>
 
-    <!-- Mobile Header -->
+    <!-- ===== MOBILE HEADER ===== -->
     <header class="mobile-header" id="mobile-header">
-        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <line x1="3" y1="18" x2="21" y2="18"/>
+        <button class="btn-icon btn-ghost" id="menu-toggle" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
             </svg>
         </button>
         <div class="mobile-title-container">
-            <img src="logo.png" alt="Logo" class="mobile-logo-img">
+            <img src="logo.png" alt="" class="mobile-logo-img" aria-hidden="true">
             <span class="mobile-title">PLK Bumi Damai</span>
         </div>
-        <button class="add-btn-mobile" id="add-btn-mobile" aria-label="Tambah kegiatan">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"/>
-                <line x1="5" y1="12" x2="19" y2="12"/>
-            </svg>
-        </button>
+        <div class="mobile-header-actions">
+            <button class="btn-icon btn-icon-sm btn-ghost" id="theme-toggle-mobile" aria-label="Ganti tema">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            <button class="btn btn-primary" id="add-btn-mobile" aria-label="Tambah kegiatan baru"
+                style="height:40px;padding:0 12px;font-size:0.8125rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Tambah
+            </button>
+        </div>
     </header>
 
-    <!-- Main Content -->
+    <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content" id="main-content">
-        
-        <!-- ===== DASHBOARD PAGE ===== -->
-        <section class="page active" id="page-dashboard">
-            <div class="page-header">
+
+        <!-- ==================== DASHBOARD PAGE ==================== -->
+        <section class="page active" id="page-dashboard" aria-label="Dashboard">
+
+            <header class="page-header">
                 <div>
                     <h1>Dashboard</h1>
                     <p class="page-subtitle">Ringkasan progress pengabdian kamu</p>
                 </div>
-                <button class="btn btn-primary" id="btn-add-activity">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
-                    Tambah Kegiatan
-                </button>
-            </div>
-
-            <!-- Profile Dashboard Card -->
-            <div class="profile-card" id="profile-card">
-                <div class="profile-card-glow"></div>
-                <div class="profile-card-inner">
-                    <div class="profile-avatar-container">
-                        <div class="profile-avatar-wrapper">
-                            <img src="logo.png" alt="Foto Profil Pengabdian" id="profile-avatar-img" class="profile-avatar-img">
-                        </div>
-                        <span class="profile-badge-status" id="profile-badge-status">
-                            <span class="status-pulse"></span> Aktif Pengabdian
-                        </span>
-                    </div>
-                    <div class="profile-details">
-                        <div class="profile-header-row">
-                            <div>
-                            </div>
-                            <button class="btn btn-outline-profile" id="btn-edit-profile">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                                </svg>
-                                Edit Profil
-                            </button>
-                        </div>
-                        <div class="profile-tags-row">
-
-                            <div class="profile-tag tag-program" id="profile-program-tag">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 10 3 12 0v-5"/></svg>
-                                <span id="profile-program-text">Program PLK 2026</span>
-                            </div>
-                            <div class="profile-tag tag-target" id="profile-target-tag">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <span id="profile-target-text">Target: 272 Jam</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="btn-add-activity">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Tambah Kegiatan
+                    </button>
                 </div>
-            </div>
+            </header>
 
             <!-- Main Progress Card -->
             <div class="progress-card" id="progress-card">
                 <div class="progress-card-inner">
-                    <div class="progress-ring-container">
-                        <svg class="progress-ring" width="200" height="200" viewBox="0 0 200 200">
-                            <circle class="progress-ring-bg" cx="100" cy="100" r="85" />
-                            <circle class="progress-ring-fill" id="progress-ring-fill" cx="100" cy="100" r="85" />
+                    <div class="progress-ring-container" aria-hidden="true">
+                        <svg class="progress-ring" width="160" height="160" viewBox="0 0 200 200" role="img">
+                            <title>Progress ring</title>
+                            <circle class="progress-ring-bg" cx="100" cy="100" r="85"/>
+                            <circle class="progress-ring-fill" id="progress-ring-fill" cx="100" cy="100" r="85"/>
                         </svg>
                         <div class="progress-ring-text">
                             <span class="progress-percent" id="progress-percent">0%</span>
@@ -164,97 +144,96 @@
                         </div>
                     </div>
                     <div class="progress-info">
-                        <h2 class="progress-hours" id="progress-hours">0</h2>
-                        <p class="progress-hours-label">dari <strong>272 jam</strong> tercapai</p>
+                        <div>
+                            <p class="progress-hours-label" style="margin-bottom:4px;">Total jam terkumpul</p>
+                            <h2 class="progress-hours" id="progress-hours" aria-live="polite">0</h2>
+                            <p class="progress-hours-label">dari <strong>272 jam</strong> target</p>
+                        </div>
                         <div class="progress-bar-wrapper">
-                            <div class="progress-bar">
+                            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progress pengabdian">
                                 <div class="progress-bar-fill" id="progress-bar-fill"></div>
                             </div>
                         </div>
                         <div class="progress-stats">
                             <div class="progress-stat">
                                 <span class="stat-value" id="stat-remaining">272</span>
-                                <span class="stat-label">Jam tersisa</span>
+                                <span class="stat-label">Jam Tersisa</span>
                             </div>
                             <div class="progress-stat">
                                 <span class="stat-value" id="stat-activities">0</span>
-                                <span class="stat-label">Total kegiatan</span>
+                                <span class="stat-label">Total Kegiatan</span>
                             </div>
                             <div class="progress-stat">
                                 <span class="stat-value" id="stat-avg">0</span>
-                                <span class="stat-label">Rata-rata jam/kegiatan</span>
+                                <span class="stat-label">Rata-rata jam</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Stats Cards -->
+            <!-- Category KPI Grid -->
             <div class="stats-grid">
                 <div class="stat-card stat-card-pre">
-                    <div class="stat-card-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <span class="badge badge-pre-acara">Pre-acara</span>
                     </div>
                     <div class="stat-card-content">
-                        <span class="stat-card-value" id="hours-pre">0</span>
-                        <span class="stat-card-label">Jam Pre-acara</span>
+                        <span class="stat-card-value" id="hours-pre" aria-label="Jam pre-acara">0</span>
+                        <span class="stat-card-label">Jam Terkumpul</span>
                     </div>
-                    <div class="stat-card-bar">
+                    <div class="stat-card-bar" aria-hidden="true">
                         <div class="stat-card-bar-fill" id="bar-pre"></div>
                     </div>
                 </div>
+
                 <div class="stat-card stat-card-hari">
-                    <div class="stat-card-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                        </svg>
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <span class="badge badge-hari-h">Hari-H</span>
                     </div>
                     <div class="stat-card-content">
-                        <span class="stat-card-value" id="hours-hari">0</span>
-                        <span class="stat-card-label">Jam Hari-H</span>
+                        <span class="stat-card-value" id="hours-hari" aria-label="Jam hari-H">0</span>
+                        <span class="stat-card-label">Jam Terkumpul</span>
                     </div>
-                    <div class="stat-card-bar">
+                    <div class="stat-card-bar" aria-hidden="true">
                         <div class="stat-card-bar-fill" id="bar-hari"></div>
                     </div>
                 </div>
+
                 <div class="stat-card stat-card-pra">
-                    <div class="stat-card-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 11 12 14 22 4"/>
-                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                        </svg>
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon" aria-hidden="true">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                        </div>
+                        <span class="badge badge-pra-acara">Pra-acara</span>
                     </div>
                     <div class="stat-card-content">
-                        <span class="stat-card-value" id="hours-pra">0</span>
-                        <span class="stat-card-label">Jam Pra-acara</span>
+                        <span class="stat-card-value" id="hours-pra" aria-label="Jam pra-acara">0</span>
+                        <span class="stat-card-label">Jam Terkumpul</span>
                     </div>
-                    <div class="stat-card-bar">
+                    <div class="stat-card-bar" aria-hidden="true">
                         <div class="stat-card-bar-fill" id="bar-pra"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Activities & Chart -->
+            <!-- Recent & Chart -->
             <div class="dashboard-grid">
                 <div class="card">
                     <div class="card-header">
                         <h3>Kegiatan Terakhir</h3>
-                        <a href="#" class="card-link" id="link-all-activities">Lihat Semua</a>
+                        <a href="#" class="card-link" id="link-all-activities">Lihat Semua →</a>
                     </div>
-                    <div class="card-body" id="recent-activities">
+                    <div id="recent-activities">
                         <div class="empty-state">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <polyline points="14 2 14 8 20 8"/>
-                                <line x1="12" y1="18" x2="12" y2="12"/>
-                                <line x1="9" y1="15" x2="15" y2="15"/>
-                            </svg>
-                            <p>Belum ada kegiatan tercatat</p>
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                            <p>Belum ada kegiatan</p>
                             <span>Klik "Tambah Kegiatan" untuk memulai</span>
                         </div>
                     </div>
@@ -263,9 +242,9 @@
                     <div class="card-header">
                         <h3>Distribusi Jam</h3>
                     </div>
-                    <div class="card-body chart-container">
-                        <canvas id="chart-distribution" width="300" height="300"></canvas>
-                        <div class="chart-legend" id="chart-legend"></div>
+                    <div class="chart-container">
+                        <canvas id="chart-distribution" width="240" height="240" aria-label="Grafik distribusi jam per kategori" role="img"></canvas>
+                        <div class="chart-legend" id="chart-legend" aria-label="Legenda grafik"></div>
                     </div>
                 </div>
             </div>
@@ -275,175 +254,149 @@
                 <div class="card-header">
                     <h3>Jam per Minggu</h3>
                 </div>
-                <div class="card-body">
-                    <div class="bar-chart" id="weekly-chart">
-                        <div class="empty-state small">
-                            <p>Data akan muncul setelah kamu menambah kegiatan</p>
-                        </div>
+                <div class="bar-chart" id="weekly-chart" role="img" aria-label="Grafik bar jam per minggu">
+                    <div class="empty-state small">
+                        <p>Data akan muncul setelah kegiatan ditambahkan</p>
                     </div>
                 </div>
             </div>
+
         </section>
 
-        <!-- ===== ACTIVITIES PAGE ===== -->
-        <section class="page" id="page-activities">
-            <div class="page-header">
+        <!-- ==================== ACTIVITIES PAGE ==================== -->
+        <section class="page" id="page-activities" aria-label="Daftar kegiatan">
+            <header class="page-header">
                 <div>
                     <h1>Kegiatan</h1>
                     <p class="page-subtitle">Daftar semua kegiatan pengabdian</p>
                 </div>
                 <div class="header-actions">
                     <div class="search-box" id="search-box">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"/>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                        </svg>
-                        <input type="text" placeholder="Cari kegiatan..." id="search-input" autocomplete="off">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" placeholder="Cari kegiatan…" id="search-input" autocomplete="off" aria-label="Cari kegiatan">
                     </div>
-                    <div class="filter-group">
-                        <select id="filter-category" class="filter-select">
-                            <option value="all">Semua Kategori</option>
-                            <option value="pre-acara">Pre-acara</option>
-                            <option value="hari-h">Hari-H</option>
-                            <option value="pra-acara">Pra-acara</option>
-                        </select>
-                    </div>
+                    <select id="filter-category" class="filter-select" aria-label="Filter kategori">
+                        <option value="all">Semua Kategori</option>
+                        <option value="pre-acara">Pre-acara</option>
+                        <option value="hari-h">Hari-H</option>
+                        <option value="pra-acara">Pra-acara</option>
+                    </select>
                     <button class="btn btn-primary" id="btn-add-activity-2">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"/>
-                            <line x1="5" y1="12" x2="19" y2="12"/>
-                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                         Tambah
                     </button>
                 </div>
-            </div>
-            <div class="activities-list" id="activities-list">
+            </header>
+            <div class="activities-list" id="activities-list" aria-live="polite">
                 <div class="empty-state">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
-                        <line x1="12" y1="18" x2="12" y2="12"/>
-                        <line x1="9" y1="15" x2="15" y2="15"/>
-                    </svg>
-                    <p>Belum ada kegiatan tercatat</p>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    <p>Belum ada kegiatan</p>
                     <span>Mulai catat kegiatan pengabdianmu!</span>
                 </div>
             </div>
         </section>
 
-        <!-- ===== GALLERY PAGE ===== -->
-        <section class="page" id="page-gallery">
-            <div class="page-header">
+        <!-- ==================== GALLERY PAGE ==================== -->
+        <section class="page" id="page-gallery" aria-label="Galeri dokumentasi">
+            <header class="page-header">
                 <div>
                     <h1>Galeri Dokumentasi</h1>
                     <p class="page-subtitle">Bukti foto kegiatan pengabdian</p>
                 </div>
-            </div>
-            <div class="gallery-grid" id="gallery-grid">
+            </header>
+            <div class="gallery-grid" id="gallery-grid" aria-live="polite">
                 <div class="empty-state">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                        <circle cx="8.5" cy="8.5" r="1.5"/>
-                        <polyline points="21 15 16 10 5 21"/>
-                    </svg>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     <p>Belum ada foto dokumentasi</p>
-                    <span>Foto akan muncul saat kamu menambah kegiatan dengan bukti foto</span>
+                    <span>Foto tampil setelah kegiatan dengan bukti foto ditambahkan</span>
                 </div>
             </div>
         </section>
 
-        <!-- ===== CALENDAR PAGE ===== -->
-        <section class="page" id="page-calendar">
-            <div class="page-header">
+        <!-- ==================== CALENDAR PAGE ==================== -->
+        <section class="page" id="page-calendar" aria-label="Kalender kegiatan">
+            <header class="page-header">
                 <div>
                     <h1>Kalender</h1>
                     <p class="page-subtitle">Jadwal kegiatan pengabdian</p>
                 </div>
-                <div class="calendar-nav">
-                    <button class="btn btn-ghost" id="cal-prev">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="15 18 9 12 15 6"/>
-                        </svg>
+                <div class="calendar-nav" role="group" aria-label="Navigasi bulan">
+                    <button class="btn-icon btn-outline" id="cal-prev" aria-label="Bulan sebelumnya">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
                     </button>
-                    <span class="calendar-month" id="cal-month">Oktober 2026</span>
-                    <button class="btn btn-ghost" id="cal-next">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"/>
-                        </svg>
+                    <span class="calendar-month" id="cal-month" aria-live="polite">Oktober 2026</span>
+                    <button class="btn-icon btn-outline" id="cal-next" aria-label="Bulan berikutnya">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
                     </button>
                 </div>
-            </div>
+            </header>
             <div class="calendar-container">
-                <div class="calendar-grid" id="calendar-grid"></div>
+                <div class="calendar-grid" id="calendar-grid" role="grid" aria-label="Kalender"></div>
             </div>
         </section>
+
     </main>
 
-    <!-- Add Activity Modal -->
-    <div class="modal-overlay" id="modal-overlay">
+    <!-- ===== ADD / EDIT ACTIVITY MODAL ===== -->
+    <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal" id="modal-add">
             <div class="modal-header">
                 <h2 id="modal-title">Tambah Kegiatan Baru</h2>
-                <button class="modal-close" id="modal-close" aria-label="Tutup modal">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
+                <button class="modal-close" id="modal-close" aria-label="Tutup dialog">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <form id="activity-form" class="modal-body">
-                <input type="hidden" id="edit-id" value="">
-                <div class="form-group">
-                    <label for="activity-name">Nama Kegiatan <span class="required">*</span></label>
-                    <input type="text" id="activity-name" placeholder="Contoh: Rapat Koordinasi Tim" required>
-                </div>
-                <div class="form-row">
+            <form id="activity-form">
+                <div class="modal-body">
+                    <input type="hidden" id="edit-id" value="">
                     <div class="form-group">
-                        <label for="activity-date">Tanggal <span class="required">*</span></label>
-                        <input type="date" id="activity-date" required>
+                        <label for="activity-name">Nama Kegiatan <span class="required" aria-hidden="true">*</span></label>
+                        <input type="text" id="activity-name" placeholder="Contoh: Rapat Koordinasi Tim" required autocomplete="off">
                     </div>
-                    <div class="form-group">
-                        <label for="activity-category">Kategori <span class="required">*</span></label>
-                        <select id="activity-category" required>
-                            <option value="">Pilih kategori</option>
-                            <option value="pre-acara">Pre-acara</option>
-                            <option value="hari-h">Hari-H</option>
-                            <option value="pra-acara">Pra-acara</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="activity-start">Jam Mulai <span class="required">*</span></label>
-                        <input type="time" id="activity-start" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="activity-end">Jam Selesai <span class="required">*</span></label>
-                        <input type="time" id="activity-end" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="activity-hours">Durasi (jam)</label>
-                    <input type="number" id="activity-hours" step="0.5" min="0.5" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="activity-description">Deskripsi</label>
-                    <textarea id="activity-description" rows="3" placeholder="Deskripsi singkat kegiatan..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="activity-photo">Bukti Foto</label>
-                    <div class="photo-upload" id="photo-upload">
-                        <input type="file" id="activity-photo" accept="image/*" multiple hidden>
-                        <div class="photo-upload-placeholder" id="photo-placeholder">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                <circle cx="8.5" cy="8.5" r="1.5"/>
-                                <polyline points="21 15 16 10 5 21"/>
-                            </svg>
-                            <p>Klik atau drag foto ke sini</p>
-                            <span>Maks 5 foto, format JPG/PNG</span>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="activity-date">Tanggal <span class="required" aria-hidden="true">*</span></label>
+                            <input type="date" id="activity-date" required>
                         </div>
-                        <div class="photo-preview-list" id="photo-preview-list"></div>
+                        <div class="form-group">
+                            <label for="activity-category">Kategori <span class="required" aria-hidden="true">*</span></label>
+                            <select id="activity-category" required>
+                                <option value="">Pilih kategori</option>
+                                <option value="pre-acara">Pre-acara</option>
+                                <option value="hari-h">Hari-H</option>
+                                <option value="pra-acara">Pra-acara</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="activity-start">Jam Mulai <span class="required" aria-hidden="true">*</span></label>
+                            <input type="time" id="activity-start" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="activity-end">Jam Selesai <span class="required" aria-hidden="true">*</span></label>
+                            <input type="time" id="activity-end" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-hours">Durasi (jam) — dihitung otomatis</label>
+                        <input type="number" id="activity-hours" step="0.5" min="0.5" readonly aria-readonly="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-description">Deskripsi</label>
+                        <textarea id="activity-description" rows="3" placeholder="Deskripsi singkat kegiatan…"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="activity-photo">Bukti Foto</label>
+                        <div class="photo-upload" id="photo-upload" role="button" tabindex="0" aria-label="Upload foto kegiatan, klik atau drag file ke sini">
+                            <input type="file" id="activity-photo" accept="image/*" multiple hidden>
+                            <div class="photo-upload-placeholder" id="photo-placeholder">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                <p>Klik atau drag foto ke sini</p>
+                                <span>Maks 5 foto · JPG/PNG</span>
+                            </div>
+                            <div class="photo-preview-list" id="photo-preview-list"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -455,97 +408,34 @@
         </div>
     </div>
 
-    <!-- Photo Lightbox -->
-    <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" id="lightbox-close" aria-label="Tutup">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
+    <!-- ===== LIGHTBOX ===== -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Tampilan foto penuh">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Tutup foto">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
-        <img id="lightbox-img" src="" alt="Bukti foto kegiatan">
+        <img id="lightbox-img" src="" alt="Foto bukti kegiatan pengabdian">
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal-overlay" id="delete-modal-overlay">
+    <!-- ===== DELETE CONFIRM MODAL ===== -->
+    <div class="modal-overlay" id="delete-modal-overlay" role="alertdialog" aria-modal="true" aria-labelledby="delete-modal-title" aria-describedby="delete-modal-desc">
         <div class="modal modal-small">
             <div class="modal-header">
-                <h2>Hapus Kegiatan?</h2>
+                <h2 id="delete-modal-title">Hapus Kegiatan?</h2>
             </div>
             <div class="modal-body">
-                <p class="delete-message">Kegiatan ini akan dihapus secara permanen. Tindakan ini tidak bisa dibatalkan.</p>
+                <p class="delete-message" id="delete-modal-desc">Kegiatan ini akan dihapus secara permanen dan tidak dapat dikembalikan.</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-ghost" id="delete-cancel">Batal</button>
-                <button class="btn btn-danger" id="delete-confirm">Hapus</button>
+                <button class="btn btn-danger" id="delete-confirm">Ya, Hapus</button>
             </div>
         </div>
     </div>
 
-    <!-- Edit Profile Modal -->
-    <div class="modal-overlay" id="profile-modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Edit Profil Pengabdian</h2>
-                <button class="modal-close" id="profile-modal-close" aria-label="Tutup">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                </button>
-            </div>
-            <form id="profile-form">
-                <div class="modal-body">
-                    <div class="avatar-edit-box">
-                        <div class="avatar-preview-wrapper">
-                            <img src="logo.png" alt="Foto Profil" id="profile-avatar-preview" class="avatar-preview-img">
-                            <label for="edit-profile-photo-input" class="avatar-edit-badge" title="Ganti Foto">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                            </label>
-                            <input type="file" id="edit-profile-photo-input" accept="image/*" hidden>
-                        </div>
-                        <div class="avatar-upload-info">
-                            <h4>Foto / Logo Dashboard</h4>
-                            <p>Default menggunakan Logo Pengabdian PLK (Dapat diunggah foto baru)</p>
-                            <button type="button" class="btn-text-reset" id="btn-reset-avatar">Reset ke Logo Default</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-profile-name">Nama Lengkap <span class="required">*</span></label>
-                        <input type="text" id="edit-profile-name" required placeholder="Contoh: Ahmad Rizky">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-profile-nim">NIM / ID Mahasiswa</label>
-                            <input type="text" id="edit-profile-nim" placeholder="Contoh: 2108101001">
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-profile-group">Kelompok / Posko</label>
-                            <input type="text" id="edit-profile-group" placeholder="Contoh: Kelompok 01 • Posko Harapan">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-profile-program">Program / Jurusan</label>
-                            <input type="text" id="edit-profile-program" placeholder="Contoh: Teknik Informatika / PLK 2026">
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-profile-target">Target Jam PLK</label>
-                            <input type="number" id="edit-profile-target" min="10" max="1000" value="272">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-ghost" id="btn-profile-cancel">Batal</button>
-                    <button type="submit" class="btn btn-primary" id="btn-profile-save">Simpan Profil</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- ===== TOAST ===== -->
+    <div class="toast-container" id="toast-container" aria-live="assertive" aria-atomic="true"></div>
 
-    <!-- Toast Notification -->
-    <div class="toast-container" id="toast-container"></div>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
 </body>
 </html>

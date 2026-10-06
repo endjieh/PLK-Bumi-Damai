@@ -1,13 +1,26 @@
 /* ========================
-   PLK Tracker — Application Logic
+   PLK Bumi Damai — Application Logic
    ======================== */
 
 (function () {
     'use strict';
 
-    // ====== Constants ======
+    // ====== Constants & Supabase Setup ======
     const TARGET_HOURS = 272;
     const STORAGE_KEY = 'plk_tracker_activities';
+    const PROFILE_STORAGE_KEY = 'plk_tracker_profile';
+
+    // ====== SUPABASE SETUP ======
+    // Isi dari Dashboard Supabase → Project Settings → API:
+    //   SUPABASE URL      : https://xxxxx.supabase.co
+    //   SUPABASE ANON KEY : eyJhbGciOi... (anon public, BUKAN service role)
+    // Jalankan dulu supabase-setup.sql di SQL Editor sebelum dipakai.
+    // Selama masih placeholder, aplikasi jalan mode lokal (localStorage).
+    const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const PHOTO_BUCKET = 'activity-photos';
+    const MIGRATED_KEY = 'plk_tracker_migrated_v1';
+
     const MONTHS_ID = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
         'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     const DAYS_ID = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
@@ -23,7 +36,127 @@
         'pra-acara': '#0ea5e9',
         'pasca-acara': '#8b5cf6'
     };
-    const PROFILE_STORAGE_KEY = 'plk_tracker_profile';
+
+    // ====== Supabase Client ======
+    function isSupabaseConfigured() {
+        return Boolean(
+            window.supabase &&
+            SUPABASE_URL && !SUPABASE_URL.includes('YOUR_PROJECT_ID') &&
+            SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_KEY')
+        );
+    }
+
+    function getSupabase() {
+        if (!isSupabaseConfigured()) return null;
+        if (!window._supabaseClient) {
+            window._supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+        return window._supabaseClient;
+    }
+
+    // ====== Mapping: baris Supabase ↔ objek aplikasi ======
+    function rowToActivity(row) {
+        return {
+            id: row.id,
+            name: row.name,
+            date: typeof row.date === 'string' ? row.date : String(row.date).slice(0, 10),
+            category: row.category,
+            startTime: row.start_time || '',
+            endTime: row.end_time || '',
+            hours: Number(row.hours) || 0,
+            description: row.description || '',
+            photos: row.photos || [],
+            createdAt: row.created_at ? Date.parse(row.created_at) : Date.now(),
+            updatedAt: row.updated_at ? Date.parse(row.updated_at) : Date.now()
+        };
+    }
+
+    function activityToRow(act) {
+        return {
+            id: act.id,
+            name: act.name,
+            date: act.date,
+            category: act.category,
+            start_time: act.startTime || null,
+            end_time: act.endTime || null,
+            hours: act.hours,
+            description: act.description || '',
+            photos: act.photos || [],
+            created_at: act.createdAt ? new Date(act.createdAt).toISOString() : new Date().toISOString(),
+            updated_at: act.updatedAt ? new Date(act.updatedAt).toISOString() : new Date().toISOString()
+        };
+    }
+
+    // ====== Supabase Storage: foto bukti ======
+    function isDataUrl(value) {
+        return typeof value === 'string' && value.startsWith('data:');
+    }
+
+    // "https://xxx.supabase.co/storage/v1/object/public/activity-photos/act_1/pic.jpg"
+    //  → "act_1/pic.jpg"
+    function photoPathFromUrl(url) {
+        if (typeof url !== 'string') return null;
+        const marker = `/object/public/${PHOTO_BUCKET}/`;
+        const idx = url.indexOf(marker);
+        if (idx === -1) return null;
+        return decodeURIComponent(url.slice(idx + marker.length).split('?')[0]);
+    }
+
+    async function uploadPhoto(activityId, dataUrl) {
+        const client = getSupabase();
+        if (!client) throw new Error('Supabase belum disetel');
+        const blob = await (await fetch(dataUrl)).blob();
+        const path = `${activityId}/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.jpg`;
+        const { error } = await client.storage
+            .from(PHOTO_BUCKET)
+            .upload(path, blob, { contentType: 'image/jpeg', upsert: false });
+        if (error) throw error;
+        return client.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl;
+    }
+
+    async function removePhotos(urls) {
+        const client = getSupabase();
+        if (!client || !Array.isArray(urls) || urls.length === 0) return;
+        const paths = urls.map(photoPathFromUrl).filter(Boolean);
+        if (paths.length === 0) return;
+        try {
+            const { error } = await client.storage.from(PHOTO_BUCKET).remove(paths);
+            if (error) throw error;
+        } catch (e) {
+            console.warn('Foto gagal dihapus dari Storage:', e);
+        }
+    }
+
+    /**
+     * Sinkronisasi foto saat menyimpan:
+     * - foto lama yang dibuang pengguna → dihapus dari Storage
+     * - foto baru (dataURL) → di-upload, diganti URL publiknya
+     * - foto lama yang masih dipakai → dibiarkan
+     * Bila Supabase belum disetel, foto tetap dataURL (mode lokal).
+     */
+    async function syncPhotos(activityId, oldPhotos, workingPhotos) {
+        const client = getSupabase();
+        if (!client) return [...workingPhotos];
+
+        const removed = (oldPhotos || []).filter(p => !workingPhotos.includes(p));
+        if (removed.length) await removePhotos(removed);
+
+        const result = [];
+        for (const photo of workingPhotos) {
+            result.push(isDataUrl(photo) ? await uploadPhoto(activityId, photo) : photo);
+        }
+        return result;
+    }
+
+    // ====== Tulis 1 kegiatan ke Supabase (no-op bila belum disetel) ======
+    async function persistActivity(activity) {
+        const client = getSupabase();
+        if (!client) return;
+        const { error } = await client
+            .from('activities')
+            .upsert(activityToRow(activity), { onConflict: 'id' });
+        if (error) throw error;
+    }
 
     // ====== State ======
     let activities = [];
@@ -74,14 +207,73 @@
         svg.insertBefore(defs, svg.firstChild);
     }
 
-    // ====== Storage ======
-    function loadActivities() {
+    // ====== Storage (Supabase Cloud + LocalStorage Fallback) ======
+    function readLocalActivities() {
         try {
-            const data = localStorage.getItem(STORAGE_KEY);
-            activities = data ? JSON.parse(data) : [];
+            const raw = localStorage.getItem(STORAGE_KEY);
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed : [];
         } catch (e) {
-            activities = [];
+            return [];
         }
+    }
+
+    // Migrasi sekali jalan: data lama di localStorage → Supabase
+    // (foto dataURL ikut di-upload ke Storage). Return false bila gagal,
+    // supaya koneksi berikutnya bisa mencoba lagi.
+    async function migrateLocalActivities(client, local) {
+        try {
+            if (local.length > 0) {
+                local.forEach(act => { if (!act.id) act.id = generateId(); });
+                for (const act of local) {
+                    if (Array.isArray(act.photos) && act.photos.some(isDataUrl)) {
+                        act.photos = await syncPhotos(act.id, [], act.photos);
+                    }
+                }
+                const { error } = await client
+                    .from('activities')
+                    .upsert(local.map(activityToRow), { onConflict: 'id' });
+                if (error) throw error;
+            }
+            localStorage.setItem(MIGRATED_KEY, '1');
+            return true;
+        } catch (e) {
+            console.warn('Migrasi localStorage → Supabase gagal (akan dicoba lagi):', e);
+            return false;
+        }
+    }
+
+    async function loadActivities() {
+        const client = getSupabase();
+        if (client) {
+            try {
+                const { data, error } = await client
+                    .from('activities')
+                    .select('*')
+                    .order('date', { ascending: false });
+                if (!error && data) {
+                    // Koneksi pertama & cloud masih kosong → dorong data lokal
+                    if (data.length === 0 && !localStorage.getItem(MIGRATED_KEY)) {
+                        const local = readLocalActivities();
+                        const ok = await migrateLocalActivities(client, local);
+                        activities = local;
+                        if (ok) saveActivities();
+                        renderAll();
+                        return;
+                    }
+                    activities = data.map(rowToActivity);
+                    saveActivities(); // mirror lokal sebagai fallback offline
+                    renderAll();
+                    return;
+                }
+                console.warn('Supabase error, fallback ke localStorage:', error);
+            } catch (e) {
+                console.warn('Supabase tidak terjangkau, fallback ke localStorage:', e);
+            }
+        }
+        activities = readLocalActivities();
+        renderAll(); // render di sini penting: bila fetch Supabase gagal async,
+                     // renderAll() awal di init() sudah terlanjur jalan dengan data kosong
     }
 
     function saveActivities() {
@@ -120,13 +312,13 @@
         // Photo upload
         const photoUpload = $('#photo-upload');
         const photoInput = $('#activity-photo');
-        
+
         photoUpload.addEventListener('click', (e) => {
             if (e.target.closest('.photo-preview-remove')) return;
             photoInput.click();
         });
         photoInput.addEventListener('change', handlePhotoSelect);
-        
+
         photoUpload.addEventListener('dragover', (e) => {
             e.preventDefault();
             photoUpload.classList.add('dragover');
@@ -285,14 +477,31 @@
         deleteTargetId = null;
     }
 
-    function deleteActivity(id) {
+    async function deleteActivity(id) {
         if (!id) return;
-        activities = activities.filter(a => String(a.id) !== String(id));
-        saveActivities();
-        closeModal();
-        closeDeleteModal();
-        renderAll();
-        showToast('Kegiatan berhasil dihapus!', 'success');
+        const target = activities.find(a => String(a.id) === String(id));
+        try {
+            const client = getSupabase();
+            if (client) {
+                const { error } = await client
+                    .from('activities')
+                    .delete()
+                    .eq('id', id);
+                if (error) throw error;
+                if (target && target.photos && target.photos.length) {
+                    await removePhotos(target.photos);
+                }
+            }
+            activities = activities.filter(a => String(a.id) !== String(id));
+            saveActivities();
+            closeModal();
+            closeDeleteModal();
+            renderAll();
+            showToast('Kegiatan berhasil dihapus!', 'success');
+        } catch (err) {
+            console.error('Gagal menghapus kegiatan:', err);
+            showToast('Gagal menghapus: ' + (err.message || err), 'error');
+        }
     }
 
     function confirmDelete() {
@@ -416,7 +625,7 @@
     }
 
     // ====== Form Submit ======
-    function handleFormSubmit(e) {
+    async function handleFormSubmit(e) {
         e.preventDefault();
         const name = $('#activity-name').value.trim();
         const date = $('#activity-date').value;
@@ -431,31 +640,47 @@
             return;
         }
 
-        if (editingId) {
-            const idx = activities.findIndex(a => a.id === editingId);
-            if (idx !== -1) {
-                activities[idx] = {
-                    ...activities[idx],
+        const submitBtn = $('#btn-submit');
+        submitBtn.disabled = true;
+
+        try {
+            if (editingId) {
+                const idx = activities.findIndex(a => String(a.id) === String(editingId));
+                if (idx === -1) throw new Error('Kegiatan tidak ditemukan');
+                const prev = activities[idx];
+                const photos = await syncPhotos(String(prev.id), prev.photos || [], photoDataUrls);
+                const updated = {
+                    ...prev,
                     name, date, category, startTime, endTime, hours, description,
-                    photos: [...photoDataUrls],
+                    photos,
                     updatedAt: Date.now()
                 };
+                await persistActivity(updated);       // upsert ke Supabase (no-op bila lokal)
+                activities[idx] = updated;
+                showToast('Kegiatan berhasil diperbarui!', 'success');
+            } else {
+                const id = generateId();
+                const photos = await syncPhotos(id, [], photoDataUrls);
+                const activity = {
+                    id, name, date, category, startTime, endTime, hours, description,
+                    photos,
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                };
+                await persistActivity(activity);      // insert ke Supabase (no-op bila lokal)
+                activities.push(activity);
+                showToast('Kegiatan berhasil ditambahkan!', 'success');
             }
-            showToast('Kegiatan berhasil diperbarui!', 'success');
-        } else {
-            activities.push({
-                id: generateId(),
-                name, date, category, startTime, endTime, hours, description,
-                photos: [...photoDataUrls],
-                createdAt: Date.now(),
-                updatedAt: Date.now()
-            });
-            showToast('Kegiatan berhasil ditambahkan!', 'success');
-        }
 
-        saveActivities();
-        closeModal();
-        renderAll();
+            saveActivities(); // mirror lokal sebagai fallback offline
+            closeModal();
+            renderAll();
+        } catch (err) {
+            console.error('Gagal menyimpan kegiatan:', err);
+            showToast('Gagal menyimpan: ' + (err.message || err), 'error');
+        } finally {
+            submitBtn.disabled = false;
+        }
     }
 
     function generateId() {
@@ -840,8 +1065,8 @@
                 </div>
                 <div class="photo-thumbs">
                     ${(act.photos || []).slice(0, 3).map(p =>
-                        `<div class="photo-thumb"><img src="${p}" alt="Bukti foto" loading="lazy"></div>`
-                    ).join('')}
+                `<div class="photo-thumb"><img src="${p}" alt="Bukti foto" loading="lazy"></div>`
+            ).join('')}
                 </div>
                 <div class="card-actions">
                     <button class="btn-icon edit-btn" title="Edit" data-id="${act.id}">
@@ -1020,17 +1245,63 @@
         avatarDataUrl: null
     };
 
-    function loadProfile() {
+    async function loadProfile() {
+        const client = getSupabase();
+        if (client) {
+            try {
+                const { data, error } = await client
+                    .from('plk_profiles')
+                    .select('*')
+                    .eq('id', 1)
+                    .maybeSingle();
+                if (!error && data) {
+                    profileData = {
+                        ...profileData,
+                        name: data.name || profileData.name,
+                        nim: data.nim || profileData.nim,
+                        group: data.group_name || profileData.group,
+                        program: data.program || profileData.program,
+                        target: Number(data.target) || profileData.target,
+                        avatarDataUrl: data.avatar_url || null
+                    };
+                    renderProfile();
+                    return;
+                }
+            } catch (e) {
+                console.warn('Profil Supabase tidak terjangkau, pakai localStorage:', e);
+            }
+        }
         try {
             const data = localStorage.getItem(PROFILE_STORAGE_KEY);
             if (data) {
                 profileData = { ...profileData, ...JSON.parse(data) };
             }
         } catch (e) { /* use defaults */ }
+        renderProfile(); // sama seperti loadActivities: render ulang bila fetch cloud gagal async
     }
 
-    function saveProfile() {
+    async function saveProfile() {
         localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profileData));
+        const client = getSupabase();
+        if (!client) return;
+        try {
+            const { error } = await client
+                .from('plk_profiles')
+                .upsert({
+                    id: 1,
+                    name: profileData.name,
+                    nim: profileData.nim,
+                    group_name: profileData.group,
+                    program: profileData.program,
+                    target: profileData.target,
+                    avatar_url: profileData.avatarDataUrl,
+                    updated_at: new Date().toISOString()
+                }, { onConflict: 'id' });
+            if (error) throw error;
+        } catch (e) {
+            console.warn('Gagal sinkron profil ke Supabase:', e);
+            showToast('Profil tersimpan lokal, sinkron Supabase gagal', 'error');
+        }
     }
 
     function renderProfile() {
