@@ -16,8 +16,8 @@
     //   SUPABASE ANON KEY : eyJhbGciOi... (anon public, BUKAN service role)
     // Jalankan dulu supabase-setup.sql di SQL Editor sebelum dipakai.
     // Selama masih placeholder, aplikasi jalan mode lokal (localStorage).
-    const SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const SUPABASE_URL = 'https://lxvtqgsyzideeqavfiit.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_HguapeGQ2OHiSw6EoqATDg_CHIUZIS2';
     const PHOTO_BUCKET = 'activity-photos';
     const MIGRATED_KEY = 'plk_tracker_migrated_v1';
 
@@ -273,7 +273,7 @@
         }
         activities = readLocalActivities();
         renderAll(); // render di sini penting: bila fetch Supabase gagal async,
-                     // renderAll() awal di init() sudah terlanjur jalan dengan data kosong
+        // renderAll() awal di init() sudah terlanjur jalan dengan data kosong
     }
 
     function saveActivities() {
