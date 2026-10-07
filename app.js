@@ -903,7 +903,7 @@
             ctx.fill();
 
             ctx.fillStyle = cssVar('--fg-muted', '#64748b');
-            ctx.font = '500 13px Inter, sans-serif';
+            ctx.font = "500 13px 'Plus Jakarta Sans', sans-serif";
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('Belum ada data', cx, cy);
@@ -928,12 +928,12 @@
 
             // Center text
             ctx.fillStyle = cssVar('--fg', '#f1f5f9');
-            ctx.font = '800 22px Inter, sans-serif';
+            ctx.font = "800 22px 'Plus Jakarta Sans', sans-serif";
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(totalHours.toFixed(1), cx, cy - 8);
             ctx.fillStyle = cssVar('--fg-muted', '#64748b');
-            ctx.font = '500 11px Inter, sans-serif';
+            ctx.font = "500 11px 'Plus Jakarta Sans', sans-serif";
             ctx.fillText('Total Jam', cx, cy + 12);
         }
 
