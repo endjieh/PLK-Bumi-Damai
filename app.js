@@ -9,6 +9,7 @@
     const TARGET_HOURS = 272;
     const STORAGE_KEY = 'plk_tracker_activities';
     const PROFILE_STORAGE_KEY = 'plk_tracker_profile';
+    const THEME_STORAGE_KEY = 'plk_tracker_theme';
 
     // ====== SUPABASE SETUP ======
     // Isi dari Dashboard Supabase → Project Settings → API:
@@ -172,8 +173,94 @@
     const $ = (sel) => document.querySelector(sel);
     const $$ = (sel) => document.querySelectorAll(sel);
 
+    // ====== Theme Management ======
+    const SUN_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+    const MOON_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+    const PIXEL_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="3" width="12" height="18" rx="1"/><line x1="6" y1="7" x2="18" y2="7"/><line x1="6" y1="17" x2="18" y2="17"/><circle cx="10" cy="12" r="1" fill="currentColor"/><circle cx="14" cy="12" r="1" fill="currentColor"/></svg>`;
+
+    const THEME_CYCLE = ['dark', 'light', 'y2k'];
+    const THEME_LABELS = {
+        dark: { next: 'light', icon: SUN_ICON, title: 'Ganti ke Tema Terang' },
+        light: { next: 'y2k', icon: PIXEL_ICON, title: 'Ganti ke Tema Y2K Pixel' },
+        y2k: { next: 'dark', icon: MOON_ICON, title: 'Ganti ke Tema Gelap' }
+    };
+    const THEME_TOAST = {
+        dark: 'Tema dialihkan ke mode gelap 🌙',
+        light: 'Tema dialihkan ke mode terang ☀️',
+        y2k: 'Tema dialihkan ke mode Y2K Pixel 👾'
+    };
+
+    function getCurrentTheme() {
+        return document.documentElement.getAttribute('data-theme') || 'dark';
+    }
+
+    function getChartFontFamily() {
+        return getCurrentTheme() === 'y2k'
+            ? "'Press Start 2P', monospace"
+            : "'Plus Jakarta Sans', sans-serif";
+    }
+
+    function getCategoryColor(key) {
+        if (getCurrentTheme() === 'y2k') {
+            if (key === 'pre-acara') return '#fcb527';
+            if (key === 'pra-acara' || key === 'pasca-acara') return '#4fa9e5';
+            if (key === 'hari-h') return '#34b76b';
+        }
+        return CATEGORY_COLORS[key] || '#50abe4';
+    }
+
+    function updateThemeUI(theme) {
+        const info = THEME_LABELS[theme] || THEME_LABELS.dark;
+
+        const btnSidebar = $('#theme-toggle-btn');
+        if (btnSidebar) {
+            btnSidebar.innerHTML = info.icon;
+            btnSidebar.title = info.title;
+            btnSidebar.setAttribute('aria-label', info.title);
+        }
+        const btnMobile = $('#theme-toggle-mobile');
+        if (btnMobile) {
+            btnMobile.innerHTML = info.icon;
+            btnMobile.title = info.title;
+            btnMobile.setAttribute('aria-label', info.title);
+        }
+    }
+
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        try {
+            localStorage.setItem(THEME_STORAGE_KEY, theme);
+        } catch (e) { /* ignore */ }
+        updateThemeUI(theme);
+        injectSVGGradient();
+        // Refresh charts to match new CSS variables
+        setTimeout(() => {
+            try { renderDashboard(); } catch (e) { /* ignore */ }
+        }, 50);
+    }
+
+    function toggleTheme() {
+        const current = getCurrentTheme();
+        const nextTheme = (THEME_LABELS[current] || THEME_LABELS.dark).next;
+        setTheme(nextTheme);
+        showToast(THEME_TOAST[nextTheme] || `Tema dialihkan`, 'info');
+    }
+
+    function initTheme() {
+        let saved = 'dark';
+        try {
+            saved = localStorage.getItem(THEME_STORAGE_KEY);
+        } catch (e) { /* ignore */ }
+        if (!saved || !THEME_LABELS[saved]) {
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            saved = prefersDark ? 'dark' : 'light';
+        }
+        setTheme(saved);
+    }
+
     // ====== Init ======
     function init() {
+        initTheme();
         loadActivities();
         loadProfile();
         injectSVGGradient();
@@ -188,20 +275,28 @@
     function injectSVGGradient() {
         const svg = document.querySelector('.progress-ring');
         if (!svg) return;
-        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        let defs = svg.querySelector('defs');
+        if (defs) defs.remove();
+        defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
         const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
         grad.setAttribute('id', 'ring-gradient');
         grad.setAttribute('x1', '0%'); grad.setAttribute('y1', '0%');
         grad.setAttribute('x2', '100%'); grad.setAttribute('y2', '100%');
+
+        const isY2K = getCurrentTheme() === 'y2k';
+        const colors = isY2K
+            ? ['#FFE838', '#FFCE1A', '#FFA800']
+            : ['#2D8F5E', '#50ABE4', '#9E89D6'];
+
         const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
         stop1.setAttribute('offset', '0%');
-        stop1.setAttribute('stop-color', '#2D8F5E');
+        stop1.setAttribute('stop-color', colors[0]);
         const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
         stop2.setAttribute('offset', '50%');
-        stop2.setAttribute('stop-color', '#50ABE4');
+        stop2.setAttribute('stop-color', colors[1]);
         const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
         stop3.setAttribute('offset', '100%');
-        stop3.setAttribute('stop-color', '#9E89D6');
+        stop3.setAttribute('stop-color', colors[2]);
         grad.appendChild(stop1);
         grad.appendChild(stop2);
         grad.appendChild(stop3);
@@ -378,6 +473,13 @@
 
         // Mobile menu
         $('#menu-toggle').addEventListener('click', toggleMobileSidebar);
+
+        // Theme toggle buttons
+        const themeBtn = $('#theme-toggle-btn');
+        if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+
+        const themeMobileBtn = $('#theme-toggle-mobile');
+        if (themeMobileBtn) themeMobileBtn.addEventListener('click', toggleTheme);
 
         // ESC key
         document.addEventListener('keydown', (e) => {
@@ -899,19 +1001,19 @@
             ctx.beginPath();
             ctx.arc(cx, cy, radius, 0, Math.PI * 2);
             ctx.arc(cx, cy, innerRadius, Math.PI * 2, 0, true);
-            ctx.fillStyle = 'rgba(45, 143, 94, 0.12)';
+            ctx.fillStyle = getCurrentTheme() === 'y2k' ? 'rgba(79, 169, 229, 0.18)' : 'rgba(45, 143, 94, 0.12)';
             ctx.fill();
 
             ctx.fillStyle = cssVar('--fg-muted', '#64748b');
-            ctx.font = "500 13px 'Plus Jakarta Sans', sans-serif";
+            ctx.font = getCurrentTheme() === 'y2k' ? "6px 'Press Start 2P', monospace" : "500 10.5px 'Plus Jakarta Sans', sans-serif";
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('Belum ada data', cx, cy);
         } else {
             const data = [
-                { key: 'pre-acara', value: hoursByCategory['pre-acara'], color: CATEGORY_COLORS['pre-acara'] },
-                { key: 'hari-h', value: hoursByCategory['hari-h'], color: CATEGORY_COLORS['hari-h'] },
-                { key: 'pra-acara', value: hoursByCategory['pra-acara'], color: CATEGORY_COLORS['pra-acara'] }
+                { key: 'pre-acara', value: hoursByCategory['pre-acara'], color: getCategoryColor('pre-acara') },
+                { key: 'hari-h', value: hoursByCategory['hari-h'], color: getCategoryColor('hari-h') },
+                { key: 'pra-acara', value: hoursByCategory['pra-acara'], color: getCategoryColor('pra-acara') }
             ].filter(d => d.value > 0);
 
             let startAngle = -Math.PI / 2;
@@ -928,12 +1030,12 @@
 
             // Center text
             ctx.fillStyle = cssVar('--fg', '#f1f5f9');
-            ctx.font = "800 22px 'Plus Jakarta Sans', sans-serif";
+            ctx.font = getCurrentTheme() === 'y2k' ? "12px 'Press Start 2P', monospace" : "800 22px 'Plus Jakarta Sans', sans-serif";
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(totalHours.toFixed(1), cx, cy - 8);
             ctx.fillStyle = cssVar('--fg-muted', '#64748b');
-            ctx.font = "500 11px 'Plus Jakarta Sans', sans-serif";
+            ctx.font = getCurrentTheme() === 'y2k' ? "7px 'Press Start 2P', monospace" : "500 11px 'Plus Jakarta Sans', sans-serif";
             ctx.fillText('Total Jam', cx, cy + 12);
         }
 
@@ -941,9 +1043,9 @@
         const legend = $('#chart-legend');
         legend.innerHTML = '';
         [
-            { key: 'pre-acara', label: 'Pre-acara', color: CATEGORY_COLORS['pre-acara'] },
-            { key: 'hari-h', label: 'Hari-H', color: CATEGORY_COLORS['hari-h'] },
-            { key: 'pra-acara', label: 'Pra-acara', color: CATEGORY_COLORS['pra-acara'] }
+            { key: 'pre-acara', label: 'Pre-acara', color: getCategoryColor('pre-acara') },
+            { key: 'hari-h', label: 'Hari-H', color: getCategoryColor('hari-h') },
+            { key: 'pra-acara', label: 'Pra-acara', color: getCategoryColor('pra-acara') }
         ].forEach(item => {
             const val = hoursByCategory[item.key] || 0;
             const pct = totalHours > 0 ? ((val / totalHours) * 100).toFixed(0) : 0;

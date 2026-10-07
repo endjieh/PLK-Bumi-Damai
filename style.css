@@ -1,6 +1,6 @@
 /* ==========================================================================
-   PLK Bumi Damai — Professional Elegant Design System
-   Stack: Vanilla HTML/CSS · Style: Minimalism + Swiss · Palette: Financial Dashboard
+   PLK Bumi Damai â€” Professional Elegant Design System
+   Stack: Vanilla HTML/CSS Â· Style: Minimalism + Swiss Â· Palette: Financial Dashboard
    Typography: Plus Jakarta Sans (Friendly SaaS pairing)
    Built with: UI/UX Pro Max Skill v2.13
    Rules applied: accessibility 4.5:1+, touch 44px, 8dp spacing scale,
@@ -10,7 +10,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
 /* --------------------------------------------------------------------------
-   Design Tokens — Financial Dashboard Palette + Swiss Minimalism Variables
+   Design Tokens â€” Financial Dashboard Palette + Swiss Minimalism Variables
    -------------------------------------------------------------------------- */
 :root {
   /* Spacing scale: 8dp increments (Swiss/Material baseline) */
@@ -55,7 +55,7 @@
   --z-toast: 200;
 }
 
-/* Dark Mode (default) — Radix Themes Slate + Iris Accent Palette */
+/* Dark Mode (default) â€” Radix Themes Slate + Iris Accent Palette */
 :root,
 [data-theme="dark"] {
   --bg:          #090D16;  /* Radix Dark Slate */
@@ -66,20 +66,20 @@
 
   --fg:          #F8FAFC;  /* Primary text */
   --fg-secondary:#94A3B8;  /* Secondary text */
-  --fg-muted:    #7B8CA6;  /* Muted text — 4.5:1+ on card & sidebar */
+  --fg-muted:    #7B8CA6;  /* Muted text â€” 4.5:1+ on card & sidebar */
 
   --border:      rgba(255, 255, 255, 0.08); /* 1px Subdued Border */
   --border-mid:  rgba(255, 255, 255, 0.16); /* Interactive Border */
-  --border-focus:#3DBA80;  /* Focus ring — Brand Green (logo tone) */
+  --border-focus:#3DBA80;  /* Focus ring â€” Brand Green (logo tone) */
 
-  /* Brand Accent — Logo Tone (Deep Green #2D8F5E family) */
-  --accent:      #3DBA80;  /* text/icon/focus on dark — 4.5:1+ */
-  --accent-solid:#25804F;  /* solid fills under white text — 4.9:1 */
+  /* Brand Accent â€” Logo Tone (Deep Green #2D8F5E family) */
+  --accent:      #3DBA80;  /* text/icon/focus on dark â€” 4.5:1+ */
+  --accent-solid:#25804F;  /* solid fills under white text â€” 4.9:1 */
   --accent-hover:#1E6B43;
   --accent-dim:  rgba(45, 143, 94, 0.14);
   --accent-glow: rgba(45, 143, 94, 0.28);
 
-  /* Category palette — Logo Tones */
+  /* Category palette â€” Logo Tones */
   --pre:         #FCB527;
   --pre-dim:     rgba(252, 181, 39, 0.14);
   --pre-border:  rgba(252, 181, 39, 0.30);
@@ -96,7 +96,7 @@
   --danger-solid:#D63A56;
   --danger-dim:  rgba(251, 102, 124, 0.14);
 
-  /* Elevation shadows — Radix crisp shadow scale */
+  /* Elevation shadows â€” Radix crisp shadow scale */
   --shadow-xs:   0 1px 2px rgba(0,0,0,0.3);
   --shadow-sm:   0 2px 8px rgba(0,0,0,0.35);
   --shadow-md:   0 4px 16px rgba(0,0,0,0.4);
@@ -107,7 +107,7 @@
   --scrollbar-thumb-hover: #475569;
 }
 
-/* Light Mode — Radix Slate Light */
+/* Light Mode â€” Radix Slate Light */
 [data-theme="light"] {
   --bg:          #F8FAFC;
   --bg-raised:   #FFFFFF;
@@ -164,7 +164,7 @@
   box-sizing: border-box;
 }
 
-/* Custom Scrollbar — Theme Aligned */
+/* Custom Scrollbar â€” Theme Aligned */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
@@ -189,7 +189,7 @@
 }
 html {
   scroll-behavior: smooth;
-  font-size: 16px; /* never below 16px – iOS auto-zoom prevention */
+  font-size: 16px; /* never below 16px â€“ iOS auto-zoom prevention */
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 body {
@@ -228,7 +228,7 @@ body::before {
   z-index: var(--z-base);
 }
 
-/* Reduced motion — respect user preference */
+/* Reduced motion â€” respect user preference */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -365,7 +365,7 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
   overflow-x: hidden;
 }
 
-/* Nav item — 44px min touch target */
+/* Nav item â€” 44px min touch target */
 .nav-item {
   display: flex;
   align-items: center;
@@ -564,7 +564,7 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
 }
 
 /* --------------------------------------------------------------------------
-   Component: Button System (44px min height — touch safe)
+   Component: Button System (44px min height â€” touch safe)
    -------------------------------------------------------------------------- */
 .btn {
   display: inline-flex;
@@ -641,7 +641,7 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
 }
 .btn-danger:hover { opacity: 0.9; transform: translateY(-1px); }
 
-/* Icon button — 44×44 square */
+/* Icon button â€” 44Ã—44 square */
 .btn-icon {
   width: 44px;
   height: 44px;
@@ -700,11 +700,23 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
   text-decoration: none;
   letter-spacing: 0.02em;
   transition: color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 .card-link:hover { color: var(--accent); }
+.card-link-arrow {
+  display: inline-block;
+  font-size: 1.15em;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+.card-link:hover .card-link-arrow {
+  transform: translateX(3px);
+}
 
 /* --------------------------------------------------------------------------
-   Profile Card — Swiss/Professional layout
+   Profile Card â€” Swiss/Professional layout
    -------------------------------------------------------------------------- */
 .profile-card {
   background-color: var(--bg-raised);
@@ -830,7 +842,7 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
 .profile-tag svg { flex-shrink: 0; }
 
 /* --------------------------------------------------------------------------
-   Progress Card — Main KPI block (UI/UX Design Pro Craft)
+   Progress Card â€” Main KPI block (UI/UX Design Pro Craft)
    -------------------------------------------------------------------------- */
 .progress-card {
   background-color: var(--bg-raised);
@@ -872,6 +884,11 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
   fill: none;
   stroke: var(--bg-elevated);
   stroke-width: 12;
+  transition: stroke 0.3s ease, filter 0.3s ease;
+}
+[data-theme="dark"] .progress-ring-bg {
+  stroke: rgba(80, 171, 228, 0.25);
+  filter: drop-shadow(0 0 6px rgba(45, 143, 94, 0.35));
 }
 .progress-ring-fill {
   fill: none;
@@ -909,16 +926,21 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
 .progress-hours {
   font-size: var(--text-4xl);
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: 0.01em;
   color: var(--fg);
   line-height: 1;
 }
 .progress-hours-label {
   font-size: var(--text-sm);
   color: var(--fg-secondary);
+  letter-spacing: 0.03em;
   margin-top: -var(--space-2);
 }
-.progress-hours-label strong { color: var(--fg); font-weight: 700; }
+.progress-hours-label strong {
+  color: var(--fg);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
 
 .progress-bar-wrapper { width: 100%; }
 .progress-bar {
@@ -967,8 +989,11 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--fg);
-  letter-spacing: -0.03em;
+  letter-spacing: 0.03em;
   line-height: 1.15;
+}
+#stat-remaining {
+  letter-spacing: 0.04em;
 }
 .stat-label {
   font-size: 0.8125rem;
@@ -980,7 +1005,7 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
 }
 
 /* --------------------------------------------------------------------------
-   Stats Grid — Category KPI Cards
+   Stats Grid â€” Category KPI Cards
    -------------------------------------------------------------------------- */
 .stats-grid {
   display: grid;
@@ -1250,7 +1275,7 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
 }
 
 /* --------------------------------------------------------------------------
-   Form Controls — 44px height, visible labels, clear focus
+   Form Controls â€” 44px height, visible labels, clear focus
    -------------------------------------------------------------------------- */
 .form-group { display: flex; flex-direction: column; gap: var(--space-2); width: 100%; }
 .form-group label {
@@ -1309,7 +1334,7 @@ input:focus, select:focus, textarea:focus, .filter-select:focus {
 }
 select option { background-color: var(--bg-raised); color: var(--fg); }
 
-/* Search box — Radix TextField.Slot styling */
+/* Search box â€” Radix TextField.Slot styling */
 .search-box { position: relative; display: flex; align-items: center; }
 .search-box svg {
   position: absolute; left: 14px;
@@ -1641,7 +1666,7 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 .toast-message { font-size: var(--text-sm); font-weight: 600; }
 
 /* --------------------------------------------------------------------------
-   Responsive — Mobile-first breakpoints (375 / 768 / 1024 / 1440)
+   Responsive â€” Mobile-first breakpoints (375 / 768 / 1024 / 1440)
    -------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
   :root { --sidebar-w: 240px; }
@@ -1700,7 +1725,7 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 }
 
 /* --------------------------------------------------------------------------
-   Activity Card — used by renderActivitiesList()
+   Activity Card â€” used by renderActivitiesList()
    -------------------------------------------------------------------------- */
 .activity-card {
   background-color: var(--bg-raised);
@@ -1836,7 +1861,7 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 }
 
 /* --------------------------------------------------------------------------
-   Gallery Item — used by renderGallery()
+   Gallery Item â€” used by renderGallery()
    -------------------------------------------------------------------------- */
 .gallery-item {
   background-color: var(--bg-raised);
@@ -1885,7 +1910,7 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 }
 
 /* --------------------------------------------------------------------------
-   Calendar Classes — used by renderCalendar()
+   Calendar Classes â€” used by renderCalendar()
    -------------------------------------------------------------------------- */
 .calendar-header-cell {
   text-align: center;
@@ -1923,8 +1948,586 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 }
 
 /* --------------------------------------------------------------------------
-   Bar Chart — CSS variable for bar gradient
+   Bar Chart â€” CSS variable for bar gradient
    -------------------------------------------------------------------------- */
 :root {
   --accent-gradient: linear-gradient(to top, #2D8F5E, #69AC43);
+}
+
+/* ==========================================================================
+   THEME: Y2K Retro Pixel â€” 8-Bit Arcade / Game Aesthetic
+   Primary: #4fa9e5 (Sky Blue) Â· Secondary: #fcb527 (Golden Yellow)
+   Font: Press Start 2P (Google Fonts pixel typeface)
+   ========================================================================== */
+[data-theme="y2k"] {
+  /* Core palette â€” retro light arcade tone */
+  --bg:          #D6E8F7;
+  --bg-raised:   #F0F7FD;
+  --bg-elevated: #E1EFFB;
+  --bg-input:    #FFFFFF;
+  --bg-sidebar:  #C4DEF4;
+
+  --fg:          #0F253B;
+  --fg-secondary:#234768;
+  --fg-muted:    #527494;
+
+  --border:      #9BC4E6;
+  --border-mid:  #72A9D6;
+  --border-focus:#4FA9E5;
+
+  /* Primary Accent â€” #4fa9e5 */
+  --accent:       #4FA9E5;
+  --accent-solid: #3B95D4;
+  --accent-hover: #2983C3;
+  --accent-dim:   rgba(79, 169, 229, 0.16);
+  --accent-glow:  rgba(79, 169, 229, 0.35);
+
+  /* Secondary Accent â€” #fcb527 */
+  --secondary:       #FCB527;
+  --secondary-solid: #E8A215;
+  --secondary-hover: #CF8D0C;
+  --secondary-dim:   rgba(252, 181, 39, 0.18);
+  --secondary-glow:  rgba(252, 181, 39, 0.35);
+
+  /* Category palette â€” Harmonized with primary & secondary */
+  --pre:         #FCB527;
+  --pre-dim:     rgba(252, 181, 39, 0.18);
+  --pre-border:  rgba(252, 181, 39, 0.40);
+
+  --hari:        #34B76B;
+  --hari-dim:    rgba(52, 183, 107, 0.18);
+  --hari-border: rgba(52, 183, 107, 0.40);
+
+  --pra:         #4FA9E5;
+  --pra-dim:     rgba(79, 169, 229, 0.18);
+  --pra-border:  rgba(79, 169, 229, 0.40);
+
+  --danger:      #E74C3C;
+  --danger-solid:#C0392B;
+  --danger-dim:  rgba(231, 76, 60, 0.18);
+
+  /* Shadows â€” crisp 8-bit offset shadows */
+  --shadow-xs:   2px 2px 0 rgba(15, 37, 59, 0.12);
+  --shadow-sm:   3px 3px 0 rgba(15, 37, 59, 0.16);
+  --shadow-md:   4px 4px 0 rgba(15, 37, 59, 0.22);
+  --shadow-lg:   6px 6px 0 rgba(15, 37, 59, 0.28);
+  --shadow-focus:0 0 0 3px var(--bg), 0 0 0 6px var(--accent);
+
+  --scrollbar-track: #E1EFFB;
+  --scrollbar-thumb: #9BC4E6;
+  --scrollbar-thumb-hover: #72A9D6;
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-full: 0px;
+
+  --accent-gradient: linear-gradient(to top, #4FA9E5, #FCB527);
+}
+
+/* ---- Y2K: Pixel Font Override ---- */
+[data-theme="y2k"] body,
+[data-theme="y2k"] button,
+[data-theme="y2k"] input,
+[data-theme="y2k"] select,
+[data-theme="y2k"] textarea,
+[data-theme="y2k"] h1,
+[data-theme="y2k"] h2,
+[data-theme="y2k"] h3,
+[data-theme="y2k"] h4,
+[data-theme="y2k"] h5,
+[data-theme="y2k"] h6,
+[data-theme="y2k"] p,
+[data-theme="y2k"] span,
+[data-theme="y2k"] a,
+[data-theme="y2k"] label,
+[data-theme="y2k"] .stat-value,
+[data-theme="y2k"] .stat-label,
+[data-theme="y2k"] .progress-percent,
+[data-theme="y2k"] .progress-label,
+[data-theme="y2k"] .progress-hours,
+[data-theme="y2k"] .progress-hours-label,
+[data-theme="y2k"] .nav-item,
+[data-theme="y2k"] .logo-text,
+[data-theme="y2k"] .logo-sub,
+[data-theme="y2k"] .btn,
+[data-theme="y2k"] .badge {
+  font-family: 'Press Start 2P', monospace !important;
+}
+
+/* ---- Y2K: Body background with retro checker pattern ---- */
+[data-theme="y2k"] body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(180deg,
+      rgba(79, 169, 229, 0.16) 0%,
+      transparent 18%,
+      transparent 75%,
+      rgba(252, 181, 39, 0.12) 100%),
+    repeating-conic-gradient(
+      rgba(15, 37, 59, 0.035) 0% 25%,
+      transparent 0% 50%
+    );
+  background-size: 100% 100%, 16px 16px;
+  image-rendering: pixelated;
+}
+
+[data-theme="y2k"] body::before {
+  display: none;
+}
+
+/* ---- Y2K: Thick pixel borders on cards ---- */
+[data-theme="y2k"] .card,
+[data-theme="y2k"] .progress-card,
+[data-theme="y2k"] .stat-card,
+[data-theme="y2k"] .profile-card,
+[data-theme="y2k"] .modal,
+[data-theme="y2k"] .activity-card {
+  border: 3px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 4px 4px 0 rgba(15, 37, 59, 0.22);
+}
+
+[data-theme="y2k"] .card:hover,
+[data-theme="y2k"] .stat-card:hover,
+[data-theme="y2k"] .activity-card:hover {
+  box-shadow: 6px 6px 0 rgba(15, 37, 59, 0.28);
+  transform: translate(-2px, -2px);
+}
+
+/* ---- Y2K: Progress stat boxes ---- */
+[data-theme="y2k"] .progress-stat {
+  border: 3px solid var(--fg);
+  border-radius: 0;
+  background-color: var(--bg-raised);
+  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.18);
+}
+[data-theme="y2k"] .progress-stat:hover {
+  border-color: var(--secondary);
+  background-color: var(--secondary-dim);
+  box-shadow: 5px 5px 0 rgba(252, 181, 39, 0.30);
+  transform: translate(-2px, -2px);
+}
+
+/* ---- Y2K: Buttons â€” thick border pixel style ---- */
+[data-theme="y2k"] .btn {
+  border: 3px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.22);
+  text-transform: uppercase;
+  font-size: 0.55rem !important;
+  letter-spacing: 0.05em;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+[data-theme="y2k"] .btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(15, 37, 59, 0.28);
+}
+[data-theme="y2k"] .btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 rgba(15, 37, 59, 0.18);
+}
+[data-theme="y2k"] .btn-primary {
+  background: var(--accent);
+  border-color: var(--fg);
+  color: #FFFFFF;
+  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.25);
+}
+[data-theme="y2k"] .btn-primary:hover {
+  background: var(--accent-solid);
+  border-color: var(--fg);
+  box-shadow: 5px 5px 0 rgba(79, 169, 229, 0.40);
+}
+
+/* Secondary button style if used */
+[data-theme="y2k"] .btn-secondary {
+  background: var(--secondary);
+  border-color: var(--fg);
+  color: var(--fg);
+  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.25);
+}
+[data-theme="y2k"] .btn-secondary:hover {
+  background: var(--secondary-solid);
+  box-shadow: 5px 5px 0 rgba(252, 181, 39, 0.40);
+}
+
+/* ---- Y2K: Sidebar ---- */
+[data-theme="y2k"] .sidebar {
+  border-right: 3px solid var(--fg);
+}
+[data-theme="y2k"] .sidebar-header {
+  border-bottom: 3px solid var(--fg);
+}
+[data-theme="y2k"] .sidebar-footer {
+  border-top: 3px solid var(--fg);
+}
+
+/* ---- Y2K: Nav items ---- */
+[data-theme="y2k"] .nav-item {
+  border-radius: 0;
+  font-size: 0.55rem !important;
+}
+[data-theme="y2k"] .nav-item.active {
+  background-color: var(--accent-dim);
+  color: var(--fg);
+  border: 2px solid var(--accent);
+  box-shadow: inset -3px 0 0 var(--secondary);
+}
+[data-theme="y2k"] .nav-item.active::before {
+  display: none;
+}
+
+/* ---- Y2K: Logo icon / Profil â€” enlarged & circular pixel frame ---- */
+[data-theme="y2k"] .logo-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  border: 3px solid var(--fg);
+  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.22);
+  background-color: #FFFFFF;
+  padding: 4px;
+}
+[data-theme="y2k"] .sidebar-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-full);
+  display: block;
+}
+[data-theme="y2k"] .mobile-logo-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-full);
+  border: 3px solid var(--fg);
+  background-color: #FFFFFF;
+  padding: 3px;
+}
+[data-theme="y2k"] .mobile-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-full);
+  display: block;
+}
+[data-theme="y2k"] .sidebar-header {
+  border-bottom: 3px solid var(--fg);
+  padding: 16px 14px;
+  min-height: 84px;
+}
+
+/* ---- Y2K: Profile avatar â€” square pixel / enlarged ---- */
+[data-theme="y2k"] .profile-avatar-wrapper {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-full);
+  border: 3px solid var(--fg);
+  box-shadow: 4px 4px 0 rgba(15, 37, 59, 0.22);
+  background-color: #FFFFFF;
+  padding: 5px;
+}
+[data-theme="y2k"] .profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-full);
+  display: block;
+}
+
+/* ---- Y2K: Badge â€” pixel style ---- */
+[data-theme="y2k"] .badge,
+[data-theme="y2k"] .sidebar-badge,
+[data-theme="y2k"] .profile-badge-status,
+[data-theme="y2k"] .profile-tag {
+  border-radius: 0;
+  border: 2px solid currentColor;
+  font-size: 0.5rem !important;
+}
+
+/* ---- Y2K: Progress ring glow ---- */
+[data-theme="y2k"] .progress-ring-container {
+  filter: drop-shadow(0 0 16px rgba(255, 214, 26, 0.45));
+}
+[data-theme="y2k"] .progress-ring-bg {
+  stroke: rgba(79, 169, 229, 0.20); /* transparansi dikurangi 50% agar tidak terlalu dominan */
+  stroke-width: 12;
+  filter: none;
+}
+[data-theme="y2k"] .progress-ring-fill {
+  stroke: url(#ring-gradient);
+  filter: drop-shadow(0 0 8px rgba(255, 214, 26, 0.85));
+}
+
+/* ---- Y2K: Progress bar â€” chunky ---- */
+[data-theme="y2k"] .progress-bar,
+[data-theme="y2k"] .mini-progress-bar,
+[data-theme="y2k"] .stat-card-bar {
+  border-radius: 0;
+  border: 2px solid var(--fg);
+  height: 10px;
+  background-color: var(--bg-raised);
+}
+[data-theme="y2k"] .progress-bar-fill,
+[data-theme="y2k"] .mini-progress-fill,
+[data-theme="y2k"] .stat-card-bar-fill {
+  border-radius: 0;
+  background: linear-gradient(90deg, var(--accent), var(--secondary));
+  image-rendering: pixelated;
+}
+
+/* ---- Y2K: Text sizing adjustments for pixel font ---- */
+[data-theme="y2k"] .page-header h1 {
+  font-size: 1.1rem !important;
+  letter-spacing: 0.02em;
+}
+[data-theme="y2k"] .page-subtitle {
+  font-size: 0.55rem !important;
+}
+[data-theme="y2k"] .logo-text {
+  font-size: 0.6rem !important;
+  line-height: 1.5;
+}
+[data-theme="y2k"] .logo-sub {
+  font-size: 0.45rem !important;
+}
+[data-theme="y2k"] .progress-percent {
+  font-size: 1.1rem !important;
+  color: var(--accent);
+}
+[data-theme="y2k"] .progress-label {
+  font-size: 0.45rem !important;
+}
+[data-theme="y2k"] .progress-hours {
+  font-size: 1.3rem !important;
+  color: var(--secondary);
+}
+[data-theme="y2k"] .progress-hours-label {
+  font-size: 0.5rem !important;
+  line-height: 1.8;
+}
+[data-theme="y2k"] .stat-value {
+  font-size: 0.9rem !important;
+}
+[data-theme="y2k"] .stat-label {
+  font-size: 0.45rem !important;
+  line-height: 1.6;
+}
+[data-theme="y2k"] .stat-card-value {
+  font-size: 1rem !important;
+}
+[data-theme="y2k"] .stat-card-label {
+  font-size: 0.4rem !important;
+}
+[data-theme="y2k"] .card-header h3 {
+  font-size: 0.58rem !important;
+  font-weight: 400 !important;
+}
+[data-theme="y2k"] .card-link {
+  font-size: 0.48rem !important;
+  font-weight: 400 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+[data-theme="y2k"] .card-link-arrow {
+  font-size: 0.85rem !important;
+  font-family: monospace, sans-serif !important;
+  font-weight: 700 !important;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ---- Y2K: Activity list items (dikurangi 1pt, seimbang & rapi) ---- */
+[data-theme="y2k"] .activity-item {
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 rgba(15, 37, 59, 0.18);
+  padding: 10px 14px;
+}
+
+[data-theme="y2k"] .activity-name,
+[data-theme="y2k"] .activity-title {
+  font-size: 0.56rem !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  letter-spacing: 0.02em !important;
+}
+
+[data-theme="y2k"] .activity-meta,
+[data-theme="y2k"] .activity-meta span {
+  font-size: 0.46rem !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+}
+
+[data-theme="y2k"] .activity-hours-badge {
+  font-size: 0.50rem !important;
+  font-weight: 400 !important;
+  border-radius: 0;
+  border: 2px solid var(--fg);
+  box-shadow: 1px 1px 0 rgba(15, 37, 59, 0.15);
+}
+
+[data-theme="y2k"] .activity-category-badge {
+  font-size: 0.46rem !important;
+  font-weight: 400 !important;
+  border-radius: 0;
+  border: 2px solid currentColor;
+}
+
+/* ---- Y2K: Chart distribution legend (Pre-acara, Hari-H, Pra-acara & jam â€” 1 baris rapi) ---- */
+[data-theme="y2k"] .legend-item {
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 rgba(15, 37, 59, 0.15);
+  padding: 8px 10px;
+  gap: 8px;
+  white-space: nowrap !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+[data-theme="y2k"] .legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+[data-theme="y2k"] .legend-label {
+  font-size: 0.56rem !important;
+  font-weight: 400 !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  flex: 1;
+}
+
+[data-theme="y2k"] .legend-value {
+  font-size: 0.54rem !important;
+  font-weight: 400 !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* ---- Y2K: Form inputs (modal tambah kegiatan â€” tidak bold & ukuran pas) ---- */
+[data-theme="y2k"] input[type="text"],
+[data-theme="y2k"] input[type="number"],
+[data-theme="y2k"] input[type="date"],
+[data-theme="y2k"] input[type="time"],
+[data-theme="y2k"] select,
+[data-theme="y2k"] textarea,
+[data-theme="y2k"] .filter-select {
+  border: 3px solid var(--fg);
+  border-radius: 0;
+  font-size: 0.48rem !important;
+  font-weight: 400 !important;
+  box-shadow: 2px 2px 0 rgba(15, 37, 59, 0.15);
+}
+
+[data-theme="y2k"] .form-group label {
+  font-size: 0.46rem !important;
+  font-weight: 400 !important;
+}
+
+[data-theme="y2k"] .form-hint {
+  font-size: 0.40rem !important;
+  font-weight: 400 !important;
+}
+
+/* ---- Y2K: Modal ---- */
+[data-theme="y2k"] .modal {
+  border: 4px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 6px 6px 0 rgba(15, 37, 59, 0.28);
+}
+[data-theme="y2k"] .modal-header {
+  border-bottom: 3px solid var(--fg);
+}
+[data-theme="y2k"] .modal-header h2 {
+  font-size: 0.65rem !important;
+}
+[data-theme="y2k"] .modal-footer {
+  border-top: 3px solid var(--fg);
+}
+
+/* ---- Y2K: Toast ---- */
+[data-theme="y2k"] .toast {
+  border: 3px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.22);
+  font-size: 0.5rem !important;
+}
+
+/* ---- Y2K: Mobile header ---- */
+[data-theme="y2k"] .mobile-header {
+  border-bottom: 3px solid var(--fg);
+}
+[data-theme="y2k"] .mobile-title {
+  font-size: 0.55rem !important;
+}
+
+/* ---- Y2K: Calendar cells ---- */
+[data-theme="y2k"] .calendar-cell {
+  border: 2px solid var(--border-mid);
+}
+
+/* ---- Y2K: Lightbox ---- */
+[data-theme="y2k"] .lightbox img {
+  border: 4px solid var(--fg);
+  border-radius: 0;
+}
+
+/* ---- Y2K: Search box ---- */
+[data-theme="y2k"] .search-box {
+  border: 3px solid var(--fg);
+  border-radius: 0;
+}
+
+/* ---- Y2K: Gallery items ---- */
+[data-theme="y2k"] .gallery-item {
+  border: 3px solid var(--fg);
+  border-radius: 0;
+}
+[data-theme="y2k"] .gallery-item:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(15, 37, 59, 0.25);
+}
+
+
+
+/* ---- Y2K: Header layout (balanced vertical spacing) ---- */
+[data-theme="y2k"] .main-content {
+  padding-top: 40px;
+}
+[data-theme="y2k"] .page-header {
+  position: relative;
+  padding-top: 0;
+}
+
+/* ---- Y2K: Stat card top borders â€” pixel accents ---- */
+[data-theme="y2k"] .stat-card-pre  { border-top: 4px solid var(--pre); }
+[data-theme="y2k"] .stat-card-hari { border-top: 4px solid var(--hari); }
+[data-theme="y2k"] .stat-card-pra  { border-top: 4px solid var(--pra); }
+
+/* ---- Y2K: Icon buttons ---- */
+[data-theme="y2k"] .btn-icon {
+  border-radius: 0;
+}
+
+/* ---- Y2K: Photo upload ---- */
+[data-theme="y2k"] .photo-upload {
+  border: 3px dashed var(--fg);
+  border-radius: 0;
+}
+
+/* ---- Y2K: Theme toggle row label ---- */
+[data-theme="y2k"] .theme-toggle-label {
+  font-size: 0.45rem !important;
+}
+[data-theme="y2k"] .mini-progress-label {
+  font-size: 0.4rem !important;
 }

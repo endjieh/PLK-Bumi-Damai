@@ -7,7 +7,19 @@
     <title>PLK Bumi Damai — Dashboard Pengabdian</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            try {
+                var savedTheme = localStorage.getItem('plk_tracker_theme');
+                if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'y2k') {
+                    document.documentElement.setAttribute('data-theme', savedTheme);
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -230,7 +242,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>Kegiatan Terakhir</h3>
-                        <a href="#" class="card-link" id="link-all-activities">Lihat Semua →</a>
+                        <a href="#" class="card-link" id="link-all-activities">Lihat Semua <span class="card-link-arrow">→</span></a>
                     </div>
                     <div id="recent-activities">
                         <div class="empty-state">
