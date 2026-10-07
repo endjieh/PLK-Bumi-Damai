@@ -1,0 +1,7 @@
+# Dependencies & Agent configurations
+.agents/
+.gemini/
+
+# OS metadata
+.DS_Store
+Thumbs.db
