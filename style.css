@@ -2582,3 +2582,74 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   font-size: 0.58rem !important;
   color: var(--fg-muted) !important;
 }
+
+/* ---- Y2K: Mobile & Responsive Layout Adjustments ---- */
+@media (max-width: 768px) {
+  [data-theme="y2k"] .main-content {
+    padding-top: 92px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  [data-theme="y2k"] .page-header {
+    margin-top: 8px !important;
+    margin-bottom: 20px !important;
+  }
+
+  [data-theme="y2k"] .page-title {
+    font-size: 1.15rem !important;
+    line-height: 1.4 !important;
+  }
+
+  [data-theme="y2k"] .page-subtitle {
+    font-size: 0.58rem !important;
+    margin-top: 6px !important;
+  }
+
+  [data-theme="y2k"] .page-header-actions {
+    margin-top: 14px !important;
+  }
+
+  [data-theme="y2k"] .dashboard-grid {
+    margin-top: 18px !important;
+    gap: 18px !important;
+  }
+
+  [data-theme="y2k"] .card {
+    padding: 14px !important;
+  }
+
+  /* Fix activity item horizontal overflow bug on mobile */
+  [data-theme="y2k"] .activity-item {
+    flex-wrap: wrap !important;
+    padding: 10px 12px !important;
+    gap: 8px 10px !important;
+    overflow: hidden !important;
+  }
+
+  [data-theme="y2k"] .activity-category-badge {
+    order: 1 !important;
+  }
+
+  [data-theme="y2k"] .activity-hours-badge {
+    order: 2 !important;
+    margin-left: auto !important;
+  }
+
+  [data-theme="y2k"] .activity-photo-indicator {
+    order: 3 !important;
+  }
+
+  [data-theme="y2k"] .activity-actions {
+    order: 4 !important;
+  }
+
+  [data-theme="y2k"] .activity-info {
+    order: 5 !important;
+    flex: 1 1 100% !important;
+    min-width: 0 !important;
+    margin-top: 4px !important;
+    padding-top: 6px !important;
+    border-top: 1px dashed rgba(5, 17, 30, 0.18) !important;
+  }
+}
