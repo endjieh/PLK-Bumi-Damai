@@ -1674,7 +1674,122 @@
         }
     }
 
-    function openAddKasModal() {
+    // List of team members (saved in localStorage or auto-discovered)
+    const STORAGE_KEY_KAS_MEMBERS = 'plk_tracker_kas_members';
+    let kasMembers = [];
+
+    function loadKasMembers() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY_KAS_MEMBERS);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) kasMembers = parsed;
+            }
+        } catch (e) {}
+
+        // Auto-discover unique names from kasList
+        kasList.forEach(item => {
+            const payer = (item.payer || '').trim();
+            if (payer && payer !== 'Kas Rutin Tim' && !kasMembers.some(m => m.toLowerCase() === payer.toLowerCase())) {
+                kasMembers.push(payer);
+            }
+        });
+        saveKasMembers();
+    }
+
+    function saveKasMembers() {
+        try {
+            localStorage.setItem(STORAGE_KEY_KAS_MEMBERS, JSON.stringify(kasMembers));
+        } catch (e) {}
+    }
+
+    function renderKasQuickPayers() {
+        loadKasMembers();
+        const container = $('#kas-quick-payers');
+        if (!container) return;
+
+        if (kasMembers.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+
+        container.innerHTML = `
+            <span style="font-size:11px;color:var(--fg-muted);display:block;margin-top:6px;margin-bottom:2px;">Pilih Cepat Nama Anggota:</span>
+            <div class="kas-chips-wrapper">
+                ${kasMembers.map(m => `<button type="button" class="kas-chip-btn">${escapeHtml(m)}</button>`).join('')}
+            </div>
+        `;
+
+        container.querySelectorAll('.kas-chip-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const payerInput = $('#kas-payer');
+                if (payerInput) payerInput.value = btn.textContent;
+            });
+        });
+    }
+
+    function renderKasMemberChecklist() {
+        loadKasMembers();
+        const listEl = $('#kas-members-list');
+        if (!listEl) return;
+
+        if (kasMembers.length === 0) {
+            listEl.innerHTML = `
+                <div class="empty-state" style="padding: 24px 12px;">
+                    <p>Belum ada daftar anggota tim</p>
+                    <span>Isi nama anggota saat mencatat pembayaran kas</span>
+                </div>
+            `;
+            return;
+        }
+
+        // Current week (Monday - Sunday)
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+        const distanceToMon = (dayOfWeek + 6) % 7;
+        const mon = new Date(today);
+        mon.setDate(today.getDate() - distanceToMon);
+        mon.setHours(0, 0, 0, 0);
+
+        const sun = new Date(mon);
+        sun.setDate(mon.getDate() + 6);
+        sun.setHours(23, 59, 59, 999);
+
+        listEl.innerHTML = '';
+        kasMembers.forEach(memberName => {
+            const memberPaidItem = kasList.find(item => {
+                if ((item.payer || '').trim().toLowerCase() !== memberName.trim().toLowerCase()) return false;
+                const itemDate = new Date(item.date + 'T00:00:00');
+                return itemDate >= mon && itemDate <= sun;
+            });
+
+            const row = document.createElement('div');
+            row.className = 'kas-member-row';
+            row.innerHTML = `
+                <div class="kas-member-info">
+                    <span class="kas-member-name">${escapeHtml(memberName)}</span>
+                    <span class="kas-member-subtitle">${memberPaidItem ? `Lunas pada ${memberPaidItem.date}` : 'Iuran Rp 10.000 (Kamis)'}</span>
+                </div>
+                <div class="kas-member-right">
+                    ${memberPaidItem ? `
+                        <span class="kas-status-badge badge-success">✓ Lunas</span>
+                    ` : `
+                        <span class="kas-status-badge badge-urgent">Belum Bayar</span>
+                        <button class="btn btn-xs btn-primary btn-pay-member" data-name="${escapeHtml(memberName)}" type="button">+ Bayar</button>
+                    `}
+                </div>
+            `;
+
+            row.querySelector('.btn-pay-member')?.addEventListener('click', () => {
+                closeKasHistoryModal();
+                openAddKasModal(memberName);
+            });
+
+            listEl.appendChild(row);
+        });
+    }
+
+    function openAddKasModal(presetName = '') {
         const overlay = $('#kas-modal-overlay');
         if (!overlay) return;
 
@@ -1689,11 +1804,12 @@
         if (amountInput) amountInput.value = 10000;
 
         const payerInput = $('#kas-payer');
-        if (payerInput && !payerInput.value) payerInput.value = 'Kas Rutin Tim';
+        if (payerInput) payerInput.value = presetName || '';
 
         const noteInput = $('#kas-note');
         if (noteInput && !noteInput.value) noteInput.value = 'Kas Kamis Rutin';
 
+        renderKasQuickPayers();
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
@@ -1708,6 +1824,7 @@
         const overlay = $('#kas-history-modal-overlay');
         if (!overlay) return;
 
+        renderKasMemberChecklist();
         renderKasHistory();
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -1733,7 +1850,7 @@
             listEl.innerHTML = `
                 <div class="empty-state" style="padding: 24px 12px;">
                     <p>Belum ada riwayat iuran kas</p>
-                    <span>Klik "+ Tambah Bayar" untuk mencatat iuran pertama</span>
+                    <span>Klik "+ Catat Pembayaran" untuk mencatat iuran pertama</span>
                 </div>
             `;
             return;
@@ -1755,7 +1872,7 @@
                     <div class="kas-history-meta">
                         <span>${dayName}, ${dateStr}</span>
                         <span>•</span>
-                        <span>${escapeHtml(item.payer || 'Tim PLK')}</span>
+                        <span><strong>Pembayar:</strong> ${escapeHtml(item.payer || 'Tim PLK')}</span>
                     </div>
                 </div>
                 <div class="kas-history-right">
@@ -1782,6 +1899,7 @@
         saveKasLocal();
         deleteKasFromSupabase(id);
         renderKasHistory();
+        renderKasMemberChecklist();
         renderKasTrackerUI();
         showToast('Catatan kas berhasil dihapus', 'info');
     }
@@ -1835,7 +1953,30 @@
         const modalHistoryClose = $('#kas-history-modal-close');
         const modalHistoryCancel = $('#kas-history-close');
 
-        if (btnAdd) btnAdd.addEventListener('click', openAddKasModal);
+        // Modal Tab Switching
+        const btnTabStatus = $('#tab-btn-kas-status');
+        const btnTabHistory = $('#tab-btn-kas-history');
+        const tabStatus = $('#kas-tab-status');
+        const tabHistory = $('#kas-tab-history');
+
+        if (btnTabStatus && btnTabHistory) {
+            btnTabStatus.addEventListener('click', () => {
+                btnTabStatus.classList.add('active');
+                btnTabHistory.classList.remove('active');
+                if (tabStatus) tabStatus.classList.add('active');
+                if (tabHistory) tabHistory.classList.remove('active');
+                renderKasMemberChecklist();
+            });
+            btnTabHistory.addEventListener('click', () => {
+                btnTabHistory.classList.add('active');
+                btnTabStatus.classList.remove('active');
+                if (tabHistory) tabHistory.classList.add('active');
+                if (tabStatus) tabStatus.classList.remove('active');
+                renderKasHistory();
+            });
+        }
+
+        if (btnAdd) btnAdd.addEventListener('click', () => openAddKasModal());
         if (btnHistory) btnHistory.addEventListener('click', openKasHistoryModal);
         if (btnAddFromHistory) {
             btnAddFromHistory.addEventListener('click', () => {
@@ -1865,12 +2006,23 @@
                 e.preventDefault();
                 const dateVal = $('#kas-date')?.value;
                 const amountVal = parseInt($('#kas-amount')?.value) || 10000;
-                const payerVal = ($('#kas-payer')?.value || '').trim() || 'Kas Rutin Tim';
+                const payerVal = ($('#kas-payer')?.value || '').trim();
                 const noteVal = ($('#kas-note')?.value || '').trim() || 'Kas Kamis Rutin';
 
                 if (!dateVal) {
                     showToast('Tanggal pembayaran wajib diisi!', 'error');
                     return;
+                }
+
+                if (!payerVal) {
+                    showToast('Nama pembayar / anggota wajib diisi!', 'error');
+                    return;
+                }
+
+                // Add to kasMembers if new
+                if (!kasMembers.some(m => m.toLowerCase() === payerVal.toLowerCase())) {
+                    kasMembers.push(payerVal);
+                    saveKasMembers();
                 }
 
                 const newItem = {
@@ -1887,7 +2039,7 @@
                 syncKasToSupabase(newItem);
                 renderKasTrackerUI();
                 closeAddKasModal();
-                showToast(`Pembayaran kas ${formatRupiah(amountVal)} berhasil dicatat!`, 'success');
+                showToast(`Pembayaran kas ${formatRupiah(amountVal)} (${payerVal}) berhasil dicatat!`, 'success');
             });
         }
 

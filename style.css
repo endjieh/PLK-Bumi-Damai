@@ -2941,3 +2941,142 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
     margin-top: 4px;
   }
 }
+
+/* Modal Tabs & Member Checklist */
+.kas-modal-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: var(--space-4);
+}
+
+.kas-tab-btn {
+  padding: 8px 14px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--fg-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.kas-tab-btn.active {
+  color: var(--fg);
+  border-bottom-color: var(--primary, #15803d);
+}
+
+.kas-tab-content {
+  display: none;
+}
+
+.kas-tab-content.active {
+  display: block;
+}
+
+.kas-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.kas-member-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.kas-member-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kas-member-name {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.kas-member-subtitle {
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
+}
+
+.kas-member-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kas-chips-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.kas-chip-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.kas-chip-btn:hover {
+  background: var(--primary, #15803d);
+  color: #ffffff;
+  border-color: var(--primary, #15803d);
+}
+
+/* Y2K Theme Overrides for Kas Tabs & Checklist */
+[data-theme="y2k"] .kas-tab-btn {
+  font-size: 0.58rem !important;
+  border-radius: 0 !important;
+}
+
+[data-theme="y2k"] .kas-tab-btn.active {
+  color: var(--fg) !important;
+  border-bottom: 3px solid var(--fg) !important;
+}
+
+[data-theme="y2k"] .kas-member-row {
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #05111E;
+  background-color: var(--bg-raised);
+}
+
+[data-theme="y2k"] .kas-member-name {
+  font-size: 0.68rem !important;
+  color: var(--fg) !important;
+}
+
+[data-theme="y2k"] .kas-member-subtitle {
+  font-size: 0.56rem !important;
+}
+
+[data-theme="y2k"] .kas-chip-btn {
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 1px 1px 0 #05111E;
+  font-size: 0.56rem !important;
+  background-color: var(--bg-raised);
+}
+
+[data-theme="y2k"] .kas-chip-btn:hover {
+  background-color: var(--fg);
+  color: #FFFFFF;
+}

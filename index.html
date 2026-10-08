@@ -507,8 +507,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="kas-payer">Nama Pembayar / Anggota</label>
-                        <input type="text" id="kas-payer" placeholder="Contoh: Saya / Tim PLK" value="Kas Rutin Tim">
+                        <label for="kas-payer">Nama Pembayar / Anggota <span class="required" aria-hidden="true">*</span></label>
+                        <input type="text" id="kas-payer" placeholder="Tulis nama anggota (misal: Budi / Ahmad)" required>
+                        <div class="kas-quick-payers" id="kas-quick-payers">
+                            <!-- Quick member chips dynamically rendered -->
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="kas-note">Keterangan / Catatan</label>
@@ -523,25 +526,41 @@
         </div>
     </div>
 
-    <!-- ===== KAS HISTORY MODAL ===== -->
+    <!-- ===== KAS HISTORY & MEMBER CHECKLIST MODAL ===== -->
     <div class="modal-overlay" id="kas-history-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="kas-history-modal-title">
         <div class="modal modal-medium">
             <div class="modal-header">
-                <h2 id="kas-history-modal-title">Riwayat Kas Rutin</h2>
+                <h2 id="kas-history-modal-title">Status & Riwayat Kas Tim</h2>
                 <button class="btn-icon btn-ghost modal-close" id="kas-history-modal-close" aria-label="Tutup modal" type="button">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
             <div class="modal-body">
+                <div class="kas-modal-tabs">
+                    <button class="kas-tab-btn active" id="tab-btn-kas-status" type="button">Status Anggota (Minggu Ini)</button>
+                    <button class="kas-tab-btn" id="tab-btn-kas-history" type="button">Riwayat Transaksi</button>
+                </div>
+
                 <div class="kas-history-summary">
                     <div>
                         <span class="kas-summary-label">Total Terkumpul:</span>
                         <strong class="kas-summary-value" id="history-total-amount">Rp 0</strong>
                     </div>
-                    <button class="btn btn-sm btn-primary" id="btn-add-kas-from-history" type="button">+ Tambah Bayar</button>
+                    <button class="btn btn-sm btn-primary" id="btn-add-kas-from-history" type="button">+ Catat Pembayaran</button>
                 </div>
-                <div class="kas-history-list" id="kas-history-list">
-                    <!-- Dynamic history items rendered by app.js -->
+
+                <!-- Tab 1: Status Pembayaran Per Anggota -->
+                <div class="kas-tab-content active" id="kas-tab-status">
+                    <div class="kas-members-list" id="kas-members-list">
+                        <!-- Rendered dynamically by app.js: Member name, Status (Sudah/Belum), Action -->
+                    </div>
+                </div>
+
+                <!-- Tab 2: Riwayat Transaksi -->
+                <div class="kas-tab-content" id="kas-tab-history">
+                    <div class="kas-history-list" id="kas-history-list">
+                        <!-- Dynamic history items rendered by app.js -->
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
