@@ -3080,3 +3080,103 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   background-color: var(--fg);
   color: #FFFFFF;
 }
+
+/* ==========================================================================
+   Mobile Responsive Fixes for Kas Card & Modals (Y2K & Base)
+   ========================================================================== */
+@media (max-width: 640px) {
+  /* Fix Kas Header Action Buttons on Mobile */
+  .kas-header-actions {
+    display: flex !important;
+    width: 100% !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+  }
+
+  .kas-header-actions .btn,
+  [data-theme="y2k"] .kas-header-actions .btn {
+    flex: 1 1 50% !important;
+    padding: 8px 4px !important;
+    font-size: 0.55rem !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    min-width: 0 !important;
+  }
+
+  /* Fix Kas Stat Badge Wrapping on Mobile */
+  .kas-status-badge,
+  [data-theme="y2k"] .kas-status-badge {
+    white-space: normal !important;
+    word-break: break-word !important;
+    font-size: 0.5rem !important;
+    line-height: 1.3 !important;
+    padding: 3px 4px !important;
+    text-align: center !important;
+    max-width: 100% !important;
+  }
+
+  /* Fix Modals Sizing & Padding on Mobile */
+  .modal {
+    width: calc(100vw - 24px) !important;
+    max-width: 100% !important;
+    padding: 14px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Fix Modal Footer Buttons Overflow on Mobile */
+  .modal-footer {
+    flex-direction: column-reverse !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+
+  .modal-footer .btn {
+    width: 100% !important;
+    margin: 0 !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+
+  /* Fix Kas History Summary Box Header on Mobile */
+  .kas-history-summary {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 10px 12px !important;
+  }
+
+  .kas-history-summary .btn {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+
+  /* Fix Kas Modal Tabs on Mobile */
+  .kas-modal-tabs {
+    width: 100% !important;
+    gap: 4px !important;
+  }
+
+  .kas-tab-btn,
+  [data-theme="y2k"] .kas-tab-btn {
+    flex: 1 1 50% !important;
+    padding: 8px 2px !important;
+    font-size: 0.5rem !important;
+    text-align: center !important;
+  }
+
+  /* Fix Member Checklist Rows on Mobile */
+  .kas-member-row {
+    padding: 8px 10px !important;
+  }
+
+  .kas-member-right {
+    gap: 4px !important;
+  }
+
+  .kas-member-right .btn {
+    padding: 4px 8px !important;
+    font-size: 0.5rem !important;
+  }
+}
