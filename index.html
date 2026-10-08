@@ -237,6 +237,47 @@
                 </div>
             </div>
 
+            <!-- Live Kas Tracker Card -->
+            <div class="card kas-tracker-card" id="kas-tracker-card">
+                <div class="kas-card-header">
+                    <div class="kas-title-group">
+                        <div class="kas-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="6" width="20" height="12" rx="2"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M6 12h.01M18 12h.01"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="kas-title">Kas Rutin Tim (Kamis • Rp 10k)</h3>
+                            <span class="kas-subtitle">Live tracker iuran kas mingguan pengabdian</span>
+                        </div>
+                    </div>
+                    <div class="kas-header-actions">
+                        <button class="btn btn-sm btn-outline" id="btn-kas-history" type="button">Riwayat & Detail</button>
+                        <button class="btn btn-sm btn-primary" id="btn-add-kas" type="button">+ Bayar Kas</button>
+                    </div>
+                </div>
+                <div class="kas-card-body">
+                    <div class="kas-stat-box">
+                        <span class="kas-stat-label">Total Kas Terkumpul</span>
+                        <span class="kas-stat-value" id="kas-total-amount">Rp 0</span>
+                    </div>
+                    <div class="kas-stat-box">
+                        <span class="kas-stat-label">Status Minggu Ini</span>
+                        <span class="kas-status-badge badge-pending" id="kas-weekly-status">Belum Bayar</span>
+                    </div>
+                    <div class="kas-stat-box">
+                        <span class="kas-stat-label">Total Pembayaran</span>
+                        <span class="kas-stat-value" id="kas-total-count">0 kali</span>
+                    </div>
+                    <div class="kas-stat-box">
+                        <span class="kas-stat-label">Terakhir Bayar</span>
+                        <span class="kas-stat-value" id="kas-last-date">-</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Recent & Chart -->
             <div class="dashboard-grid">
                 <div class="card">
@@ -440,6 +481,71 @@
             <div class="modal-footer">
                 <button class="btn btn-ghost" id="delete-cancel">Batal</button>
                 <button class="btn btn-danger" id="delete-confirm">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== KAS MODAL (TAMBAH KAS) ===== -->
+    <div class="modal-overlay" id="kas-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="kas-modal-title">
+        <div class="modal modal-medium">
+            <div class="modal-header">
+                <h2 id="kas-modal-title">Catat Pembayaran Kas</h2>
+                <button class="btn-icon btn-ghost modal-close" id="kas-modal-close" aria-label="Tutup modal" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <form id="kas-form">
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="kas-date">Tanggal Pembayaran <span class="required" aria-hidden="true">*</span></label>
+                            <input type="date" id="kas-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="kas-amount">Nominal Kas (Rp) <span class="required" aria-hidden="true">*</span></label>
+                            <input type="number" id="kas-amount" value="10000" min="1000" step="1000" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="kas-payer">Nama Pembayar / Anggota</label>
+                        <input type="text" id="kas-payer" placeholder="Contoh: Saya / Tim PLK" value="Kas Rutin Tim">
+                    </div>
+                    <div class="form-group">
+                        <label for="kas-note">Keterangan / Catatan</label>
+                        <input type="text" id="kas-note" placeholder="Contoh: Kas Kamis Minggu ke-1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" id="kas-cancel">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="kas-submit">Simpan Pembayaran Kas</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== KAS HISTORY MODAL ===== -->
+    <div class="modal-overlay" id="kas-history-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="kas-history-modal-title">
+        <div class="modal modal-medium">
+            <div class="modal-header">
+                <h2 id="kas-history-modal-title">Riwayat Kas Rutin</h2>
+                <button class="btn-icon btn-ghost modal-close" id="kas-history-modal-close" aria-label="Tutup modal" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="kas-history-summary">
+                    <div>
+                        <span class="kas-summary-label">Total Terkumpul:</span>
+                        <strong class="kas-summary-value" id="history-total-amount">Rp 0</strong>
+                    </div>
+                    <button class="btn btn-sm btn-primary" id="btn-add-kas-from-history" type="button">+ Tambah Bayar</button>
+                </div>
+                <div class="kas-history-list" id="kas-history-list">
+                    <!-- Dynamic history items rendered by app.js -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" id="kas-history-close">Tutup</button>
             </div>
         </div>
     </div>

@@ -2653,3 +2653,291 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
     border-top: 1px dashed rgba(5, 17, 30, 0.18) !important;
   }
 }
+
+/* ==========================================================================
+   Live Kas Tracker Card Styles
+   ========================================================================== */
+.kas-tracker-card {
+  margin-top: var(--space-6);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.kas-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.kas-title-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.kas-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: rgba(52, 183, 107, 0.15);
+  color: #34b76b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kas-title {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0;
+}
+
+.kas-subtitle {
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
+}
+
+.kas-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.kas-card-body {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+.kas-stat-box {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.kas-stat-label {
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
+}
+
+.kas-stat-value {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.kas-status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  width: fit-content;
+}
+
+.kas-status-badge.badge-success {
+  background: rgba(52, 183, 107, 0.15);
+  color: #15803d;
+  border: 1px solid rgba(52, 183, 107, 0.3);
+}
+
+.kas-status-badge.badge-urgent {
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.kas-status-badge.badge-pending {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--fg-muted);
+  border: 1px solid var(--border);
+}
+
+/* History Modal Content */
+.kas-history-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--border);
+}
+
+.kas-summary-label {
+  font-size: var(--text-sm);
+  color: var(--fg-muted);
+  margin-right: 8px;
+}
+
+.kas-summary-value {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.kas-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.kas-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.kas-history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.kas-history-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.kas-history-meta {
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
+  display: flex;
+  gap: 6px;
+}
+
+.kas-history-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.kas-history-amount {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: #15803d;
+}
+
+/* Y2K Theme Overrides for Kas Tracker */
+[data-theme="y2k"] .kas-tracker-card {
+  border: 3px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 4px 4px 0 #05111E;
+  background-color: var(--bg-raised);
+}
+
+[data-theme="y2k"] .kas-icon {
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  background-color: #D97706;
+  color: #FFFFFF;
+  box-shadow: 2px 2px 0 #05111E;
+}
+
+[data-theme="y2k"] .kas-title {
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  color: var(--fg) !important;
+}
+
+[data-theme="y2k"] .kas-subtitle {
+  font-size: 0.58rem !important;
+  color: var(--fg-muted) !important;
+}
+
+[data-theme="y2k"] .kas-stat-box {
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #05111E;
+  background-color: var(--bg-raised);
+}
+
+[data-theme="y2k"] .kas-stat-label {
+  font-size: 0.56rem !important;
+  color: var(--fg-muted) !important;
+}
+
+[data-theme="y2k"] .kas-stat-value {
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  color: var(--fg) !important;
+}
+
+[data-theme="y2k"] .kas-status-badge {
+  border: 2px solid var(--fg) !important;
+  border-radius: 0 !important;
+  box-shadow: 1px 1px 0 #05111E !important;
+  font-size: 0.56rem !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="y2k"] .kas-status-badge.badge-success {
+  background-color: #15803D !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="y2k"] .kas-status-badge.badge-urgent {
+  background-color: #D97706 !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="y2k"] .kas-status-badge.badge-pending {
+  background-color: #FFFFFF !important;
+  color: var(--fg) !important;
+}
+
+[data-theme="y2k"] .kas-history-summary,
+[data-theme="y2k"] .kas-history-item {
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #05111E;
+  background-color: var(--bg-raised);
+}
+
+[data-theme="y2k"] .kas-history-title {
+  font-size: 0.68rem !important;
+  color: var(--fg) !important;
+}
+
+[data-theme="y2k"] .kas-history-meta span {
+  font-size: 0.58rem !important;
+}
+
+[data-theme="y2k"] .kas-history-amount {
+  font-size: 0.72rem !important;
+  color: #15803D !important;
+}
+
+@media (max-width: 768px) {
+  .kas-card-body {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .kas-header-actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 4px;
+  }
+}

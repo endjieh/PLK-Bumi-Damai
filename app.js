@@ -263,11 +263,14 @@
         initTheme();
         loadActivities();
         loadProfile();
+        loadKasData();
         injectSVGGradient();
         bindEvents();
         bindProfileEvents();
+        bindKasEvents();
         renderAll();
         renderProfile();
+        renderKasTracker();
         setDefaultDate();
     }
 
@@ -811,6 +814,7 @@
     // ====== Render All ======
     function renderAll() {
         try { renderDashboard(); } catch (e) { console.error('Dashboard render error:', e); }
+        try { renderKasTracker(); } catch (e) { console.error('Kas render error:', e); }
         try { renderActivitiesList(); } catch (e) { console.error('Activities render error:', e); }
         try { renderGallery(); } catch (e) { console.error('Gallery render error:', e); }
         try { renderCalendar(); } catch (e) { console.error('Calendar render error:', e); }
@@ -1524,6 +1528,285 @@
         renderProfile();
         closeProfileModal();
         showToast('Profil berhasil diperbarui!', 'success');
+    }
+
+    // ====== Live Kas Tracker Logic ======
+    const STORAGE_KEY_KAS = 'plk_tracker_kas';
+    let kasList = [];
+
+    function loadKasData() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY_KAS);
+            kasList = raw ? JSON.parse(raw) : [];
+            if (!Array.isArray(kasList)) kasList = [];
+        } catch (e) {
+            kasList = [];
+        }
+    }
+
+    function saveKasData() {
+        try {
+            localStorage.setItem(STORAGE_KEY_KAS, JSON.stringify(kasList));
+        } catch (e) {
+            console.error('Gagal menyimpan data kas:', e);
+        }
+    }
+
+    function formatRupiah(num) {
+        return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+    }
+
+    function checkKasStatusThisWeek() {
+        const today = new Date();
+        const dayOfWeek = today.getDay(); // 0 = Sun, 1 = Mon, ..., 4 = Thu
+        
+        // Start of current week (Monday)
+        const distanceToMon = (dayOfWeek + 6) % 7;
+        const mon = new Date(today);
+        mon.setDate(today.getDate() - distanceToMon);
+        mon.setHours(0, 0, 0, 0);
+
+        // End of current week (Sunday)
+        const sun = new Date(mon);
+        sun.setDate(mon.getDate() + 6);
+        sun.setHours(23, 59, 59, 999);
+
+        const paidThisWeek = kasList.some(item => {
+            if (!item.date) return false;
+            const itemDate = new Date(item.date + 'T00:00:00');
+            return itemDate >= mon && itemDate <= sun;
+        });
+
+        return {
+            isPaid: paidThisWeek,
+            isThursday: dayOfWeek === 4
+        };
+    }
+
+    function renderKasTracker() {
+        loadKasData();
+        const totalAmount = kasList.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+        const totalCount = kasList.length;
+
+        let lastDateStr = '-';
+        if (kasList.length > 0) {
+            const sorted = [...kasList].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const latestObj = new Date(sorted[0].date + 'T00:00:00');
+            lastDateStr = `${latestObj.getDate()} ${MONTHS_ID[latestObj.getMonth()].substring(0, 3)} ${latestObj.getFullYear()}`;
+        }
+
+        const totalEl = $('#kas-total-amount');
+        const statusEl = $('#kas-weekly-status');
+        const countEl = $('#kas-total-count');
+        const lastDateEl = $('#kas-last-date');
+
+        if (totalEl) totalEl.textContent = formatRupiah(totalAmount);
+        if (countEl) countEl.textContent = `${totalCount} kali`;
+        if (lastDateEl) lastDateEl.textContent = lastDateStr;
+
+        if (statusEl) {
+            const statusInfo = checkKasStatusThisWeek();
+            if (statusInfo.isPaid) {
+                statusEl.className = 'kas-status-badge badge-success';
+                statusEl.innerHTML = '✓ Minggu Ini Lunas';
+            } else if (statusInfo.isThursday) {
+                statusEl.className = 'kas-status-badge badge-urgent';
+                statusEl.innerHTML = '⚡ Hari Ini Kamis!';
+            } else {
+                statusEl.className = 'kas-status-badge badge-pending';
+                statusEl.innerHTML = 'Belum Bayar (Kamis)';
+            }
+        }
+    }
+
+    function openAddKasModal() {
+        const overlay = $('#kas-modal-overlay');
+        if (!overlay) return;
+
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const dateInput = $('#kas-date');
+        if (dateInput) dateInput.value = `${yyyy}-${mm}-${dd}`;
+
+        const amountInput = $('#kas-amount');
+        if (amountInput) amountInput.value = 10000;
+
+        const payerInput = $('#kas-payer');
+        if (payerInput && !payerInput.value) payerInput.value = 'Kas Rutin Tim';
+
+        const noteInput = $('#kas-note');
+        if (noteInput && !noteInput.value) noteInput.value = 'Kas Kamis Rutin';
+
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAddKasModal() {
+        const overlay = $('#kas-modal-overlay');
+        if (overlay) overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function openKasHistoryModal() {
+        const overlay = $('#kas-history-modal-overlay');
+        if (!overlay) return;
+
+        renderKasHistory();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeKasHistoryModal() {
+        const overlay = $('#kas-history-modal-overlay');
+        if (overlay) overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function renderKasHistory() {
+        loadKasData();
+        const listEl = $('#kas-history-list');
+        const historyTotalEl = $('#history-total-amount');
+
+        const totalAmount = kasList.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+        if (historyTotalEl) historyTotalEl.textContent = formatRupiah(totalAmount);
+
+        if (!listEl) return;
+
+        if (kasList.length === 0) {
+            listEl.innerHTML = `
+                <div class="empty-state" style="padding: 24px 12px;">
+                    <p>Belum ada riwayat iuran kas</p>
+                    <span>Klik "+ Tambah Bayar" untuk mencatat iuran pertama</span>
+                </div>
+            `;
+            return;
+        }
+
+        const sorted = [...kasList].sort((a, b) => new Date(b.date) - new Date(a.date));
+        listEl.innerHTML = '';
+
+        sorted.forEach(item => {
+            const dateObj = new Date(item.date + 'T00:00:00');
+            const dateStr = `${dateObj.getDate()} ${MONTHS_ID[dateObj.getMonth()].substring(0, 3)} ${dateObj.getFullYear()}`;
+            const dayName = DAYS_ID[dateObj.getDay()];
+
+            const row = document.createElement('div');
+            row.className = 'kas-history-item';
+            row.innerHTML = `
+                <div class="kas-history-info">
+                    <div class="kas-history-title">${escapeHtml(item.note || 'Kas Rutin')}</div>
+                    <div class="kas-history-meta">
+                        <span>${dayName}, ${dateStr}</span>
+                        <span>•</span>
+                        <span>${escapeHtml(item.payer || 'Tim PLK')}</span>
+                    </div>
+                </div>
+                <div class="kas-history-right">
+                    <span class="kas-history-amount">${formatRupiah(item.amount)}</span>
+                    <button class="btn-icon delete-btn kas-delete-btn" data-id="${item.id}" title="Hapus catatan" type="button">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                    </button>
+                </div>
+            `;
+
+            row.querySelector('.kas-delete-btn')?.addEventListener('click', () => {
+                deleteKasItem(item.id);
+            });
+
+            listEl.appendChild(row);
+        });
+    }
+
+    function deleteKasItem(id) {
+        kasList = kasList.filter(item => item.id !== id);
+        saveKasData();
+        renderKasHistory();
+        renderKasTracker();
+        showToast('Catatan kas berhasil dihapus', 'info');
+    }
+
+    function bindKasEvents() {
+        const btnAdd = $('#btn-add-kas');
+        const btnHistory = $('#btn-kas-history');
+        const btnAddFromHistory = $('#btn-add-kas-from-history');
+        
+        const modalAddOverlay = $('#kas-modal-overlay');
+        const modalAddClose = $('#kas-modal-close');
+        const modalAddCancel = $('#kas-cancel');
+        const formAdd = $('#kas-form');
+
+        const modalHistoryOverlay = $('#kas-history-modal-overlay');
+        const modalHistoryClose = $('#kas-history-modal-close');
+        const modalHistoryCancel = $('#kas-history-close');
+
+        if (btnAdd) btnAdd.addEventListener('click', openAddKasModal);
+        if (btnHistory) btnHistory.addEventListener('click', openKasHistoryModal);
+        if (btnAddFromHistory) {
+            btnAddFromHistory.addEventListener('click', () => {
+                closeKasHistoryModal();
+                openAddKasModal();
+            });
+        }
+
+        if (modalAddClose) modalAddClose.addEventListener('click', closeAddKasModal);
+        if (modalAddCancel) modalAddCancel.addEventListener('click', closeAddKasModal);
+        if (modalAddOverlay) {
+            modalAddOverlay.addEventListener('click', (e) => {
+                if (e.target === modalAddOverlay) closeAddKasModal();
+            });
+        }
+
+        if (modalHistoryClose) modalHistoryClose.addEventListener('click', closeKasHistoryModal);
+        if (modalHistoryCancel) modalHistoryCancel.addEventListener('click', closeKasHistoryModal);
+        if (modalHistoryOverlay) {
+            modalHistoryOverlay.addEventListener('click', (e) => {
+                if (e.target === modalHistoryOverlay) closeKasHistoryModal();
+            });
+        }
+
+        if (formAdd) {
+            formAdd.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const dateVal = $('#kas-date')?.value;
+                const amountVal = parseInt($('#kas-amount')?.value) || 10000;
+                const payerVal = ($('#kas-payer')?.value || '').trim() || 'Kas Rutin Tim';
+                const noteVal = ($('#kas-note')?.value || '').trim() || 'Kas Kamis Rutin';
+
+                if (!dateVal) {
+                    showToast('Tanggal pembayaran wajib diisi!', 'error');
+                    return;
+                }
+
+                const newItem = {
+                    id: 'kas_' + Date.now(),
+                    date: dateVal,
+                    amount: amountVal,
+                    payer: payerVal,
+                    note: noteVal,
+                    createdAt: Date.now()
+                };
+
+                kasList.push(newItem);
+                saveKasData();
+                renderKasTracker();
+                closeAddKasModal();
+                showToast(`Pembayaran kas ${formatRupiah(amountVal)} berhasil dicatat!`, 'success');
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const addModal = $('#kas-modal-overlay');
+                const historyModal = $('#kas-history-modal-overlay');
+                if (addModal && addModal.classList.contains('active')) closeAddKasModal();
+                if (historyModal && historyModal.classList.contains('active')) closeKasHistoryModal();
+            }
+        });
     }
 
     // ====== Start ======
