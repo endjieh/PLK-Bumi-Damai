@@ -1005,7 +1005,7 @@
             ctx.fill();
 
             ctx.fillStyle = cssVar('--fg-muted', '#64748b');
-            ctx.font = getCurrentTheme() === 'y2k' ? "6px 'Press Start 2P', monospace" : "500 10.5px 'Plus Jakarta Sans', sans-serif";
+            ctx.font = getCurrentTheme() === 'y2k' ? "9px 'Press Start 2P', monospace" : "500 10.5px 'Plus Jakarta Sans', sans-serif";
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('Belum ada data', cx, cy);
@@ -1030,12 +1030,12 @@
 
             // Center text
             ctx.fillStyle = cssVar('--fg', '#f1f5f9');
-            ctx.font = getCurrentTheme() === 'y2k' ? "12px 'Press Start 2P', monospace" : "800 22px 'Plus Jakarta Sans', sans-serif";
+            ctx.font = getCurrentTheme() === 'y2k' ? "15px 'Press Start 2P', monospace" : "800 22px 'Plus Jakarta Sans', sans-serif";
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(totalHours.toFixed(1), cx, cy - 8);
             ctx.fillStyle = cssVar('--fg-muted', '#64748b');
-            ctx.font = getCurrentTheme() === 'y2k' ? "7px 'Press Start 2P', monospace" : "500 11px 'Plus Jakarta Sans', sans-serif";
+            ctx.font = getCurrentTheme() === 'y2k' ? "9px 'Press Start 2P', monospace" : "500 11px 'Plus Jakarta Sans', sans-serif";
             ctx.fillText('Total Jam', cx, cy + 12);
         }
 

@@ -1960,62 +1960,62 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
    Font: Press Start 2P (Google Fonts pixel typeface)
    ========================================================================== */
 [data-theme="y2k"] {
-  /* Core palette â€” retro light arcade tone */
-  --bg:          #D6E8F7;
-  --bg-raised:   #F0F7FD;
-  --bg-elevated: #E1EFFB;
+  /* Core palette — retro arcade high-contrast light tone */
+  --bg:          #D4E6F6;
+  --bg-raised:   #FFFFFF;
+  --bg-elevated: #E4F0FB;
   --bg-input:    #FFFFFF;
-  --bg-sidebar:  #C4DEF4;
+  --bg-sidebar:  #BCD9F5;
 
-  --fg:          #0F253B;
-  --fg-secondary:#234768;
-  --fg-muted:    #527494;
+  --fg:          #05111E;
+  --fg-secondary:#0F2942;
+  --fg-muted:    #1A4268;
 
-  --border:      #9BC4E6;
-  --border-mid:  #72A9D6;
-  --border-focus:#4FA9E5;
+  --border:      #6B9ECF;
+  --border-mid:  #447FB8;
+  --border-focus:#0066FF;
 
-  /* Primary Accent â€” #4fa9e5 */
-  --accent:       #4FA9E5;
-  --accent-solid: #3B95D4;
-  --accent-hover: #2983C3;
-  --accent-dim:   rgba(79, 169, 229, 0.16);
-  --accent-glow:  rgba(79, 169, 229, 0.35);
+  /* Primary Accent — Electric Blue */
+  --accent:       #0075FF;
+  --accent-solid: #0056BD;
+  --accent-hover: #004294;
+  --accent-dim:   rgba(0, 117, 255, 0.16);
+  --accent-glow:  rgba(0, 117, 255, 0.35);
 
-  /* Secondary Accent â€” #fcb527 */
-  --secondary:       #FCB527;
-  --secondary-solid: #E8A215;
-  --secondary-hover: #CF8D0C;
-  --secondary-dim:   rgba(252, 181, 39, 0.18);
-  --secondary-glow:  rgba(252, 181, 39, 0.35);
+  /* Secondary Accent — Arcade Gold / Amber */
+  --secondary:       #D97706;
+  --secondary-solid: #B45309;
+  --secondary-hover: #92400E;
+  --secondary-dim:   rgba(217, 119, 6, 0.16);
+  --secondary-glow:  rgba(217, 119, 6, 0.35);
 
-  /* Category palette â€” Harmonized with primary & secondary */
-  --pre:         #FCB527;
-  --pre-dim:     rgba(252, 181, 39, 0.18);
-  --pre-border:  rgba(252, 181, 39, 0.40);
+  /* Category palette — High contrast badges & accents */
+  --pre:         #D97706;
+  --pre-dim:     rgba(217, 119, 6, 0.16);
+  --pre-border:  rgba(217, 119, 6, 0.50);
 
-  --hari:        #34B76B;
-  --hari-dim:    rgba(52, 183, 107, 0.18);
-  --hari-border: rgba(52, 183, 107, 0.40);
+  --hari:        #15803D;
+  --hari-dim:    rgba(21, 128, 61, 0.16);
+  --hari-border: rgba(21, 128, 61, 0.50);
 
-  --pra:         #4FA9E5;
-  --pra-dim:     rgba(79, 169, 229, 0.18);
-  --pra-border:  rgba(79, 169, 229, 0.40);
+  --pra:         #0284C7;
+  --pra-dim:     rgba(2, 132, 199, 0.16);
+  --pra-border:  rgba(2, 132, 199, 0.50);
 
-  --danger:      #E74C3C;
-  --danger-solid:#C0392B;
-  --danger-dim:  rgba(231, 76, 60, 0.18);
+  --danger:      #DC2626;
+  --danger-solid:#B91C1C;
+  --danger-dim:  rgba(220, 38, 38, 0.16);
 
-  /* Shadows â€” crisp 8-bit offset shadows */
-  --shadow-xs:   2px 2px 0 rgba(15, 37, 59, 0.12);
-  --shadow-sm:   3px 3px 0 rgba(15, 37, 59, 0.16);
-  --shadow-md:   4px 4px 0 rgba(15, 37, 59, 0.22);
-  --shadow-lg:   6px 6px 0 rgba(15, 37, 59, 0.28);
+  /* Shadows — crisp sharp 8-bit offset shadows */
+  --shadow-xs:   2px 2px 0 #05111E;
+  --shadow-sm:   3px 3px 0 #05111E;
+  --shadow-md:   4px 4px 0 #05111E;
+  --shadow-lg:   6px 6px 0 #05111E;
   --shadow-focus:0 0 0 3px var(--bg), 0 0 0 6px var(--accent);
 
-  --scrollbar-track: #E1EFFB;
-  --scrollbar-thumb: #9BC4E6;
-  --scrollbar-thumb-hover: #72A9D6;
+  --scrollbar-track: #E4F0FB;
+  --scrollbar-thumb: #6B9ECF;
+  --scrollbar-thumb-hover: #447FB8;
 
   --radius-sm: 0px;
   --radius-md: 0px;
@@ -2023,7 +2023,7 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   --radius-xl: 0px;
   --radius-full: 0px;
 
-  --accent-gradient: linear-gradient(to top, #4FA9E5, #FCB527);
+  --accent-gradient: linear-gradient(to top, #0075FF, #D97706);
 }
 
 /* ---- Y2K: Pixel Font Override ---- */
@@ -2054,19 +2054,20 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 [data-theme="y2k"] .btn,
 [data-theme="y2k"] .badge {
   font-family: 'Press Start 2P', monospace !important;
+  color: var(--fg);
 }
 
-/* ---- Y2K: Body background with retro checker pattern ---- */
 [data-theme="y2k"] body {
+  font-size: 0.75rem !important;
   background-color: var(--bg);
   background-image:
     linear-gradient(180deg,
-      rgba(79, 169, 229, 0.16) 0%,
+      rgba(0, 117, 255, 0.12) 0%,
       transparent 18%,
       transparent 75%,
-      rgba(252, 181, 39, 0.12) 100%),
+      rgba(217, 119, 6, 0.10) 100%),
     repeating-conic-gradient(
-      rgba(15, 37, 59, 0.035) 0% 25%,
+      rgba(5, 17, 30, 0.04) 0% 25%,
       transparent 0% 50%
     );
   background-size: 100% 100%, 16px 16px;
@@ -2086,13 +2087,14 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 [data-theme="y2k"] .activity-card {
   border: 3px solid var(--fg);
   border-radius: 0;
-  box-shadow: 4px 4px 0 rgba(15, 37, 59, 0.22);
+  background-color: var(--bg-raised);
+  box-shadow: 4px 4px 0 #05111E;
 }
 
 [data-theme="y2k"] .card:hover,
 [data-theme="y2k"] .stat-card:hover,
 [data-theme="y2k"] .activity-card:hover {
-  box-shadow: 6px 6px 0 rgba(15, 37, 59, 0.28);
+  box-shadow: 6px 6px 0 #05111E;
   transform: translate(-2px, -2px);
 }
 
@@ -2101,60 +2103,63 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   border: 3px solid var(--fg);
   border-radius: 0;
   background-color: var(--bg-raised);
-  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.18);
+  box-shadow: 3px 3px 0 #05111E;
 }
 [data-theme="y2k"] .progress-stat:hover {
   border-color: var(--secondary);
   background-color: var(--secondary-dim);
-  box-shadow: 5px 5px 0 rgba(252, 181, 39, 0.30);
+  box-shadow: 5px 5px 0 #05111E;
   transform: translate(-2px, -2px);
 }
 
-/* ---- Y2K: Buttons â€” thick border pixel style ---- */
+/* ---- Y2K: Buttons — thick border pixel style ---- */
 [data-theme="y2k"] .btn {
   border: 3px solid var(--fg);
   border-radius: 0;
-  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.22);
+  box-shadow: 3px 3px 0 #05111E;
   text-transform: uppercase;
-  font-size: 0.55rem !important;
-  letter-spacing: 0.05em;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.04em;
   transition: transform 0.1s, box-shadow 0.1s;
+  font-weight: 700;
+  padding: 10px 16px;
 }
 [data-theme="y2k"] .btn:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0 rgba(15, 37, 59, 0.28);
+  box-shadow: 5px 5px 0 #05111E;
 }
 [data-theme="y2k"] .btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 rgba(15, 37, 59, 0.18);
+  box-shadow: 1px 1px 0 #05111E;
 }
 [data-theme="y2k"] .btn-primary {
   background: var(--accent);
   border-color: var(--fg);
-  color: #FFFFFF;
-  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.25);
+  color: #FFFFFF !important;
+  box-shadow: 3px 3px 0 #05111E;
 }
 [data-theme="y2k"] .btn-primary:hover {
   background: var(--accent-solid);
   border-color: var(--fg);
-  box-shadow: 5px 5px 0 rgba(79, 169, 229, 0.40);
+  box-shadow: 5px 5px 0 #05111E;
 }
 
 /* Secondary button style if used */
 [data-theme="y2k"] .btn-secondary {
   background: var(--secondary);
   border-color: var(--fg);
-  color: var(--fg);
-  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.25);
+  color: #FFFFFF !important;
+  box-shadow: 3px 3px 0 #05111E;
 }
 [data-theme="y2k"] .btn-secondary:hover {
   background: var(--secondary-solid);
-  box-shadow: 5px 5px 0 rgba(252, 181, 39, 0.40);
+  box-shadow: 5px 5px 0 #05111E;
 }
 
 /* ---- Y2K: Sidebar ---- */
 [data-theme="y2k"] .sidebar {
   border-right: 3px solid var(--fg);
+  background-color: var(--bg-sidebar);
 }
 [data-theme="y2k"] .sidebar-header {
   border-bottom: 3px solid var(--fg);
@@ -2166,25 +2171,32 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 /* ---- Y2K: Nav items ---- */
 [data-theme="y2k"] .nav-item {
   border-radius: 0;
-  font-size: 0.55rem !important;
+  font-size: 0.68rem !important;
+  font-weight: 700;
+  color: var(--fg-secondary) !important;
+  padding: 10px 14px;
+}
+[data-theme="y2k"] .nav-item:hover {
+  color: var(--fg) !important;
+  background-color: var(--bg-elevated);
 }
 [data-theme="y2k"] .nav-item.active {
   background-color: var(--accent-dim);
-  color: var(--fg);
-  border: 2px solid var(--accent);
-  box-shadow: inset -3px 0 0 var(--secondary);
+  color: var(--fg) !important;
+  border: 2px solid var(--fg);
+  box-shadow: inset -4px 0 0 var(--secondary);
 }
 [data-theme="y2k"] .nav-item.active::before {
   display: none;
 }
 
-/* ---- Y2K: Logo icon / Profil â€” enlarged & circular pixel frame ---- */
+/* ---- Y2K: Logo icon / Profil — enlarged & circular pixel frame ---- */
 [data-theme="y2k"] .logo-icon {
   width: 64px;
   height: 64px;
   border-radius: var(--radius-full);
   border: 3px solid var(--fg);
-  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.22);
+  box-shadow: 3px 3px 0 #05111E;
   background-color: #FFFFFF;
   padding: 4px;
 }
@@ -2216,13 +2228,13 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   min-height: 84px;
 }
 
-/* ---- Y2K: Profile avatar â€” square pixel / enlarged ---- */
+/* ---- Y2K: Profile avatar — square pixel / enlarged ---- */
 [data-theme="y2k"] .profile-avatar-wrapper {
   width: 100px;
   height: 100px;
   border-radius: var(--radius-full);
   border: 3px solid var(--fg);
-  box-shadow: 4px 4px 0 rgba(15, 37, 59, 0.22);
+  box-shadow: 4px 4px 0 #05111E;
   background-color: #FFFFFF;
   padding: 5px;
 }
@@ -2234,38 +2246,42 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   display: block;
 }
 
-/* ---- Y2K: Badge â€” pixel style ---- */
+/* ---- Y2K: Badge — pixel style ---- */
 [data-theme="y2k"] .badge,
 [data-theme="y2k"] .sidebar-badge,
 [data-theme="y2k"] .profile-badge-status,
 [data-theme="y2k"] .profile-tag {
   border-radius: 0;
-  border: 2px solid currentColor;
-  font-size: 0.5rem !important;
+  border: 2px solid var(--fg);
+  font-size: 0.62rem !important;
+  font-weight: 700 !important;
+  padding: 4px 8px;
+  color: var(--fg) !important;
+  background-color: var(--bg-elevated);
 }
 
 /* ---- Y2K: Progress ring glow ---- */
 [data-theme="y2k"] .progress-ring-container {
-  filter: drop-shadow(0 0 16px rgba(255, 214, 26, 0.45));
+  filter: drop-shadow(0 0 12px rgba(217, 119, 6, 0.40));
 }
 [data-theme="y2k"] .progress-ring-bg {
-  stroke: rgba(79, 169, 229, 0.20); /* transparansi dikurangi 50% agar tidak terlalu dominan */
+  stroke: rgba(0, 117, 255, 0.22);
   stroke-width: 12;
   filter: none;
 }
 [data-theme="y2k"] .progress-ring-fill {
   stroke: url(#ring-gradient);
-  filter: drop-shadow(0 0 8px rgba(255, 214, 26, 0.85));
+  filter: drop-shadow(0 0 8px rgba(217, 119, 6, 0.70));
 }
 
-/* ---- Y2K: Progress bar â€” chunky ---- */
+/* ---- Y2K: Progress bar — chunky ---- */
 [data-theme="y2k"] .progress-bar,
 [data-theme="y2k"] .mini-progress-bar,
 [data-theme="y2k"] .stat-card-bar {
   border-radius: 0;
   border: 2px solid var(--fg);
-  height: 10px;
-  background-color: var(--bg-raised);
+  height: 12px;
+  background-color: var(--bg-elevated);
 }
 [data-theme="y2k"] .progress-bar-fill,
 [data-theme="y2k"] .mini-progress-fill,
@@ -2275,62 +2291,75 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   image-rendering: pixelated;
 }
 
-/* ---- Y2K: Text sizing adjustments for pixel font ---- */
+/* ---- Y2K: Text sizing & contrast adjustments for pixel font ---- */
 [data-theme="y2k"] .page-header h1 {
-  font-size: 1.1rem !important;
+  font-size: 1.3rem !important;
   letter-spacing: 0.02em;
+  color: var(--fg) !important;
 }
 [data-theme="y2k"] .page-subtitle {
-  font-size: 0.55rem !important;
-}
-[data-theme="y2k"] .logo-text {
-  font-size: 0.6rem !important;
-  line-height: 1.5;
-}
-[data-theme="y2k"] .logo-sub {
-  font-size: 0.45rem !important;
-}
-[data-theme="y2k"] .progress-percent {
-  font-size: 1.1rem !important;
-  color: var(--accent);
-}
-[data-theme="y2k"] .progress-label {
-  font-size: 0.45rem !important;
-}
-[data-theme="y2k"] .progress-hours {
-  font-size: 1.3rem !important;
-  color: var(--secondary);
-}
-[data-theme="y2k"] .progress-hours-label {
-  font-size: 0.5rem !important;
-  line-height: 1.8;
-}
-[data-theme="y2k"] .stat-value {
-  font-size: 0.9rem !important;
-}
-[data-theme="y2k"] .stat-label {
-  font-size: 0.45rem !important;
+  font-size: 0.65rem !important;
+  color: var(--fg-muted) !important;
   line-height: 1.6;
 }
+[data-theme="y2k"] .logo-text {
+  font-size: 0.76rem !important;
+  line-height: 1.5;
+  color: var(--fg) !important;
+}
+[data-theme="y2k"] .logo-sub {
+  font-size: 0.58rem !important;
+  color: var(--fg-muted) !important;
+}
+[data-theme="y2k"] .progress-percent {
+  font-size: 1.3rem !important;
+  color: var(--accent) !important;
+}
+[data-theme="y2k"] .progress-label {
+  font-size: 0.6rem !important;
+  color: var(--fg-muted) !important;
+}
+[data-theme="y2k"] .progress-hours {
+  font-size: 1.5rem !important;
+  color: var(--secondary) !important;
+}
+[data-theme="y2k"] .progress-hours-label {
+  font-size: 0.65rem !important;
+  line-height: 1.6;
+  color: var(--fg-muted) !important;
+}
+[data-theme="y2k"] .stat-value {
+  font-size: 1.15rem !important;
+  color: var(--fg) !important;
+}
+[data-theme="y2k"] .stat-label {
+  font-size: 0.6rem !important;
+  line-height: 1.6;
+  color: var(--fg-muted) !important;
+}
 [data-theme="y2k"] .stat-card-value {
-  font-size: 1rem !important;
+  font-size: 1.2rem !important;
+  color: var(--fg) !important;
 }
 [data-theme="y2k"] .stat-card-label {
-  font-size: 0.4rem !important;
+  font-size: 0.58rem !important;
+  color: var(--fg-muted) !important;
 }
 [data-theme="y2k"] .card-header h3 {
-  font-size: 0.58rem !important;
-  font-weight: 400 !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: var(--fg) !important;
 }
 [data-theme="y2k"] .card-link {
-  font-size: 0.48rem !important;
-  font-weight: 400 !important;
+  font-size: 0.65rem !important;
+  font-weight: 700 !important;
+  color: var(--accent) !important;
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
 [data-theme="y2k"] .card-link-arrow {
-  font-size: 0.85rem !important;
+  font-size: 0.95rem !important;
   font-family: monospace, sans-serif !important;
   font-weight: 700 !important;
   line-height: 1;
@@ -2338,82 +2367,93 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   vertical-align: middle;
 }
 
-/* ---- Y2K: Activity list items (dikurangi 1pt, seimbang & rapi) ---- */
+/* ---- Y2K: Activity list items ---- */
 [data-theme="y2k"] .activity-item {
   border: 2px solid var(--fg);
   border-radius: 0;
-  box-shadow: 2px 2px 0 rgba(15, 37, 59, 0.18);
-  padding: 10px 14px;
+  box-shadow: 2px 2px 0 #05111E;
+  padding: 12px 14px;
+  background-color: var(--bg-raised);
 }
 
 [data-theme="y2k"] .activity-name,
 [data-theme="y2k"] .activity-title {
-  font-size: 0.56rem !important;
-  font-weight: 400 !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
   line-height: 1.5 !important;
   letter-spacing: 0.02em !important;
+  color: var(--fg) !important;
 }
 
 [data-theme="y2k"] .activity-meta,
 [data-theme="y2k"] .activity-meta span {
-  font-size: 0.46rem !important;
+  font-size: 0.62rem !important;
   font-weight: 400 !important;
-  line-height: 1.4 !important;
+  line-height: 1.5 !important;
+  color: var(--fg-muted) !important;
 }
 
 [data-theme="y2k"] .activity-hours-badge {
-  font-size: 0.50rem !important;
-  font-weight: 400 !important;
+  font-size: 0.65rem !important;
+  font-weight: 700 !important;
   border-radius: 0;
   border: 2px solid var(--fg);
-  box-shadow: 1px 1px 0 rgba(15, 37, 59, 0.15);
+  box-shadow: 1px 1px 0 #05111E;
+  color: var(--fg) !important;
+  background-color: var(--bg-elevated);
 }
 
 [data-theme="y2k"] .activity-category-badge {
-  font-size: 0.46rem !important;
-  font-weight: 400 !important;
+  font-size: 0.62rem !important;
+  font-weight: 700 !important;
   border-radius: 0;
-  border: 2px solid currentColor;
+  border: 2px solid var(--fg);
+  color: var(--fg) !important;
+  background-color: #FFFFFF;
 }
 
-/* ---- Y2K: Chart distribution legend (Pre-acara, Hari-H, Pra-acara & jam â€” 1 baris rapi) ---- */
+/* ---- Y2K: Chart distribution legend ---- */
 [data-theme="y2k"] .legend-item {
   border: 2px solid var(--fg);
   border-radius: 0;
-  box-shadow: 2px 2px 0 rgba(15, 37, 59, 0.15);
-  padding: 8px 10px;
+  box-shadow: 2px 2px 0 #05111E;
+  padding: 8px 12px;
   gap: 8px;
   white-space: nowrap !important;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: var(--bg-raised);
 }
 
 [data-theme="y2k"] .legend-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 0;
+  border: 1px solid var(--fg);
   flex-shrink: 0;
 }
 
 [data-theme="y2k"] .legend-label {
   font-size: 0.56rem !important;
-  font-weight: 400 !important;
+  font-weight: 700 !important;
   white-space: nowrap !important;
   line-height: 1 !important;
   flex: 1;
+  color: var(--fg) !important;
 }
 
 [data-theme="y2k"] .legend-value {
-  font-size: 0.54rem !important;
-  font-weight: 400 !important;
+  font-size: 0.52rem !important;
+  font-weight: 700 !important;
   white-space: nowrap !important;
   line-height: 1 !important;
   flex-shrink: 0;
   margin-left: auto;
+  color: var(--fg-secondary) !important;
 }
 
-/* ---- Y2K: Form inputs (modal tambah kegiatan â€” tidak bold & ukuran pas) ---- */
+/* ---- Y2K: Form inputs ---- */
 [data-theme="y2k"] input[type="text"],
 [data-theme="y2k"] input[type="number"],
 [data-theme="y2k"] input[type="date"],
@@ -2423,32 +2463,39 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 [data-theme="y2k"] .filter-select {
   border: 3px solid var(--fg);
   border-radius: 0;
-  font-size: 0.48rem !important;
+  font-size: 0.68rem !important;
   font-weight: 400 !important;
-  box-shadow: 2px 2px 0 rgba(15, 37, 59, 0.15);
+  box-shadow: 2px 2px 0 #05111E;
+  color: var(--fg) !important;
+  background-color: var(--bg-input) !important;
+  padding: 8px 12px;
 }
 
 [data-theme="y2k"] .form-group label {
-  font-size: 0.46rem !important;
-  font-weight: 400 !important;
+  font-size: 0.62rem !important;
+  font-weight: 700 !important;
+  color: var(--fg) !important;
 }
 
 [data-theme="y2k"] .form-hint {
-  font-size: 0.40rem !important;
+  font-size: 0.56rem !important;
   font-weight: 400 !important;
+  color: var(--fg-muted) !important;
 }
 
 /* ---- Y2K: Modal ---- */
 [data-theme="y2k"] .modal {
   border: 4px solid var(--fg);
   border-radius: 0;
-  box-shadow: 6px 6px 0 rgba(15, 37, 59, 0.28);
+  box-shadow: 6px 6px 0 #05111E;
+  background-color: var(--bg-raised);
 }
 [data-theme="y2k"] .modal-header {
   border-bottom: 3px solid var(--fg);
 }
 [data-theme="y2k"] .modal-header h2 {
-  font-size: 0.65rem !important;
+  font-size: 0.85rem !important;
+  color: var(--fg) !important;
 }
 [data-theme="y2k"] .modal-footer {
   border-top: 3px solid var(--fg);
@@ -2458,8 +2505,11 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 [data-theme="y2k"] .toast {
   border: 3px solid var(--fg);
   border-radius: 0;
-  box-shadow: 3px 3px 0 rgba(15, 37, 59, 0.22);
-  font-size: 0.5rem !important;
+  box-shadow: 3px 3px 0 #05111E;
+  font-size: 0.68rem !important;
+  font-weight: 700;
+  color: var(--fg) !important;
+  background-color: #FFFFFF;
 }
 
 /* ---- Y2K: Mobile header ---- */
@@ -2467,7 +2517,8 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   border-bottom: 3px solid var(--fg);
 }
 [data-theme="y2k"] .mobile-title {
-  font-size: 0.55rem !important;
+  font-size: 0.72rem !important;
+  color: var(--fg) !important;
 }
 
 /* ---- Y2K: Calendar cells ---- */
@@ -2494,21 +2545,19 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 }
 [data-theme="y2k"] .gallery-item:hover {
   transform: translate(-2px, -2px);
-  box-shadow: 5px 5px 0 rgba(15, 37, 59, 0.25);
+  box-shadow: 5px 5px 0 #05111E;
 }
 
-
-
-/* ---- Y2K: Header layout (balanced vertical spacing) ---- */
+/* ---- Y2K: Header layout ---- */
 [data-theme="y2k"] .main-content {
-  padding-top: 40px;
+  padding-top: 64px;
 }
 [data-theme="y2k"] .page-header {
   position: relative;
   padding-top: 0;
 }
 
-/* ---- Y2K: Stat card top borders â€” pixel accents ---- */
+/* ---- Y2K: Stat card top borders ---- */
 [data-theme="y2k"] .stat-card-pre  { border-top: 4px solid var(--pre); }
 [data-theme="y2k"] .stat-card-hari { border-top: 4px solid var(--hari); }
 [data-theme="y2k"] .stat-card-pra  { border-top: 4px solid var(--pra); }
@@ -2526,8 +2575,10 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 
 /* ---- Y2K: Theme toggle row label ---- */
 [data-theme="y2k"] .theme-toggle-label {
-  font-size: 0.45rem !important;
+  font-size: 0.6rem !important;
+  color: var(--fg) !important;
 }
 [data-theme="y2k"] .mini-progress-label {
-  font-size: 0.4rem !important;
+  font-size: 0.58rem !important;
+  color: var(--fg-muted) !important;
 }
