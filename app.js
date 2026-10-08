@@ -1674,20 +1674,26 @@
         }
     }
 
-    // List of team members (saved in localStorage or auto-discovered)
+    // Fixed list of 10 team members
+    const FIXED_KAS_MEMBERS = [
+        'Farel',
+        'Zidan',
+        'Clewin',
+        'Nabil',
+        'Carissa',
+        'Nebris',
+        'Linda',
+        'Tsalis',
+        'Tanifa',
+        'Kaila'
+    ];
+
     const STORAGE_KEY_KAS_MEMBERS = 'plk_tracker_kas_members';
-    let kasMembers = [];
+    let kasMembers = [...FIXED_KAS_MEMBERS];
 
     function loadKasMembers() {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY_KAS_MEMBERS);
-            if (raw) {
-                const parsed = JSON.parse(raw);
-                if (Array.isArray(parsed)) kasMembers = parsed;
-            }
-        } catch (e) {}
-
-        // Auto-discover unique names from kasList
+        kasMembers = [...FIXED_KAS_MEMBERS];
+        // Also auto-discover any custom names from history if present
         kasList.forEach(item => {
             const payer = (item.payer || '').trim();
             if (payer && payer !== 'Kas Rutin Tim' && !kasMembers.some(m => m.toLowerCase() === payer.toLowerCase())) {
@@ -1703,18 +1709,31 @@
         } catch (e) {}
     }
 
+    // Helper: Calculate current Thursday week cycle (Thursday to Wednesday)
+    function getCurrentWeekRange() {
+        const today = new Date();
+        const dayOfWeek = today.getDay(); // 0 = Sun, 1 = Mon, ..., 4 = Thu
+        // Distance to the current week's Thursday
+        const diffToThu = (dayOfWeek + 3) % 7;
+        
+        const thuStart = new Date(today);
+        thuStart.setDate(today.getDate() - diffToThu);
+        thuStart.setHours(0, 0, 0, 0);
+
+        const wedEnd = new Date(thuStart);
+        wedEnd.setDate(thuStart.getDate() + 6);
+        wedEnd.setHours(23, 59, 59, 999);
+
+        return { start: thuStart, end: wedEnd, thuDateStr: thuStart.toISOString().slice(0, 10) };
+    }
+
     function renderKasQuickPayers() {
         loadKasMembers();
         const container = $('#kas-quick-payers');
         if (!container) return;
 
-        if (kasMembers.length === 0) {
-            container.innerHTML = '';
-            return;
-        }
-
         container.innerHTML = `
-            <span style="font-size:11px;color:var(--fg-muted);display:block;margin-top:6px;margin-bottom:2px;">Pilih Cepat Nama Anggota:</span>
+            <span style="font-size:11px;color:var(--fg-muted);display:block;margin-top:6px;margin-bottom:4px;">Pilih Nama Anggota Tim:</span>
             <div class="kas-chips-wrapper">
                 ${kasMembers.map(m => `<button type="button" class="kas-chip-btn">${escapeHtml(m)}</button>`).join('')}
             </div>
@@ -1733,34 +1752,15 @@
         const listEl = $('#kas-members-list');
         if (!listEl) return;
 
-        if (kasMembers.length === 0) {
-            listEl.innerHTML = `
-                <div class="empty-state" style="padding: 24px 12px;">
-                    <p>Belum ada daftar anggota tim</p>
-                    <span>Isi nama anggota saat mencatat pembayaran kas</span>
-                </div>
-            `;
-            return;
-        }
-
-        // Current week (Monday - Sunday)
-        const today = new Date();
-        const dayOfWeek = today.getDay();
-        const distanceToMon = (dayOfWeek + 6) % 7;
-        const mon = new Date(today);
-        mon.setDate(today.getDate() - distanceToMon);
-        mon.setHours(0, 0, 0, 0);
-
-        const sun = new Date(mon);
-        sun.setDate(mon.getDate() + 6);
-        sun.setHours(23, 59, 59, 999);
+        const weekRange = getCurrentWeekRange();
 
         listEl.innerHTML = '';
         kasMembers.forEach(memberName => {
             const memberPaidItem = kasList.find(item => {
                 if ((item.payer || '').trim().toLowerCase() !== memberName.trim().toLowerCase()) return false;
+                if (!item.date) return false;
                 const itemDate = new Date(item.date + 'T00:00:00');
-                return itemDate >= mon && itemDate <= sun;
+                return itemDate >= weekRange.start && itemDate <= weekRange.end;
             });
 
             const row = document.createElement('div');
@@ -1768,7 +1768,7 @@
             row.innerHTML = `
                 <div class="kas-member-info">
                     <span class="kas-member-name">${escapeHtml(memberName)}</span>
-                    <span class="kas-member-subtitle">${memberPaidItem ? `Lunas pada ${memberPaidItem.date}` : 'Iuran Rp 10.000 (Kamis)'}</span>
+                    <span class="kas-member-subtitle">${memberPaidItem ? `Lunas (Tgl ${memberPaidItem.date})` : 'Iuran Rp 10.000 (Kamis Ini)'}</span>
                 </div>
                 <div class="kas-member-right">
                     ${memberPaidItem ? `
@@ -1905,8 +1905,22 @@
     }
 
     function renderKasTrackerUI() {
+        loadKasMembers();
         const totalAmount = kasList.reduce((sum, item) => sum + Number(item.amount || 0), 0);
         const totalCount = kasList.length;
+
+        // Calculate paid members for current Thursday week cycle
+        const weekRange = getCurrentWeekRange();
+        let paidMembersCount = 0;
+        FIXED_KAS_MEMBERS.forEach(memberName => {
+            const hasPaid = kasList.some(item => {
+                if ((item.payer || '').trim().toLowerCase() !== memberName.toLowerCase()) return false;
+                if (!item.date) return false;
+                const itemDate = new Date(item.date + 'T00:00:00');
+                return itemDate >= weekRange.start && itemDate <= weekRange.end;
+            });
+            if (hasPaid) paidMembersCount++;
+        });
 
         let lastDateStr = '-';
         if (kasList.length > 0) {
@@ -1925,16 +1939,15 @@
         if (lastDateEl) lastDateEl.textContent = lastDateStr;
 
         if (statusEl) {
-            const statusInfo = checkKasStatusThisWeek();
-            if (statusInfo.isPaid) {
+            if (paidMembersCount === FIXED_KAS_MEMBERS.length) {
                 statusEl.className = 'kas-status-badge badge-success';
-                statusEl.innerHTML = '✓ Minggu Ini Lunas';
-            } else if (statusInfo.isThursday) {
+                statusEl.innerHTML = `✓ Lunas (${paidMembersCount}/10)`;
+            } else if (paidMembersCount > 0) {
                 statusEl.className = 'kas-status-badge badge-urgent';
-                statusEl.innerHTML = '⚡ Hari Ini Kamis!';
+                statusEl.innerHTML = `⚡ ${paidMembersCount}/10 Lunas`;
             } else {
                 statusEl.className = 'kas-status-badge badge-pending';
-                statusEl.innerHTML = 'Belum Bayar (Kamis)';
+                statusEl.innerHTML = `Belum Bayar (0/10)`;
             }
         }
     }
