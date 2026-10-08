@@ -3084,23 +3084,26 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 /* ==========================================================================
    Mobile Responsive Fixes for Kas Card & Modals (Y2K & Base)
    ========================================================================== */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   /* Fix Kas Header Action Buttons on Mobile */
-  .kas-header-actions {
+  .kas-header-actions,
+  [data-theme="y2k"] .kas-header-actions {
     display: flex !important;
     width: 100% !important;
     gap: 8px !important;
     margin-top: 8px !important;
+    box-sizing: border-box !important;
   }
 
   .kas-header-actions .btn,
   [data-theme="y2k"] .kas-header-actions .btn {
     flex: 1 1 50% !important;
     padding: 8px 4px !important;
-    font-size: 0.55rem !important;
+    font-size: 0.52rem !important;
     text-align: center !important;
     white-space: nowrap !important;
     min-width: 0 !important;
+    box-sizing: border-box !important;
   }
 
   /* Fix Kas Stat Badge Wrapping on Mobile */
@@ -3113,69 +3116,95 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
     padding: 3px 4px !important;
     text-align: center !important;
     max-width: 100% !important;
-  }
-
-  /* Fix Modals Sizing & Padding on Mobile */
-  .modal {
-    width: calc(100vw - 24px) !important;
-    max-width: 100% !important;
-    padding: 14px !important;
     box-sizing: border-box !important;
   }
 
+  /* Fix Modals Sizing & Padding on Mobile */
+  .modal,
+  [data-theme="y2k"] .modal {
+    width: calc(100vw - 20px) !important;
+    max-width: 100% !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
   /* Fix Modal Footer Buttons Overflow on Mobile */
-  .modal-footer {
+  .modal-footer,
+  [data-theme="y2k"] .modal-footer {
+    display: flex !important;
     flex-direction: column-reverse !important;
     gap: 8px !important;
     align-items: stretch !important;
     width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 10px 0 0 0 !important;
   }
 
-  .modal-footer .btn {
+  .modal-footer .btn,
+  [data-theme="y2k"] .modal-footer .btn {
     width: 100% !important;
     margin: 0 !important;
     text-align: center !important;
     justify-content: center !important;
+    box-sizing: border-box !important;
+    font-size: 0.58rem !important;
+    padding: 10px 8px !important;
   }
 
   /* Fix Kas History Summary Box Header on Mobile */
-  .kas-history-summary {
+  .kas-history-summary,
+  [data-theme="y2k"] .kas-history-summary {
+    display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 10px !important;
     padding: 10px 12px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
   }
 
-  .kas-history-summary .btn {
+  .kas-history-summary .btn,
+  [data-theme="y2k"] .kas-history-summary .btn {
     width: 100% !important;
     text-align: center !important;
     justify-content: center !important;
+    font-size: 0.58rem !important;
+    padding: 8px 6px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
   }
 
   /* Fix Kas Modal Tabs on Mobile */
-  .kas-modal-tabs {
+  .kas-modal-tabs,
+  [data-theme="y2k"] .kas-modal-tabs {
     width: 100% !important;
     gap: 4px !important;
+    display: flex !important;
   }
 
   .kas-tab-btn,
   [data-theme="y2k"] .kas-tab-btn {
     flex: 1 1 50% !important;
     padding: 8px 2px !important;
-    font-size: 0.5rem !important;
+    font-size: 0.48rem !important;
     text-align: center !important;
+    box-sizing: border-box !important;
   }
 
   /* Fix Member Checklist Rows on Mobile */
-  .kas-member-row {
+  .kas-member-row,
+  [data-theme="y2k"] .kas-member-row {
     padding: 8px 10px !important;
   }
 
-  .kas-member-right {
+  .kas-member-right,
+  [data-theme="y2k"] .kas-member-right {
     gap: 4px !important;
   }
 
-  .kas-member-right .btn {
+  .kas-member-right .btn,
+  [data-theme="y2k"] .kas-member-right .btn {
     padding: 4px 8px !important;
     font-size: 0.5rem !important;
   }
