@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,11 @@
     <title>PLK Bumi Damai — Dashboard Pengabdian</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
     <script>
-        (function() {
+        (function () {
             try {
                 var savedTheme = localStorage.getItem('plk_tracker_theme');
                 if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'y2k') {
@@ -17,11 +20,12 @@
                 } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
                     document.documentElement.setAttribute('data-theme', 'light');
                 }
-            } catch (e) {}
+            } catch (e) { }
         })();
     </script>
     <link rel="stylesheet" href="style.css?v=1.0.5">
 </head>
+
 <body>
 
     <!-- ===== SIDEBAR ===== -->
@@ -43,31 +47,43 @@
 
         <nav class="sidebar-nav" aria-labelledby="nav-section-label">
             <a href="#" class="nav-item active" data-page="dashboard" id="nav-dashboard" aria-current="page">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
                 </svg>
                 <span>Dashboard</span>
             </a>
             <a href="#" class="nav-item" data-page="activities" id="nav-activities">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
-                    <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
-                    <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="8" y1="6" x2="21" y2="6" />
+                    <line x1="8" y1="12" x2="21" y2="12" />
+                    <line x1="8" y1="18" x2="21" y2="18" />
+                    <line x1="3" y1="6" x2="3.01" y2="6" />
+                    <line x1="3" y1="12" x2="3.01" y2="12" />
+                    <line x1="3" y1="18" x2="3.01" y2="18" />
                 </svg>
                 <span>Kegiatan</span>
             </a>
             <a href="#" class="nav-item" data-page="gallery" id="nav-gallery">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-                    <polyline points="21 15 16 10 5 21"/>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
                 </svg>
                 <span>Galeri</span>
             </a>
             <a href="#" class="nav-item" data-page="calendar" id="nav-calendar">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <rect x="3" y="4" width="18" height="18" rx="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
                 <span>Kalender</span>
             </a>
@@ -79,7 +95,8 @@
                     <span>Progress Total</span>
                     <span id="sidebar-progress-text" aria-live="polite">0 / 272 jam</span>
                 </div>
-                <div class="mini-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progress total pengabdian">
+                <div class="mini-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                    aria-valuenow="0" aria-label="Progress total pengabdian">
                     <div class="mini-progress-fill" id="sidebar-progress-fill"></div>
                 </div>
             </div>
@@ -87,8 +104,9 @@
                 <span class="theme-toggle-label">Tema</span>
                 <button class="btn-icon btn-icon-sm btn-ghost" id="theme-toggle-btn"
                     aria-label="Ganti tema gelap/terang" title="Ganti Tema">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                     </svg>
                 </button>
             </div>
@@ -97,9 +115,13 @@
 
     <!-- ===== MOBILE HEADER ===== -->
     <header class="mobile-header" id="mobile-header">
-        <button class="btn-icon btn-ghost" id="menu-toggle" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="sidebar">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+        <button class="btn-icon btn-ghost" id="menu-toggle" aria-label="Buka menu navigasi" aria-expanded="false"
+            aria-controls="sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
         </button>
         <div class="mobile-title-container">
@@ -110,12 +132,16 @@
         </div>
         <div class="mobile-header-actions">
             <button class="btn-icon btn-icon-sm btn-ghost" id="theme-toggle-mobile" aria-label="Ganti tema">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
             </button>
             <button class="btn btn-primary" id="add-btn-mobile" aria-label="Tambah kegiatan baru"
                 style="height:40px;padding:0 12px;font-size:0.8125rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
                 </svg>
                 Tambah
             </button>
@@ -135,8 +161,10 @@
                 </div>
                 <div class="header-actions">
                     <button class="btn btn-primary" id="btn-add-activity">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
                         Tambah Kegiatan
                     </button>
@@ -149,8 +177,8 @@
                     <div class="progress-ring-container" aria-hidden="true">
                         <svg class="progress-ring" width="160" height="160" viewBox="0 0 200 200" role="img">
                             <title>Progress ring</title>
-                            <circle class="progress-ring-bg" cx="100" cy="100" r="85"/>
-                            <circle class="progress-ring-fill" id="progress-ring-fill" cx="100" cy="100" r="85"/>
+                            <circle class="progress-ring-bg" cx="100" cy="100" r="85" />
+                            <circle class="progress-ring-fill" id="progress-ring-fill" cx="100" cy="100" r="85" />
                         </svg>
                         <div class="progress-ring-text">
                             <span class="progress-percent" id="progress-percent">0%</span>
@@ -164,7 +192,8 @@
                             <p class="progress-hours-label">dari <strong>272 jam</strong> target</p>
                         </div>
                         <div class="progress-bar-wrapper">
-                            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progress pengabdian">
+                            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                                aria-valuenow="0" aria-label="Progress pengabdian">
                                 <div class="progress-bar-fill" id="progress-bar-fill"></div>
                             </div>
                         </div>
@@ -191,7 +220,13 @@
                 <div class="stat-card stat-card-pre">
                     <div class="stat-card-header">
                         <div class="stat-card-icon" aria-hidden="true">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
                         </div>
                         <span class="badge badge-pre-acara">Pre-acara</span>
                     </div>
@@ -207,7 +242,11 @@
                 <div class="stat-card stat-card-hari">
                     <div class="stat-card-header">
                         <div class="stat-card-icon" aria-hidden="true">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg>
                         </div>
                         <span class="badge badge-hari-h">Hari-H</span>
                     </div>
@@ -223,7 +262,11 @@
                 <div class="stat-card stat-card-pra">
                     <div class="stat-card-header">
                         <div class="stat-card-icon" aria-hidden="true">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 11 12 14 22 4" />
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                            </svg>
                         </div>
                         <span class="badge badge-pra-acara">Pra-acara</span>
                     </div>
@@ -242,19 +285,21 @@
                 <div class="kas-card-header">
                     <div class="kas-title-group">
                         <div class="kas-icon" aria-hidden="true">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="6" width="20" height="12" rx="2"/>
-                                <circle cx="12" cy="12" r="3"/>
-                                <path d="M6 12h.01M18 12h.01"/>
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="6" width="20" height="12" rx="2" />
+                                <circle cx="12" cy="12" r="3" />
+                                <path d="M6 12h.01M18 12h.01" />
                             </svg>
                         </div>
                         <div>
-                            <h3 class="kas-title">Kas Rutin Tim (Kamis • Rp 10k)</h3>
+                            <h3 class="kas-title">Kas Rutin Tim </h3>
                             <span class="kas-subtitle">Live tracker iuran kas mingguan pengabdian</span>
                         </div>
                     </div>
                     <div class="kas-header-actions">
-                        <button class="btn btn-sm btn-outline" id="btn-kas-history" type="button">Riwayat & Detail</button>
+                        <button class="btn btn-sm btn-outline" id="btn-kas-history" type="button">Riwayat &
+                            Detail</button>
                         <button class="btn btn-sm btn-primary" id="btn-add-kas" type="button">+ Bayar Kas</button>
                     </div>
                 </div>
@@ -283,11 +328,18 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>Kegiatan Terakhir</h3>
-                        <a href="#" class="card-link" id="link-all-activities">Lihat Semua <span class="card-link-arrow">→</span></a>
+                        <a href="#" class="card-link" id="link-all-activities">Lihat Semua <span
+                                class="card-link-arrow">→</span></a>
                     </div>
                     <div id="recent-activities">
                         <div class="empty-state">
-                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <line x1="12" y1="18" x2="12" y2="12" />
+                                <line x1="9" y1="15" x2="15" y2="15" />
+                            </svg>
                             <p>Belum ada kegiatan</p>
                             <span>Klik "Tambah Kegiatan" untuk memulai</span>
                         </div>
@@ -298,7 +350,8 @@
                         <h3>Distribusi Jam</h3>
                     </div>
                     <div class="chart-container">
-                        <canvas id="chart-distribution" width="240" height="240" aria-label="Grafik distribusi jam per kategori" role="img"></canvas>
+                        <canvas id="chart-distribution" width="240" height="240"
+                            aria-label="Grafik distribusi jam per kategori" role="img"></canvas>
                         <div class="chart-legend" id="chart-legend" aria-label="Legenda grafik"></div>
                     </div>
                 </div>
@@ -327,8 +380,13 @@
                 </div>
                 <div class="header-actions">
                     <div class="search-box" id="search-box">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                        <input type="text" placeholder="Cari kegiatan…" id="search-input" autocomplete="off" aria-label="Cari kegiatan">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text" placeholder="Cari kegiatan…" id="search-input" autocomplete="off"
+                            aria-label="Cari kegiatan">
                     </div>
                     <select id="filter-category" class="filter-select" aria-label="Filter kategori">
                         <option value="all">Semua Kategori</option>
@@ -337,14 +395,24 @@
                         <option value="pra-acara">Pra-acara</option>
                     </select>
                     <button class="btn btn-primary" id="btn-add-activity-2">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
                         Tambah
                     </button>
                 </div>
             </header>
             <div class="activities-list" id="activities-list" aria-live="polite">
                 <div class="empty-state">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="12" y1="18" x2="12" y2="12" />
+                        <line x1="9" y1="15" x2="15" y2="15" />
+                    </svg>
                     <p>Belum ada kegiatan</p>
                     <span>Mulai catat kegiatan pengabdianmu!</span>
                 </div>
@@ -361,7 +429,12 @@
             </header>
             <div class="gallery-grid" id="gallery-grid" aria-live="polite">
                 <div class="empty-state">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <polyline points="21 15 16 10 5 21" />
+                    </svg>
                     <p>Belum ada foto dokumentasi</p>
                     <span>Foto tampil setelah kegiatan dengan bukti foto ditambahkan</span>
                 </div>
@@ -377,11 +450,17 @@
                 </div>
                 <div class="calendar-nav" role="group" aria-label="Navigasi bulan">
                     <button class="btn-icon btn-outline" id="cal-prev" aria-label="Bulan sebelumnya">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
                     </button>
                     <span class="calendar-month" id="cal-month" aria-live="polite">Oktober 2026</span>
                     <button class="btn-icon btn-outline" id="cal-next" aria-label="Bulan berikutnya">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
                     </button>
                 </div>
             </header>
@@ -398,23 +477,31 @@
             <div class="modal-header">
                 <h2 id="modal-title">Tambah Kegiatan Baru</h2>
                 <button class="modal-close" id="modal-close" aria-label="Tutup dialog">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                 </button>
             </div>
             <form id="activity-form">
                 <div class="modal-body">
                     <input type="hidden" id="edit-id" value="">
                     <div class="form-group">
-                        <label for="activity-name">Nama Kegiatan <span class="required" aria-hidden="true">*</span></label>
-                        <input type="text" id="activity-name" placeholder="Contoh: Rapat Koordinasi Tim" required autocomplete="off">
+                        <label for="activity-name">Nama Kegiatan <span class="required"
+                                aria-hidden="true">*</span></label>
+                        <input type="text" id="activity-name" placeholder="Contoh: Rapat Koordinasi Tim" required
+                            autocomplete="off">
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="activity-date">Tanggal <span class="required" aria-hidden="true">*</span></label>
+                            <label for="activity-date">Tanggal <span class="required"
+                                    aria-hidden="true">*</span></label>
                             <input type="date" id="activity-date" required>
                         </div>
                         <div class="form-group">
-                            <label for="activity-category">Kategori <span class="required" aria-hidden="true">*</span></label>
+                            <label for="activity-category">Kategori <span class="required"
+                                    aria-hidden="true">*</span></label>
                             <select id="activity-category" required>
                                 <option value="">Pilih kategori</option>
                                 <option value="pre-acara">Pre-acara</option>
@@ -437,14 +524,22 @@
                     </div>
                     <div class="form-group">
                         <label for="activity-description">Deskripsi</label>
-                        <textarea id="activity-description" rows="3" placeholder="Deskripsi singkat kegiatan…"></textarea>
+                        <textarea id="activity-description" rows="3"
+                            placeholder="Deskripsi singkat kegiatan…"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="activity-photo">Bukti Foto</label>
-                        <div class="photo-upload" id="photo-upload" role="button" tabindex="0" aria-label="Upload foto kegiatan, klik atau drag file ke sini">
+                        <div class="photo-upload" id="photo-upload" role="button" tabindex="0"
+                            aria-label="Upload foto kegiatan, klik atau drag file ke sini">
                             <input type="file" id="activity-photo" accept="image/*" multiple hidden>
                             <div class="photo-upload-placeholder" id="photo-placeholder">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                                    aria-hidden="true">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                                    <circle cx="8.5" cy="8.5" r="1.5" />
+                                    <polyline points="21 15 16 10 5 21" />
+                                </svg>
                                 <p>Klik atau drag foto ke sini</p>
                                 <span>Maks 5 foto · JPG/PNG</span>
                             </div>
@@ -453,7 +548,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" id="btn-delete-in-modal" style="display:none;margin-right:auto;">Hapus</button>
+                    <button type="button" class="btn btn-danger" id="btn-delete-in-modal"
+                        style="display:none;margin-right:auto;">Hapus</button>
                     <button type="button" class="btn btn-ghost" id="btn-cancel">Batal</button>
                     <button type="submit" class="btn btn-primary" id="btn-submit">Simpan Kegiatan</button>
                 </div>
@@ -464,19 +560,25 @@
     <!-- ===== LIGHTBOX ===== -->
     <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Tampilan foto penuh">
         <button class="lightbox-close" id="lightbox-close" aria-label="Tutup foto">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
         </button>
         <img id="lightbox-img" src="" alt="Foto bukti kegiatan pengabdian">
     </div>
 
     <!-- ===== DELETE CONFIRM MODAL ===== -->
-    <div class="modal-overlay" id="delete-modal-overlay" role="alertdialog" aria-modal="true" aria-labelledby="delete-modal-title" aria-describedby="delete-modal-desc">
+    <div class="modal-overlay" id="delete-modal-overlay" role="alertdialog" aria-modal="true"
+        aria-labelledby="delete-modal-title" aria-describedby="delete-modal-desc">
         <div class="modal modal-small">
             <div class="modal-header">
                 <h2 id="delete-modal-title">Hapus Kegiatan?</h2>
             </div>
             <div class="modal-body">
-                <p class="delete-message" id="delete-modal-desc">Kegiatan ini akan dihapus secara permanen dan tidak dapat dikembalikan.</p>
+                <p class="delete-message" id="delete-modal-desc">Kegiatan ini akan dihapus secara permanen dan tidak
+                    dapat dikembalikan.</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-ghost" id="delete-cancel">Batal</button>
@@ -490,25 +592,33 @@
         <div class="modal modal-medium">
             <div class="modal-header">
                 <h2 id="kas-modal-title">Catat Pembayaran Kas</h2>
-                <button class="btn-icon btn-ghost modal-close" id="kas-modal-close" aria-label="Tutup modal" type="button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <button class="btn-icon btn-ghost modal-close" id="kas-modal-close" aria-label="Tutup modal"
+                    type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                 </button>
             </div>
             <form id="kas-form">
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="kas-date">Tanggal Pembayaran <span class="required" aria-hidden="true">*</span></label>
+                            <label for="kas-date">Tanggal Pembayaran <span class="required"
+                                    aria-hidden="true">*</span></label>
                             <input type="date" id="kas-date" required>
                         </div>
                         <div class="form-group">
-                            <label for="kas-amount">Nominal Kas (Rp) <span class="required" aria-hidden="true">*</span></label>
+                            <label for="kas-amount">Nominal Kas (Rp) <span class="required"
+                                    aria-hidden="true">*</span></label>
                             <input type="number" id="kas-amount" value="10000" min="1000" step="1000" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="kas-payer">Nama Pembayar / Anggota <span class="required" aria-hidden="true">*</span></label>
-                        <input type="text" id="kas-payer" placeholder="Tulis nama anggota (misal: Budi / Ahmad)" required>
+                        <label for="kas-payer">Nama Pembayar / Anggota <span class="required"
+                                aria-hidden="true">*</span></label>
+                        <input type="text" id="kas-payer" placeholder="Tulis nama anggota (misal: Budi / Ahmad)"
+                            required>
                         <div class="kas-quick-payers" id="kas-quick-payers">
                             <!-- Quick member chips dynamically rendered -->
                         </div>
@@ -527,17 +637,23 @@
     </div>
 
     <!-- ===== KAS HISTORY & MEMBER CHECKLIST MODAL ===== -->
-    <div class="modal-overlay" id="kas-history-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="kas-history-modal-title">
+    <div class="modal-overlay" id="kas-history-modal-overlay" role="dialog" aria-modal="true"
+        aria-labelledby="kas-history-modal-title">
         <div class="modal modal-medium">
             <div class="modal-header">
                 <h2 id="kas-history-modal-title">Status & Riwayat Kas Tim</h2>
-                <button class="btn-icon btn-ghost modal-close" id="kas-history-modal-close" aria-label="Tutup modal" type="button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <button class="btn-icon btn-ghost modal-close" id="kas-history-modal-close" aria-label="Tutup modal"
+                    type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="kas-modal-tabs">
-                    <button class="kas-tab-btn active" id="tab-btn-kas-status" type="button">Status Anggota (Minggu Ini)</button>
+                    <button class="kas-tab-btn active" id="tab-btn-kas-status" type="button">Status Anggota (Minggu
+                        Ini)</button>
                     <button class="kas-tab-btn" id="tab-btn-kas-history" type="button">Riwayat Transaksi</button>
                 </div>
 
@@ -546,7 +662,8 @@
                         <span class="kas-summary-label">Total Terkumpul:</span>
                         <strong class="kas-summary-value" id="history-total-amount">Rp 0</strong>
                     </div>
-                    <button class="btn btn-sm btn-primary" id="btn-add-kas-from-history" type="button">+ Catat Pembayaran</button>
+                    <button class="btn btn-sm btn-primary" id="btn-add-kas-from-history" type="button">+ Catat
+                        Pembayaran</button>
                 </div>
 
                 <!-- Tab 1: Status Pembayaran Per Anggota -->
@@ -575,4 +692,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js?v=1.0.5"></script>
 </body>
+
 </html>
