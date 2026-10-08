@@ -1009,10 +1009,17 @@
             ctx.fill();
 
             ctx.fillStyle = cssVar('--fg-muted', '#64748b');
-            ctx.font = getCurrentTheme() === 'y2k' ? "9px 'Press Start 2P', monospace" : "500 10.5px 'Plus Jakarta Sans', sans-serif";
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('Belum ada data', cx, cy);
+            if (getCurrentTheme() === 'y2k') {
+                ctx.font = "6.5px 'Press Start 2P', monospace";
+                ctx.fillText('Belum Ada', cx, cy - 5.5);
+                ctx.fillText('Data', cx, cy + 6.5);
+            } else {
+                ctx.font = "600 10px 'Plus Jakarta Sans', sans-serif";
+                ctx.fillText('Belum Ada', cx, cy - 6);
+                ctx.fillText('Data', cx, cy + 6);
+            }
         } else {
             const data = [
                 { key: 'pre-acara', value: hoursByCategory['pre-acara'], color: getCategoryColor('pre-acara') },
@@ -1775,7 +1782,7 @@
                         <span class="kas-status-badge badge-success">✓ Lunas</span>
                     ` : `
                         <span class="kas-status-badge badge-urgent">Belum Bayar</span>
-                        <button class="btn btn-xs btn-primary btn-pay-member" data-name="${escapeHtml(memberName)}" type="button">+ Bayar</button>
+                        <button class="btn btn-xs btn-primary btn-pay-member" data-name="${escapeHtml(memberName)}" type="button"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>Bayar</span></button>
                     `}
                 </div>
             `;
@@ -1904,8 +1911,182 @@
         showToast('Catatan kas berhasil dihapus', 'info');
     }
 
+    // ====== Target Kas Logic ======
+    const STORAGE_KEY_KAS_TARGET = 'plk_tracker_kas_target';
+    let kasTarget = {
+        amount: 1600000,
+        date: '2026-02-09',
+        title: 'Target Kas Acara (9 Februari)'
+    };
+
+    function loadKasTarget() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY_KAS_TARGET);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed.amount) kasTarget.amount = Number(parsed.amount);
+                if (parsed.date) kasTarget.date = parsed.date;
+                if (parsed.title) kasTarget.title = parsed.title;
+            }
+        } catch (e) {}
+    }
+
+    function saveKasTarget() {
+        try {
+            localStorage.setItem(STORAGE_KEY_KAS_TARGET, JSON.stringify(kasTarget));
+        } catch (e) {}
+    }
+
+    function renderKasProgressChart() {
+        const canvas = $('#chart-kas-progress');
+        if (!canvas) return;
+        const rect = canvas.parentElement;
+        if (!rect) return;
+        const dpr = window.devicePixelRatio || 1;
+        const w = rect.clientWidth > 0 ? rect.clientWidth : 300;
+        const h = 130;
+
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        const ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+
+        ctx.clearRect(0, 0, w, h);
+
+        const targetAmount = kasTarget.amount || 1600000;
+        const totalAmount = kasList.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+        const sortedItems = [...kasList].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        const paddingLeft = 42;
+        const paddingRight = 20;
+        const paddingTop = 22;
+        const paddingBottom = 25;
+        const chartW = w - paddingLeft - paddingRight;
+        const chartH = h - paddingTop - paddingBottom;
+
+        const isY2K = getCurrentTheme() === 'y2k';
+        const gridColor = isY2K ? 'rgba(255, 255, 255, 0.12)' : cssVar('--border', 'rgba(255,255,255,0.08)');
+        const textColor = cssVar('--fg-muted', '#64748b');
+        
+        // Green for paid accumulation, Blue for target goal path
+        const paidColor = isY2K ? '#22C55E' : cssVar('--accent', '#3DBA80');
+        const paidFill = isY2K ? 'rgba(34, 197, 94, 0.45)' : 'rgba(61, 186, 128, 0.40)';
+        const targetColor = isY2K ? '#50ABE4' : cssVar('--pra', '#50ABE4');
+
+        const maxY = Math.max(targetAmount, totalAmount * 1.15, 100000);
+
+        // Y-axis Grid & Labels (0, 50%, 100%)
+        [0, 0.5, 1].forEach(ratio => {
+            const y = paddingTop + chartH - ratio * chartH;
+            ctx.strokeStyle = gridColor;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(paddingLeft, y);
+            ctx.lineTo(paddingLeft + chartW, y);
+            ctx.stroke();
+
+            ctx.fillStyle = textColor;
+            ctx.font = isY2K ? "6px 'Press Start 2P', monospace" : "10px 'Plus Jakarta Sans', sans-serif";
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            const labelVal = Math.round((maxY * ratio) / 1000) + 'k';
+            ctx.fillText(labelVal, paddingLeft - 6, y);
+        });
+
+        // Dashed Target Line (Blue)
+        const targetY = paddingTop + chartH - (targetAmount / maxY) * chartH;
+        ctx.save();
+        ctx.setLineDash([5, 4]);
+        ctx.strokeStyle = targetColor;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(paddingLeft, targetY);
+        ctx.lineTo(paddingLeft + chartW, targetY);
+        ctx.stroke();
+        ctx.restore();
+
+        // Target Label (Blue)
+        ctx.fillStyle = targetColor;
+        ctx.font = isY2K ? "6px 'Press Start 2P', monospace" : "bold 10px 'Plus Jakarta Sans', sans-serif";
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText('Target ' + formatRupiah(targetAmount), paddingLeft + chartW, targetY - 2);
+
+        // Calculate cumulative points
+        const points = [];
+        let cumSum = 0;
+        points.push({ xPct: 0, amount: 0 });
+
+        if (sortedItems.length > 0) {
+            sortedItems.forEach((item, idx) => {
+                cumSum += Number(item.amount || 0);
+                const xPct = (idx + 1) / Math.max(sortedItems.length, 1);
+                points.push({ xPct, amount: cumSum });
+            });
+        } else {
+            points.push({ xPct: 1, amount: 0 });
+        }
+
+        // Fill Area
+        ctx.beginPath();
+        points.forEach((pt, i) => {
+            const x = paddingLeft + pt.xPct * chartW;
+            const y = paddingTop + chartH - (Math.min(pt.amount, maxY) / maxY) * chartH;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+
+        const lastX = paddingLeft + (points[points.length - 1]?.xPct || 1) * chartW;
+        ctx.lineTo(lastX, paddingTop + chartH);
+        ctx.lineTo(paddingLeft, paddingTop + chartH);
+        ctx.closePath();
+        ctx.fillStyle = paidFill;
+        ctx.fill();
+
+        // Stroke Line
+        ctx.beginPath();
+        points.forEach((pt, i) => {
+            const x = paddingLeft + pt.xPct * chartW;
+            const y = paddingTop + chartH - (Math.min(pt.amount, maxY) / maxY) * chartH;
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = paidColor;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Points
+        points.forEach(pt => {
+            const x = paddingLeft + pt.xPct * chartW;
+            const y = paddingTop + chartH - (Math.min(pt.amount, maxY) / maxY) * chartH;
+            ctx.beginPath();
+            ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+            ctx.fillStyle = paidColor;
+            ctx.fill();
+            ctx.strokeStyle = isY2K ? '#000000' : '#ffffff';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        });
+
+        // X-axis Date Labels
+        ctx.fillStyle = textColor;
+        ctx.font = isY2K ? "6px 'Press Start 2P', monospace" : "10px 'Plus Jakarta Sans', sans-serif";
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText('Mulai', paddingLeft, paddingTop + chartH + 6);
+
+        ctx.textAlign = 'right';
+        const targetDateObj = new Date(kasTarget.date + 'T00:00:00');
+        const targetDateLabel = isNaN(targetDateObj) ? '9 Feb' : `${targetDateObj.getDate()} ${MONTHS_ID[targetDateObj.getMonth()].substring(0,3)}`;
+        ctx.fillText(targetDateLabel, paddingLeft + chartW, paddingTop + chartH + 6);
+    }
+
     function renderKasTrackerUI() {
         loadKasMembers();
+        loadKasTarget();
         const totalAmount = kasList.reduce((sum, item) => sum + Number(item.amount || 0), 0);
         const totalCount = kasList.length;
 
@@ -1950,6 +2131,28 @@
                 statusEl.innerHTML = `Belum Bayar (0/10)`;
             }
         }
+
+        // Update Target Kas Progress UI
+        const targetAmount = kasTarget.amount || 1600000;
+        const pct = Math.min(Math.round((totalAmount / targetAmount) * 100), 100);
+        const remaining = Math.max(targetAmount - totalAmount, 0);
+
+        const targetTitleEl = $('#kas-target-title');
+        const targetPctEl = $('#kas-target-percent');
+        const progressBarEl = $('#kas-progress-bar');
+        const targetMetaTextEl = $('#kas-target-meta-text');
+        const targetRemainingEl = $('#kas-target-remaining');
+
+        const targetDateObj = new Date(kasTarget.date + 'T00:00:00');
+        const dateStrFormatted = isNaN(targetDateObj) ? '9 Februari' : `${targetDateObj.getDate()} ${MONTHS_ID[targetDateObj.getMonth()]}`;
+
+        if (targetTitleEl) targetTitleEl.textContent = `Target Kas Acara (${dateStrFormatted})`;
+        if (targetPctEl) targetPctEl.textContent = `${pct}%`;
+        if (progressBarEl) progressBarEl.style.width = `${pct}%`;
+        if (targetMetaTextEl) targetMetaTextEl.innerHTML = `Terkumpul: <strong>${formatRupiah(totalAmount)}</strong> dari Target <strong>${formatRupiah(targetAmount)}</strong>`;
+        if (targetRemainingEl) targetRemainingEl.innerHTML = `Sisa: <strong>${formatRupiah(remaining)}</strong>`;
+
+        renderKasProgressChart();
     }
 
     function bindKasEvents() {
@@ -1969,24 +2172,41 @@
         // Modal Tab Switching
         const btnTabStatus = $('#tab-btn-kas-status');
         const btnTabHistory = $('#tab-btn-kas-history');
+        const btnTabTarget = $('#tab-btn-kas-target');
         const tabStatus = $('#kas-tab-status');
         const tabHistory = $('#kas-tab-history');
+        const tabTarget = $('#kas-tab-target');
 
         if (btnTabStatus && btnTabHistory) {
             btnTabStatus.addEventListener('click', () => {
                 btnTabStatus.classList.add('active');
                 btnTabHistory.classList.remove('active');
+                if (btnTabTarget) btnTabTarget.classList.remove('active');
                 if (tabStatus) tabStatus.classList.add('active');
                 if (tabHistory) tabHistory.classList.remove('active');
+                if (tabTarget) tabTarget.classList.remove('active');
                 renderKasMemberChecklist();
             });
             btnTabHistory.addEventListener('click', () => {
                 btnTabHistory.classList.add('active');
                 btnTabStatus.classList.remove('active');
+                if (btnTabTarget) btnTabTarget.classList.remove('active');
                 if (tabHistory) tabHistory.classList.add('active');
                 if (tabStatus) tabStatus.classList.remove('active');
+                if (tabTarget) tabTarget.classList.remove('active');
                 renderKasHistory();
             });
+            if (btnTabTarget) {
+                btnTabTarget.addEventListener('click', () => {
+                    btnTabTarget.classList.add('active');
+                    btnTabStatus.classList.remove('active');
+                    btnTabHistory.classList.remove('active');
+                    if (tabTarget) tabTarget.classList.add('active');
+                    if (tabStatus) tabStatus.classList.remove('active');
+                    if (tabHistory) tabHistory.classList.remove('active');
+                    renderKasProgressChart();
+                });
+            }
         }
 
         if (btnAdd) btnAdd.addEventListener('click', () => openAddKasModal());
@@ -2056,12 +2276,51 @@
             });
         }
 
+        // Target Kas Modal Handlers
+        $('#btn-edit-kas-target')?.addEventListener('click', () => {
+            loadKasTarget();
+            if ($('#kas-target-amount-input')) $('#kas-target-amount-input').value = kasTarget.amount || 1600000;
+            if ($('#kas-target-date-input')) $('#kas-target-date-input').value = kasTarget.date || '2026-02-09';
+            $('#kas-target-modal-overlay')?.classList.add('active');
+        });
+
+        $('#kas-target-modal-close')?.addEventListener('click', () => {
+            $('#kas-target-modal-overlay')?.classList.remove('active');
+        });
+
+        $('#kas-target-cancel')?.addEventListener('click', () => {
+            $('#kas-target-modal-overlay')?.classList.remove('active');
+        });
+
+        $('#kas-target-modal-overlay')?.addEventListener('click', (e) => {
+            if (e.target === $('#kas-target-modal-overlay')) {
+                $('#kas-target-modal-overlay')?.classList.remove('active');
+            }
+        });
+
+        $('#kas-target-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const amt = Number($('#kas-target-amount-input')?.value) || 1600000;
+            const dt = $('#kas-target-date-input')?.value || '2026-02-09';
+            kasTarget.amount = amt;
+            kasTarget.date = dt;
+            const targetDateObj = new Date(dt + 'T00:00:00');
+            const dateStrFormatted = isNaN(targetDateObj) ? '9 Februari' : `${targetDateObj.getDate()} ${MONTHS_ID[targetDateObj.getMonth()]}`;
+            kasTarget.title = `Target Kas Acara (${dateStrFormatted})`;
+            saveKasTarget();
+            $('#kas-target-modal-overlay')?.classList.remove('active');
+            renderKasTrackerUI();
+            showToast('Target Kas berhasil diperbarui!', 'success');
+        });
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const addModal = $('#kas-modal-overlay');
                 const historyModal = $('#kas-history-modal-overlay');
+                const targetModal = $('#kas-target-modal-overlay');
                 if (addModal && addModal.classList.contains('active')) closeAddKasModal();
                 if (historyModal && historyModal.classList.contains('active')) closeKasHistoryModal();
+                if (targetModal && targetModal.classList.contains('active')) targetModal.classList.remove('active');
             }
         });
     }

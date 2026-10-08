@@ -570,6 +570,8 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  line-height: 1;
   gap: var(--space-2);
   padding: 0 var(--space-5);
   height: 44px; /* touch target */
@@ -585,6 +587,28 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
   user-select: none;
   transition: background-color 0.15s ease, border-color 0.15s ease,
               opacity 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+.btn svg {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Button Sizes */
+.btn-sm {
+  height: 36px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-md);
+  gap: 6px;
+}
+
+.btn-xs {
+  height: 30px;
+  padding: 0 10px;
+  font-size: var(--text-xs);
+  border-radius: var(--radius-sm);
+  gap: 4px;
 }
 .btn:focus-visible { box-shadow: var(--shadow-focus); }
 .btn:active { transform: scale(0.97); }
@@ -2743,11 +2767,14 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 .kas-status-badge {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  justify-content: center;
+  line-height: 1;
+  padding: 6px 12px;
   border-radius: var(--radius-full);
   font-size: var(--text-xs);
   font-weight: 700;
   width: fit-content;
+  text-align: center;
 }
 
 .kas-status-badge.badge-success {
@@ -2762,10 +2789,130 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   border: 1px solid rgba(245, 158, 11, 0.4);
 }
 
-.kas-status-badge.badge-pending {
-  background: rgba(148, 163, 184, 0.15);
+/* Kas Target & Progress Section */
+.kas-target-section {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.kas-target-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.kas-target-title-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kas-target-label {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.kas-target-percent {
+  font-size: var(--text-base);
+  font-weight: 800;
+  color: var(--accent, #3DBA80);
+}
+
+.kas-progress-track {
+  width: 100%;
+  height: 10px;
+  background: rgba(80, 171, 228, 0.22);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(80, 171, 228, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.kas-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #25804F 0%, var(--accent, #3DBA80) 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+.kas-target-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: var(--fg-secondary);
+  margin-top: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.kas-chart-wrapper {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--border);
+}
+
+.kas-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.kas-chart-title {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--fg-secondary);
+}
+
+.kas-chart-badge {
+  font-size: 11px;
   color: var(--fg-muted);
-  border: 1px solid var(--border);
+}
+
+/* Y2K Theme Overrides for Kas Target */
+[data-theme="y2k"] .kas-target-section {
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #05111E;
+  background-color: var(--bg-raised);
+}
+
+[data-theme="y2k"] .kas-progress-track {
+  border: 2px solid var(--fg);
+  border-radius: 0;
+  height: 14px;
+  background-color: rgba(0, 117, 255, 0.22);
+  overflow: hidden;
+}
+
+[data-theme="y2k"] .kas-progress-bar {
+  border-radius: 0;
+  background: #22C55E;
+}
+
+[data-theme="y2k"] .kas-target-percent {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.65rem !important;
+  color: #22C55E !important;
+}
+
+[data-theme="y2k"] .kas-target-label,
+[data-theme="y2k"] .kas-chart-title {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.60rem !important;
+}
+
+[data-theme="y2k"] .kas-target-meta,
+[data-theme="y2k"] .kas-chart-badge {
+  font-size: 0.56rem !important;
 }
 
 /* History Modal Content */
@@ -3205,7 +3352,13 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 
   .kas-member-right .btn,
   [data-theme="y2k"] .kas-member-right .btn {
-    padding: 4px 8px !important;
-    font-size: 0.5rem !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 8px !important;
+    font-size: 0.65rem !important;
+    line-height: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 }
