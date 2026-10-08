@@ -1534,7 +1534,36 @@
     const STORAGE_KEY_KAS = 'plk_tracker_kas';
     let kasList = [];
 
-    function loadKasData() {
+    async function loadKasData() {
+        const client = getSupabase();
+        if (client) {
+            try {
+                const { data, error } = await client
+                    .from('plk_kas')
+                    .select('*')
+                    .order('date', { ascending: false });
+                if (!error && data) {
+                    kasList = data.map(r => ({
+                        id: r.id,
+                        date: typeof r.date === 'string' ? r.date : String(r.date).slice(0, 10),
+                        amount: Number(r.amount) || 10000,
+                        payer: r.payer || 'Kas Rutin Tim',
+                        note: r.note || 'Kas Kamis Rutin',
+                        createdAt: r.created_at ? Date.parse(r.created_at) : Date.now()
+                    }));
+                    saveKasLocal();
+                    renderKasTrackerUI();
+                    return;
+                }
+            } catch (e) {
+                console.warn('Supabase kas fetch error, fallback local:', e);
+            }
+        }
+        readKasLocal();
+        renderKasTrackerUI();
+    }
+
+    function readKasLocal() {
         try {
             const raw = localStorage.getItem(STORAGE_KEY_KAS);
             kasList = raw ? JSON.parse(raw) : [];
@@ -1544,11 +1573,37 @@
         }
     }
 
-    function saveKasData() {
+    function saveKasLocal() {
         try {
             localStorage.setItem(STORAGE_KEY_KAS, JSON.stringify(kasList));
         } catch (e) {
-            console.error('Gagal menyimpan data kas:', e);
+            console.error('Gagal menyimpan data kas lokal:', e);
+        }
+    }
+
+    async function syncKasToSupabase(kasItem) {
+        const client = getSupabase();
+        if (!client) return;
+        try {
+            await client.from('plk_kas').upsert({
+                id: kasItem.id,
+                date: kasItem.date,
+                amount: kasItem.amount,
+                payer: kasItem.payer,
+                note: kasItem.note
+            });
+        } catch (e) {
+            console.warn('Gagal sync kas ke Supabase:', e);
+        }
+    }
+
+    async function deleteKasFromSupabase(id) {
+        const client = getSupabase();
+        if (!client) return;
+        try {
+            await client.from('plk_kas').delete().eq('id', id);
+        } catch (e) {
+            console.warn('Gagal hapus kas dari Supabase:', e);
         }
     }
 
@@ -1724,10 +1779,46 @@
 
     function deleteKasItem(id) {
         kasList = kasList.filter(item => item.id !== id);
-        saveKasData();
+        saveKasLocal();
+        deleteKasFromSupabase(id);
         renderKasHistory();
-        renderKasTracker();
+        renderKasTrackerUI();
         showToast('Catatan kas berhasil dihapus', 'info');
+    }
+
+    function renderKasTrackerUI() {
+        const totalAmount = kasList.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+        const totalCount = kasList.length;
+
+        let lastDateStr = '-';
+        if (kasList.length > 0) {
+            const sorted = [...kasList].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const latestObj = new Date(sorted[0].date + 'T00:00:00');
+            lastDateStr = `${latestObj.getDate()} ${MONTHS_ID[latestObj.getMonth()].substring(0, 3)} ${latestObj.getFullYear()}`;
+        }
+
+        const totalEl = $('#kas-total-amount');
+        const statusEl = $('#kas-weekly-status');
+        const countEl = $('#kas-total-count');
+        const lastDateEl = $('#kas-last-date');
+
+        if (totalEl) totalEl.textContent = formatRupiah(totalAmount);
+        if (countEl) countEl.textContent = `${totalCount} kali`;
+        if (lastDateEl) lastDateEl.textContent = lastDateStr;
+
+        if (statusEl) {
+            const statusInfo = checkKasStatusThisWeek();
+            if (statusInfo.isPaid) {
+                statusEl.className = 'kas-status-badge badge-success';
+                statusEl.innerHTML = '✓ Minggu Ini Lunas';
+            } else if (statusInfo.isThursday) {
+                statusEl.className = 'kas-status-badge badge-urgent';
+                statusEl.innerHTML = '⚡ Hari Ini Kamis!';
+            } else {
+                statusEl.className = 'kas-status-badge badge-pending';
+                statusEl.innerHTML = 'Belum Bayar (Kamis)';
+            }
+        }
     }
 
     function bindKasEvents() {
@@ -1792,8 +1883,9 @@
                 };
 
                 kasList.push(newItem);
-                saveKasData();
-                renderKasTracker();
+                saveKasLocal();
+                syncKasToSupabase(newItem);
+                renderKasTrackerUI();
                 closeAddKasModal();
                 showToast(`Pembayaran kas ${formatRupiah(amountVal)} berhasil dicatat!`, 'success');
             });

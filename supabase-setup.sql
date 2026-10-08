@@ -94,6 +94,23 @@ on conflict (id) do nothing;
 
 
 -- =============================================================================
+-- 2b) TABEL KAS RUTIN TIM
+-- =============================================================================
+create table if not exists public.plk_kas (
+    id          text primary key,
+    date        date not null,
+    amount      numeric not null default 10000 check (amount > 0),
+    payer       text default 'Kas Rutin Tim',
+    note        text default 'Kas Kamis Rutin',
+    created_at  timestamptz not null default now(),
+    updated_at  timestamptz not null default now()
+);
+
+create index if not exists plk_kas_date_idx
+    on public.plk_kas (date desc);
+
+
+-- =============================================================================
 -- 3) TRIGGER updated_at OTOMATIS
 -- =============================================================================
 create or replace function public.set_updated_at()
@@ -116,12 +133,18 @@ create trigger set_plk_profiles_updated_at
     before update on public.plk_profiles
     for each row execute function public.set_updated_at();
 
+drop trigger if exists set_plk_kas_updated_at on public.plk_kas;
+create trigger set_plk_kas_updated_at
+    before update on public.plk_kas
+    for each row execute function public.set_updated_at();
+
 
 -- =============================================================================
 -- 4) ROW LEVEL SECURITY — izinkan anon client (tanpa login) CRUD
 -- =============================================================================
 alter table public.activities   enable row level security;
 alter table public.plk_profiles enable row level security;
+alter table public.plk_kas      enable row level security;
 
 drop policy if exists "activities_anon_all" on public.activities;
 create policy "activities_anon_all"
@@ -133,6 +156,13 @@ create policy "activities_anon_all"
 drop policy if exists "plk_profiles_anon_all" on public.plk_profiles;
 create policy "plk_profiles_anon_all"
     on public.plk_profiles
+    to anon, authenticated
+    using (true)
+    with check (true);
+
+drop policy if exists "plk_kas_anon_all" on public.plk_kas;
+create policy "plk_kas_anon_all"
+    on public.plk_kas
     to anon, authenticated
     using (true)
     with check (true);
