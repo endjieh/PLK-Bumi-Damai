@@ -1190,6 +1190,285 @@ p  { color: var(--fg-secondary); line-height: 1.65; }
   line-height: 1.2;
 }
 
+/* --------------------------------------------------------------------------
+   Activity Heatmap — GitHub-style contribution grid
+   -------------------------------------------------------------------------- */
+.heatmap-container {
+  display: flex;
+  gap: 4px;
+  padding: var(--space-2) 0;
+  overflow: hidden;
+}
+
+.heatmap-day-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 22px; /* align with grid rows below month labels */
+  flex-shrink: 0;
+  min-width: 28px;
+}
+
+.heatmap-day-labels span {
+  height: 16px;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.heatmap-scroll-area {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+}
+
+.heatmap-month-labels {
+  display: flex;
+  gap: 0;
+  margin-bottom: 4px;
+  height: 16px;
+  position: relative;
+}
+
+.heatmap-month-labels span {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: absolute;
+  top: 0;
+}
+
+.heatmap-grid {
+  display: flex;
+  gap: 3px;
+}
+
+.heatmap-week {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.heatmap-cell {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  cursor: default;
+  position: relative;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.4);
+  z-index: 5;
+}
+
+/* Intensity levels — Dark theme */
+.heatmap-cell.level-0 {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+.heatmap-cell.level-1 {
+  background-color: rgba(45, 143, 94, 0.30);
+  border: 1px solid rgba(45, 143, 94, 0.15);
+  box-shadow: 0 0 4px rgba(45, 143, 94, 0.08);
+}
+.heatmap-cell.level-2 {
+  background-color: rgba(45, 143, 94, 0.55);
+  border: 1px solid rgba(45, 143, 94, 0.25);
+  box-shadow: 0 0 6px rgba(45, 143, 94, 0.12);
+}
+.heatmap-cell.level-3 {
+  background-color: rgba(61, 186, 128, 0.75);
+  border: 1px solid rgba(61, 186, 128, 0.35);
+  box-shadow: 0 0 8px rgba(61, 186, 128, 0.15);
+}
+.heatmap-cell.level-4 {
+  background-color: #3DBA80;
+  border: 1px solid rgba(61, 186, 128, 0.5);
+  box-shadow: 0 0 10px rgba(61, 186, 128, 0.25);
+}
+
+/* Light theme overrides */
+[data-theme="light"] .heatmap-cell.level-0 {
+  background-color: #EBEDF0;
+  border-color: #D0D7DE;
+}
+[data-theme="light"] .heatmap-cell.level-1 {
+  background-color: #9BE9A8;
+  border-color: #7DD694;
+  box-shadow: none;
+}
+[data-theme="light"] .heatmap-cell.level-2 {
+  background-color: #40C463;
+  border-color: #34A853;
+  box-shadow: none;
+}
+[data-theme="light"] .heatmap-cell.level-3 {
+  background-color: #30A14E;
+  border-color: #26853F;
+  box-shadow: none;
+}
+[data-theme="light"] .heatmap-cell.level-4 {
+  background-color: #216E39;
+  border-color: #1A5C2E;
+  box-shadow: none;
+}
+
+[data-theme="y2k"] .heatmap-cell.level-0 {
+  background-color: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--border-mid);
+  border-radius: 0;
+}
+[data-theme="y2k"] .heatmap-cell.level-1 {
+  background-color: rgba(255, 232, 56, 0.40);
+  border: 1px solid rgba(255, 232, 56, 0.50);
+  border-radius: 0;
+}
+[data-theme="y2k"] .heatmap-cell.level-2 {
+  background-color: rgba(255, 206, 26, 0.65);
+  border: 1px solid rgba(255, 206, 26, 0.75);
+  border-radius: 0;
+}
+[data-theme="y2k"] .heatmap-cell.level-3 {
+  background-color: rgba(255, 168, 0, 0.85);
+  border: 1px solid rgba(255, 168, 0, 0.95);
+  border-radius: 0;
+}
+[data-theme="y2k"] .heatmap-cell.level-4 {
+  background-color: #FFA800;
+  border: 1px solid #FF8C00;
+  border-radius: 0;
+}
+
+/* Heatmap Tooltip */
+.heatmap-cell .heatmap-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-elevated);
+  color: var(--fg);
+  border: 1px solid var(--border-mid);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 50;
+  box-shadow: var(--shadow-sm);
+}
+
+.heatmap-cell .heatmap-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--border-mid);
+}
+
+.heatmap-cell:hover .heatmap-tooltip {
+  opacity: 1;
+}
+
+/* Heatmap Footer */
+.heatmap-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+  margin-top: var(--space-2);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.heatmap-stats {
+  font-size: 11px;
+  color: var(--fg-muted);
+  font-weight: 500;
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.heatmap-stats strong {
+  color: var(--fg);
+  font-weight: 700;
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.heatmap-legend-label {
+  font-size: 10px;
+  color: var(--fg-muted);
+  font-weight: 500;
+}
+
+.heatmap-legend-cells {
+  display: flex;
+  gap: 3px;
+}
+
+.heatmap-year-label {
+  font-size: var(--text-xs);
+  color: var(--fg-muted);
+  font-weight: 600;
+}
+
+/* Heatmap cell enter animation */
+@keyframes heatmapFadeIn {
+  from { opacity: 0; transform: scale(0.6); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.heatmap-cell.animate-in {
+  animation: heatmapFadeIn 0.3s ease forwards;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 600px) {
+  .heatmap-cell {
+    width: 11px;
+    height: 11px;
+  }
+  .heatmap-day-labels {
+    min-width: 22px;
+    padding-top: 20px;
+  }
+  .heatmap-day-labels span {
+    height: 11px;
+    font-size: 8px;
+  }
+  .heatmap-grid {
+    gap: 2px;
+  }
+  .heatmap-week {
+    gap: 2px;
+  }
+  .heatmap-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 /* Empty state */
 .empty-state {
   display: flex; flex-direction: column;
@@ -2840,6 +3119,12 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   transition: width 0.4s ease;
 }
 
+[data-theme="dark"] .kas-progress-bar {
+  background: var(--accent-solid, #25804F);
+  box-shadow: none;
+  filter: none;
+}
+
 .kas-target-meta {
   display: flex;
   align-items: center;
@@ -3256,13 +3541,14 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   /* Fix Kas Stat Badge Wrapping on Mobile */
   .kas-status-badge,
   [data-theme="y2k"] .kas-status-badge {
-    white-space: normal !important;
-    word-break: break-word !important;
-    font-size: 0.5rem !important;
+    white-space: nowrap !important;
+    font-size: 0.55rem !important;
     line-height: 1.3 !important;
-    padding: 3px 4px !important;
+    padding: 3px 6px !important;
     text-align: center !important;
-    max-width: 100% !important;
+    width: max-content !important;
+    min-width: max-content !important;
+    flex-shrink: 0 !important;
     box-sizing: border-box !important;
   }
 
@@ -3348,6 +3634,21 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   .kas-member-right,
   [data-theme="y2k"] .kas-member-right {
     gap: 4px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .kas-member-info,
+  [data-theme="y2k"] .kas-member-info {
+    min-width: 0 !important;
+  }
+  
+  .kas-member-name,
+  .kas-member-subtitle,
+  [data-theme="y2k"] .kas-member-name,
+  [data-theme="y2k"] .kas-member-subtitle {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   .kas-member-right .btn,

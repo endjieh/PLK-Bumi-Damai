@@ -262,6 +262,7 @@
     function init() {
         initTheme();
         loadActivities();
+        subscribeRealtime();
         loadProfile();
         loadKasData();
         injectSVGGradient();
@@ -381,6 +382,37 @@
     }
 
     // ====== Events ======
+    function subscribeRealtime() {
+        const client = getSupabase();
+        if (!client) return;
+        const channel = client.channel('public:activities');
+        channel
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'activities' }, (payload) => {
+                const newRow = payload.new;
+                const oldRow = payload.old;
+                const type = payload.eventType;
+                if (type === 'INSERT') {
+                    activities.unshift(rowToActivity(newRow));
+                    showToast('Aktivitas baru ditambahkan (realtime)', 'info');
+                } else if (type === 'UPDATE') {
+                    const idx = activities.findIndex(a => a.id === newRow.id);
+                    if (idx > -1) activities[idx] = rowToActivity(newRow);
+                    showToast('Aktivitas diperbarui (realtime)', 'info');
+                } else if (type === 'DELETE') {
+                    activities = activities.filter(a => a.id !== oldRow.id);
+                    showToast('Aktivitas dihapus (realtime)', 'info');
+                }
+                saveActivities();
+                renderAll();
+            })
+            .subscribe((status, err) => {
+                if (status === 'SUBSCRIBED') {
+                    console.log('Supabase realtime subscribed to activities');
+                } else if (status === 'ERROR') {
+                    console.warn('Supabase realtime error:', err);
+                }
+            });
+    }
     function bindEvents() {
         // Navigation
         $$('.nav-item').forEach(item => {
@@ -887,6 +919,9 @@
 
         // Weekly chart
         renderWeeklyChart();
+
+        // Activity heatmap
+        renderHeatmap();
     }
 
     function animateNumber(element, target, suffix = '', decimals = 0) {
@@ -1120,6 +1155,195 @@
         const diff = d.getDate() - day + (day === 0 ? -6 : 1);
         d.setDate(diff);
         return d;
+    }
+
+    // ====== Activity Heatmap ======
+    function renderHeatmap() {
+        const grid = $('#heatmap-grid');
+        const dayLabelsEl = $('#heatmap-day-labels');
+        const monthLabelsEl = $('#heatmap-month-labels');
+        const statsEl = $('#heatmap-stats');
+        const yearLabel = $('#heatmap-year-label');
+        if (!grid) return;
+
+        // --- Build hours-per-day map ---
+        const hoursByDate = {};
+        activities.forEach(a => {
+            const key = a.date; // 'YYYY-MM-DD'
+            if (!hoursByDate[key]) hoursByDate[key] = 0;
+            hoursByDate[key] += a.hours;
+        });
+
+        // --- Date range: 26 weeks starting from 9 Feb 2027 ---
+        const targetStartDate = new Date(2027, 1, 9); // 1 = Feb (0-indexed)
+        targetStartDate.setHours(0, 0, 0, 0);
+        const totalWeeks = 26;
+
+        // Find the Sunday that starts the first week
+        const startDay = new Date(targetStartDate);
+        startDay.setDate(startDay.getDate() - startDay.getDay());
+        
+        // Calculate end day based on total weeks
+        const endDay = new Date(startDay);
+        endDay.setDate(endDay.getDate() + (totalWeeks * 7) - 1);
+
+        // Year label
+        if (yearLabel) {
+            const y1 = startDay.getFullYear();
+            const y2 = endDay.getFullYear();
+            yearLabel.textContent = y1 === y2 ? String(y1) : `${y1}–${y2}`;
+        }
+
+        // --- Day labels (Sun-Sat, show Mon/Wed/Fri) ---
+        const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+        dayLabelsEl.innerHTML = '';
+        dayNames.forEach((name) => {
+            const span = document.createElement('span');
+            span.textContent = name;
+            dayLabelsEl.appendChild(span);
+        });
+
+        // --- Build weeks ---
+        grid.innerHTML = '';
+        const weeks = [];
+        let cursor = new Date(startDay);
+
+        while (cursor <= endDay) {
+            const week = [];
+            for (let d = 0; d < 7; d++) {
+                const cellDate = new Date(cursor);
+                if (cellDate <= endDay) {
+                    const key = cellDate.getFullYear() + '-' +
+                        String(cellDate.getMonth() + 1).padStart(2, '0') + '-' +
+                        String(cellDate.getDate()).padStart(2, '0');
+                    week.push({ date: cellDate, key, hours: hoursByDate[key] || 0 });
+                } else {
+                    week.push(null); // future
+                }
+                cursor.setDate(cursor.getDate() + 1);
+            }
+            weeks.push(week);
+        }
+
+        // --- Intensity level ---
+        function getLevel(hours) {
+            if (hours <= 0) return 0;
+            if (hours < 1) return 1;
+            if (hours < 3) return 2;
+            if (hours < 5) return 3;
+            return 4;
+        }
+
+        // --- Month labels ---
+        monthLabelsEl.innerHTML = '';
+        const cellSize = 16;
+        const cellGap = 3;
+        let lastMonth = -1;
+        weeks.forEach((week, wi) => {
+            const firstValid = week.find(c => c !== null);
+            if (firstValid) {
+                const m = firstValid.date.getMonth();
+                if (m !== lastMonth) {
+                    lastMonth = m;
+                    const span = document.createElement('span');
+                    span.textContent = MONTHS_ID[m].substring(0, 3);
+                    span.style.left = (wi * (cellSize + cellGap)) + 'px';
+                    monthLabelsEl.appendChild(span);
+                }
+            }
+        });
+
+        // --- Render cells ---
+        let cellIndex = 0;
+        let activeDays = 0;
+        let maxDay = 0;
+        let currentStreak = 0;
+        let longestStreak = 0;
+        let tempStreak = 0;
+
+        // For streak calculation, sort dates
+        const allDates = [];
+
+        weeks.forEach(week => {
+            const col = document.createElement('div');
+            col.className = 'heatmap-week';
+
+            week.forEach(cell => {
+                const el = document.createElement('div');
+                el.className = 'heatmap-cell';
+
+                if (cell === null) {
+                    el.classList.add('level-0');
+                    el.style.opacity = '0';
+                    el.style.pointerEvents = 'none';
+                } else {
+                    const level = getLevel(cell.hours);
+                    el.classList.add(`level-${level}`);
+
+                    if (cell.hours > 0) {
+                        activeDays++;
+                        if (cell.hours > maxDay) maxDay = cell.hours;
+                    }
+                    allDates.push({ date: cell.date, hours: cell.hours });
+
+                    // Tooltip
+                    const dateStr = `${cell.date.getDate()} ${MONTHS_ID[cell.date.getMonth()]} ${cell.date.getFullYear()}`;
+                    const hoursStr = cell.hours > 0 ? `${cell.hours.toFixed(1)} jam` : 'Tidak ada kegiatan';
+                    const tooltip = document.createElement('span');
+                    tooltip.className = 'heatmap-tooltip';
+                    tooltip.textContent = `${hoursStr} — ${dateStr}`;
+                    el.appendChild(tooltip);
+
+                    // Staggered animation
+                    el.style.opacity = '0';
+                    const delay = cellIndex * 1.5;
+                    el.style.animationDelay = delay + 'ms';
+                    el.classList.add('animate-in');
+                }
+
+                col.appendChild(el);
+                cellIndex++;
+            });
+
+            grid.appendChild(col);
+        });
+
+        // --- Calculate streaks ---
+        allDates.sort((a, b) => a.date - b.date);
+        tempStreak = 0;
+        for (let i = 0; i < allDates.length; i++) {
+            if (allDates[i].hours > 0) {
+                tempStreak++;
+                if (tempStreak > longestStreak) longestStreak = tempStreak;
+            } else {
+                tempStreak = 0;
+            }
+        }
+        // Current streak (from today backwards)
+        currentStreak = 0;
+        for (let i = allDates.length - 1; i >= 0; i--) {
+            if (allDates[i].hours > 0) {
+                currentStreak++;
+            } else {
+                break;
+            }
+        }
+
+        // --- Footer stats ---
+        if (statsEl) {
+            statsEl.innerHTML = `
+                <span><strong>${activeDays}</strong> hari aktif</span>
+                <span>Terbanyak: <strong>${maxDay.toFixed(1)} jam</strong>/hari</span>
+                <span>Streak saat ini: <strong>${currentStreak} hari</strong></span>
+                <span>Streak terpanjang: <strong>${longestStreak} hari</strong></span>
+            `;
+        }
+
+        // Scroll to the end (most recent)
+        const scrollArea = grid.closest('.heatmap-scroll-area');
+        if (scrollArea) {
+            setTimeout(() => { scrollArea.scrollLeft = scrollArea.scrollWidth; }, 100);
+        }
     }
 
     // ====== Activities List ======
