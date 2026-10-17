@@ -1048,9 +1048,16 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             if (getCurrentTheme() === 'y2k') {
-                ctx.font = "6.5px 'Press Start 2P', monospace";
-                ctx.fillText('Belum Ada', cx, cy - 5.5);
-                ctx.fillText('Data', cx, cy + 6.5);
+                let fontSize = 8.5;
+                ctx.font = `${fontSize}px 'Press Start 2P', monospace`;
+                const textWidth = ctx.measureText('Belum Ada').width;
+                const maxAllowedWidth = innerRadius * 1.55;
+                if (textWidth > maxAllowedWidth && textWidth > 0) {
+                    fontSize = Math.floor(fontSize * (maxAllowedWidth / textWidth) * 10) / 10;
+                    ctx.font = `${fontSize}px 'Press Start 2P', monospace`;
+                }
+                ctx.fillText('Belum Ada', cx, cy - 7);
+                ctx.fillText('Data', cx, cy + 8);
             } else {
                 ctx.font = "600 10px 'Plus Jakarta Sans', sans-serif";
                 ctx.fillText('Belum Ada', cx, cy - 6);
