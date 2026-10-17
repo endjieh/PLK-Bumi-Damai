@@ -820,6 +820,10 @@
             </div>
             <form id="kas-login-form">
                 <div class="modal-body">
+                    <div class="kas-auth-tabs" style="display:flex; background:rgba(255,255,255,0.06); border-radius:8px; padding:3px; margin-bottom:14px; gap:4px; border:1px solid rgba(255,255,255,0.1);">
+                        <button type="button" class="kas-auth-tab-btn active" id="tab-auth-login" style="flex:1; padding:7px; border-radius:6px; border:none; background:var(--accent,#3dba80); color:#fff; font-size:12px; font-weight:600; cursor:pointer;">Masuk</button>
+                        <button type="button" class="kas-auth-tab-btn" id="tab-auth-register" style="flex:1; padding:7px; border-radius:6px; border:none; background:transparent; color:#94a3b8; font-size:12px; font-weight:600; cursor:pointer;">Daftar Akun Baru</button>
+                    </div>
                     <div id="kas-login-error" class="kas-login-alert" style="display:none;"></div>
                     <div class="form-group" style="margin-bottom: 14px;">
                         <label for="kas-login-email">Email Bendahara <span class="required" aria-hidden="true">*</span></label>
@@ -827,9 +831,17 @@
                     </div>
                     <div class="form-group" style="margin-bottom: 8px;">
                         <label for="kas-login-password">Kata Sandi <span class="required" aria-hidden="true">*</span></label>
-                        <input type="password" id="kas-login-password" class="form-control" placeholder="••••••••" autocomplete="current-password" required>
+                        <div class="password-input-wrapper" style="position:relative; display:flex; align-items:center;">
+                            <input type="password" id="kas-login-password" class="form-control" placeholder="••••••••" autocomplete="current-password" required style="padding-right:42px;">
+                            <button type="button" id="btn-toggle-kas-password" class="btn-icon btn-ghost" style="position:absolute; right:6px; color:#cbd5e1; width:32px; height:32px; padding:0; display:flex; align-items:center; justify-content:center; border:none; background:transparent; cursor:pointer;" aria-label="Lihat kata sandi">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <small style="color:var(--fg-muted); font-size:11px; display:block; margin-top:6px; line-height:1.4;">
+                    <small style="color:#94a3b8; font-size:11px; display:block; margin-top:6px; line-height:1.4;">
                         Akun ini terdaftar di Supabase Auth untuk mengamankan data transaksi kas tim.
                     </small>
                 </div>

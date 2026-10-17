@@ -2662,6 +2662,44 @@
             });
         }
 
+        // Auth Modal Mode (Login vs Register)
+        let authModalMode = 'login';
+        const tabAuthLogin = $('#tab-auth-login');
+        const tabAuthRegister = $('#tab-auth-register');
+        const modalTitle = $('#kas-login-modal-title');
+
+        if (tabAuthLogin && tabAuthRegister) {
+            tabAuthLogin.addEventListener('click', () => {
+                authModalMode = 'login';
+                tabAuthLogin.classList.add('active');
+                tabAuthLogin.style.background = 'var(--accent, #3dba80)';
+                tabAuthLogin.style.color = '#ffffff';
+                tabAuthRegister.classList.remove('active');
+                tabAuthRegister.style.background = 'transparent';
+                tabAuthRegister.style.color = '#94a3b8';
+                if (modalTitle) modalTitle.textContent = 'Login Bendahara';
+                const btnText = $('#kas-login-submit')?.querySelector('.btn-text');
+                if (btnText) btnText.textContent = 'Masuk';
+                const errEl = $('#kas-login-error');
+                if (errEl) errEl.style.display = 'none';
+            });
+
+            tabAuthRegister.addEventListener('click', () => {
+                authModalMode = 'register';
+                tabAuthRegister.classList.add('active');
+                tabAuthRegister.style.background = 'var(--accent, #3dba80)';
+                tabAuthRegister.style.color = '#ffffff';
+                tabAuthLogin.classList.remove('active');
+                tabAuthLogin.style.background = 'transparent';
+                tabAuthLogin.style.color = '#94a3b8';
+                if (modalTitle) modalTitle.textContent = 'Daftar Akun Bendahara';
+                const btnText = $('#kas-login-submit')?.querySelector('.btn-text');
+                if (btnText) btnText.textContent = 'Daftar Akun Baru';
+                const errEl = $('#kas-login-error');
+                if (errEl) errEl.style.display = 'none';
+            });
+        }
+
         if (formLogin) {
             formLogin.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -2675,6 +2713,14 @@
                 if (!email || !password) {
                     if (errEl) {
                         errEl.textContent = 'Email dan kata sandi wajib diisi!';
+                        errEl.style.display = 'block';
+                    }
+                    return;
+                }
+
+                if (password.length < 6) {
+                    if (errEl) {
+                        errEl.textContent = 'Kata sandi minimal 6 karakter!';
                         errEl.style.display = 'block';
                     }
                     return;
@@ -2695,34 +2741,66 @@
                 if (errEl) errEl.style.display = 'none';
 
                 try {
-                    const { data, error } = await client.auth.signInWithPassword({
-                        email: email,
-                        password: password
-                    });
+                    let authData = null;
 
-                    if (error) {
-                        let errMsg = error.message;
-                        if (errMsg.includes('Invalid login credentials')) {
-                            errMsg = 'Email atau kata sandi salah. Pastikan akun sudah dibuat di Supabase Auth.';
-                        } else if (errMsg.includes('Email not confirmed')) {
-                            errMsg = 'Email belum dikonfirmasi di Supabase.';
+                    if (authModalMode === 'register') {
+                        const { data, error } = await client.auth.signUp({
+                            email: email,
+                            password: password
+                        });
+
+                        if (error) {
+                            let errMsg = error.message;
+                            if (errMsg.includes('Password should be at least')) {
+                                errMsg = 'Kata sandi minimal 6 karakter.';
+                            } else if (errMsg.includes('already registered')) {
+                                errMsg = 'Email sudah terdaftar. Silakan pilih tab "Masuk".';
+                            }
+                            if (errEl) {
+                                errEl.textContent = errMsg;
+                                errEl.style.display = 'block';
+                            }
+                            showToast(errMsg, 'error');
+                            return;
                         }
-                        if (errEl) {
-                            errEl.textContent = errMsg;
-                            errEl.style.display = 'block';
+
+                        if (data?.user && !data?.session) {
+                            showToast('Akun berhasil didaftarkan! Silakan coba masuk sekarang.', 'success');
+                            tabAuthLogin?.click();
+                            return;
                         }
-                        showToast(errMsg, 'error');
-                        return;
+                        authData = data;
+                    } else {
+                        const { data, error } = await client.auth.signInWithPassword({
+                            email: email,
+                            password: password
+                        });
+
+                        if (error) {
+                            let errMsg = error.message;
+                            if (errMsg.includes('Invalid login credentials')) {
+                                errMsg = 'Email atau kata sandi salah. Jika belum punya akun, klik tab "Daftar Akun Baru".';
+                            } else if (errMsg.includes('Email not confirmed')) {
+                                errMsg = 'Email belum dikonfirmasi di Supabase.';
+                            }
+                            if (errEl) {
+                                errEl.textContent = errMsg;
+                                errEl.style.display = 'block';
+                            }
+                            showToast(errMsg, 'error');
+                            return;
+                        }
+                        authData = data;
                     }
 
-                    if (data?.user) {
-                        currentBendaharaUser = data.user;
+                    if (authData?.user) {
+                        currentBendaharaUser = authData.user;
                         closeKasLoginModal();
                         updateKasAuthUI();
                         renderKasMemberChecklist();
                         renderKasHistory();
                         renderKasTrackerUI();
-                        showToast(`Selamat datang, Bendahara (${data.user.email})!`, 'success');
+                        showToast(`Selamat datang, Bendahara (${authData.user.email})!`, 'success');
                         formLogin.reset();
                     }
                 } catch (err) {
@@ -2735,6 +2813,28 @@
                     if (btnText) btnText.style.display = '';
                     if (btnSpinner) btnSpinner.style.display = 'none';
                 }
+            });
+        }
+
+        // Toggle Password Visibility in Login Modal
+        const btnTogglePw = $('#btn-toggle-kas-password');
+        const pwInput = $('#kas-login-password');
+        if (btnTogglePw && pwInput) {
+            btnTogglePw.addEventListener('click', () => {
+                const isPw = pwInput.type === 'password';
+                pwInput.type = isPw ? 'text' : 'password';
+                btnTogglePw.setAttribute('aria-label', isPw ? 'Sembunyikan kata sandi' : 'Lihat kata sandi');
+                btnTogglePw.innerHTML = isPw ? `
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                ` : `
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                `;
             });
         }
 
