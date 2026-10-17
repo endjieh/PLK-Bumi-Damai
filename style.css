@@ -3026,9 +3026,9 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 
 /* Kas Auth & Bendahara Login */
 .btn-kas-login-trigger {
-  color: #ffffff !important;
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -3036,9 +3036,19 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   transition: all 0.15s ease;
 }
 .btn-kas-login-trigger:hover {
-  color: #ffffff !important;
-  background-color: rgba(255, 255, 255, 0.16) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="light"] .btn-kas-login-trigger {
+  color: var(--fg) !important;
+  background-color: var(--bg-elevated) !important;
+  border: 1px solid var(--border-mid) !important;
+}
+[data-theme="light"] .btn-kas-login-trigger:hover {
+  background-color: var(--bg-input) !important;
+  border-color: var(--fg-muted) !important;
 }
 
 .kas-auth-badge {
@@ -3201,14 +3211,127 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   font-weight: 600 !important;
 }
 
-/* Y2K theme overrides for Kas Auth */
+/* Y2K theme overrides for Kas Auth & Header Action Buttons */
+[data-theme="y2k"] .kas-header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+/* Y2K: Login Bendahara Button (High visibility arcade gold) */
+[data-theme="y2k"] .btn-kas-login-trigger,
+[data-theme="y2k"] #btn-kas-login {
+  background-color: #FFD000 !important;
+  color: #05111E !important;
+  border: 3px solid #05111E !important;
+  border-radius: 0 !important;
+  box-shadow: 3px 3px 0 #05111E !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.62rem !important;
+  font-weight: 700 !important;
+  padding: 8px 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  letter-spacing: 0.02em !important;
+  transition: transform 0.1s, box-shadow 0.1s !important;
+}
+
+[data-theme="y2k"] .btn-kas-login-trigger svg,
+[data-theme="y2k"] #btn-kas-login svg {
+  stroke: #05111E !important;
+  color: #05111E !important;
+  width: 14px !important;
+  height: 14px !important;
+  flex-shrink: 0 !important;
+}
+
+[data-theme="y2k"] .btn-kas-login-trigger:hover,
+[data-theme="y2k"] #btn-kas-login:hover {
+  background-color: #FFE600 !important;
+  color: #05111E !important;
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 5px 5px 0 #05111E !important;
+}
+
+[data-theme="y2k"] .btn-kas-login-trigger:active,
+[data-theme="y2k"] #btn-kas-login:active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 1px 1px 0 #05111E !important;
+}
+
+/* Y2K: Riwayat & Detail Button (High visibility crisp retro white) */
+[data-theme="y2k"] #btn-kas-history {
+  background-color: #FFFFFF !important;
+  color: #05111E !important;
+  border: 3px solid #05111E !important;
+  border-radius: 0 !important;
+  box-shadow: 3px 3px 0 #05111E !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.62rem !important;
+  font-weight: 700 !important;
+  padding: 8px 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  letter-spacing: 0.02em !important;
+  transition: transform 0.1s, box-shadow 0.1s !important;
+}
+
+[data-theme="y2k"] #btn-kas-history:hover {
+  background-color: #E2E8F0 !important;
+  color: #05111E !important;
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 5px 5px 0 #05111E !important;
+}
+
+[data-theme="y2k"] #btn-kas-history:active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 1px 1px 0 #05111E !important;
+}
+
+/* Y2K: Bayar Kas Button */
+[data-theme="y2k"] #btn-add-kas {
+  background-color: #22C55E !important;
+  color: #FFFFFF !important;
+  border: 3px solid #05111E !important;
+  border-radius: 0 !important;
+  box-shadow: 3px 3px 0 #05111E !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.62rem !important;
+  font-weight: 700 !important;
+  padding: 8px 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+}
+
+[data-theme="y2k"] #btn-add-kas:hover {
+  background-color: #16A34A !important;
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 5px 5px 0 #05111E !important;
+}
+
 [data-theme="y2k"] .kas-auth-badge {
   font-family: 'Press Start 2P', monospace;
   font-size: 7px;
-  border: 2px solid #22c55e;
+  border: 3px solid var(--fg);
   border-radius: 0;
-  background: #000;
-  color: #22c55e;
+  box-shadow: 3px 3px 0 #05111E;
+  background: #FFE600;
+  color: #05111E;
 }
 
 [data-theme="y2k"] .btn-kas-logout {
@@ -3761,6 +3884,8 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
     white-space: nowrap !important;
     min-width: 0 !important;
     box-sizing: border-box !important;
+    border: 3px solid #05111E !important;
+    box-shadow: 2px 2px 0 #05111E !important;
   }
 
   .kas-header-actions .kas-auth-badge,
