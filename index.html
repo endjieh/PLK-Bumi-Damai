@@ -319,12 +319,12 @@
                         <span class="kas-stat-value" id="kas-total-amount">Rp 0</span>
                     </div>
                     <div class="kas-stat-box">
-                        <span class="kas-stat-label">Target (9 Feb)</span>
-                        <span class="kas-stat-value" id="kas-target-amount-display">Rp 1.600.000</span>
+                        <span class="kas-stat-label" id="kas-target-stat-label">Target (Akhir Juni 2027)</span>
+                        <span class="kas-stat-value" id="kas-target-amount-display">Rp 3.600.000</span>
                     </div>
                     <div class="kas-stat-box">
                         <span class="kas-stat-label">Sisa Target</span>
-                        <span class="kas-stat-value" id="kas-remaining-display">Rp 1.600.000</span>
+                        <span class="kas-stat-value" id="kas-remaining-display">Rp 3.600.000</span>
                     </div>
                     <div class="kas-stat-box">
                         <span class="kas-stat-label">Status Minggu Ini</span>
@@ -336,7 +336,7 @@
                 <div class="kas-target-section">
                     <div class="kas-target-header">
                         <div class="kas-target-title-group">
-                            <span class="kas-target-badge">🎯 <span id="kas-target-title">Target Acara 9 Feb</span></span>
+                            <span class="kas-target-badge">🎯 <span id="kas-target-title">Target Kas (30 Juni 2027)</span></span>
                             <button class="btn-icon btn-icon-sm btn-ghost" id="btn-edit-kas-target" title="Ubah Target Kas" type="button">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -748,7 +748,7 @@
                     <div class="kas-chart-container" style="padding: 12px; background: var(--bg-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
                         <div class="kas-chart-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
                             <div>
-                                <span class="kas-chart-title" style="font-size: var(--text-sm); font-weight: 700; color: var(--fg);">Grafik Akumulasi Kas (s/d 9 Feb)</span>
+                                <span class="kas-chart-title" id="kas-chart-modal-title" style="font-size: var(--text-sm); font-weight: 700; color: var(--fg);">Grafik Akumulasi Kas (s/d Akhir Juni 2027)</span>
                                 <span style="display:block; font-size: 11px; color: var(--fg-muted);">Perkembangan pengumpulan kas tim menuju target</span>
                             </div>
                             <span class="kas-chart-badge" style="font-size: 11px; background: var(--bg-input); padding: 4px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border);">10 anggota • Rp 10.000/minggu</span>
@@ -767,7 +767,7 @@
     <div class="modal-overlay" id="kas-target-modal-overlay">
         <div class="modal" id="kas-target-modal">
             <div class="modal-header">
-                <h3>Pengaturan Target Kas Acara</h3>
+                <h3>Pengaturan Target Kas Tim</h3>
                 <button class="btn-icon btn-ghost modal-close" id="kas-target-modal-close" aria-label="Tutup modal" type="button">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18" />
@@ -779,12 +779,12 @@
                 <div class="modal-body">
                     <div class="form-group" style="margin-bottom: 16px;">
                         <label for="kas-target-amount-input">Target Nominal Kas (Rp)</label>
-                        <input type="number" id="kas-target-amount-input" class="form-control" value="1600000" min="10000" step="10000" required>
-                        <small style="color: var(--fg-muted); font-size: 11px; margin-top: 4px; display: block;">Estimasi: 10 anggota × Rp 10.000/minggu × jumlah minggu</small>
+                        <input type="number" id="kas-target-amount-input" class="form-control" value="3600000" min="10000" step="10000" required>
+                        <small style="color: var(--fg-muted); font-size: 11px; margin-top: 4px; display: block;">Estimasi: 10 anggota × Rp 10.000/minggu hingga target tercapai</small>
                     </div>
                     <div class="form-group">
-                        <label for="kas-target-date-input">Tanggal Target Acara</label>
-                        <input type="date" id="kas-target-date-input" class="form-control" value="2026-02-09" required>
+                        <label for="kas-target-date-input">Tanggal Target Kas</label>
+                        <input type="date" id="kas-target-date-input" class="form-control" value="2027-06-30" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -820,10 +820,6 @@
             </div>
             <form id="kas-login-form">
                 <div class="modal-body">
-                    <div class="kas-auth-tabs" style="display:flex; background:rgba(255,255,255,0.06); border-radius:8px; padding:3px; margin-bottom:14px; gap:4px; border:1px solid rgba(255,255,255,0.1);">
-                        <button type="button" class="kas-auth-tab-btn active" id="tab-auth-login" style="flex:1; padding:7px; border-radius:6px; border:none; background:var(--accent,#3dba80); color:#fff; font-size:12px; font-weight:600; cursor:pointer;">Masuk</button>
-                        <button type="button" class="kas-auth-tab-btn" id="tab-auth-register" style="flex:1; padding:7px; border-radius:6px; border:none; background:transparent; color:#94a3b8; font-size:12px; font-weight:600; cursor:pointer;">Daftar Akun Baru</button>
-                    </div>
                     <div id="kas-login-error" class="kas-login-alert" style="display:none;"></div>
                     <div class="form-group" style="margin-bottom: 14px;">
                         <label for="kas-login-email">Email Bendahara <span class="required" aria-hidden="true">*</span></label>

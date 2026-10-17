@@ -2257,9 +2257,9 @@
     // ====== Target Kas Logic ======
     const STORAGE_KEY_KAS_TARGET = 'plk_tracker_kas_target';
     let kasTarget = {
-        amount: 1600000,
-        date: '2026-02-09',
-        title: 'Target Kas Acara (9 Februari)'
+        amount: 3600000,
+        date: '2027-06-30',
+        title: 'Target Kas (Akhir Juni 2027)'
     };
 
     function loadKasTarget() {
@@ -2270,6 +2270,12 @@
                 if (parsed.amount) kasTarget.amount = Number(parsed.amount);
                 if (parsed.date) kasTarget.date = parsed.date;
                 if (parsed.title) kasTarget.title = parsed.title;
+            }
+            if (kasTarget.date === '2026-02-09' || !kasTarget.date) {
+                kasTarget.date = '2027-06-30';
+                kasTarget.title = 'Target Kas (Akhir Juni 2027)';
+                if (kasTarget.amount === 1600000) kasTarget.amount = 3600000;
+                saveKasTarget();
             }
         } catch (e) {}
     }
@@ -2423,7 +2429,7 @@
 
         ctx.textAlign = 'right';
         const targetDateObj = new Date(kasTarget.date + 'T00:00:00');
-        const targetDateLabel = isNaN(targetDateObj) ? '9 Feb' : `${targetDateObj.getDate()} ${MONTHS_ID[targetDateObj.getMonth()].substring(0,3)}`;
+        const targetDateLabel = isNaN(targetDateObj) ? 'Juni 2027' : `${targetDateObj.getDate()} ${MONTHS_ID[targetDateObj.getMonth()].substring(0,3)} ${targetDateObj.getFullYear()}`;
         ctx.fillText(targetDateLabel, paddingLeft + chartW, paddingTop + chartH + 6);
     }
 
@@ -2476,7 +2482,7 @@
         }
 
         // Update Target Kas Progress UI
-        const targetAmount = kasTarget.amount || 1600000;
+        const targetAmount = kasTarget.amount || 3600000;
         const pct = Math.min(Math.round((totalAmount / targetAmount) * 100), 100);
         const remaining = Math.max(targetAmount - totalAmount, 0);
 
@@ -2485,11 +2491,19 @@
         const progressBarEl = $('#kas-progress-bar');
         const targetMetaTextEl = $('#kas-target-meta-text');
         const targetRemainingEl = $('#kas-target-remaining');
+        const targetAmountDisplayEl = $('#kas-target-amount-display');
+        const targetStatLabelEl = $('#kas-target-stat-label');
+        const remainingDisplayEl = $('#kas-remaining-display');
+        const chartModalTitleEl = $('#kas-chart-modal-title');
 
         const targetDateObj = new Date(kasTarget.date + 'T00:00:00');
-        const dateStrFormatted = isNaN(targetDateObj) ? '9 Februari' : `${targetDateObj.getDate()} ${MONTHS_ID[targetDateObj.getMonth()]}`;
+        const dateStrFormatted = isNaN(targetDateObj) ? 'Akhir Juni 2027' : `${targetDateObj.getDate()} ${MONTHS_ID[targetDateObj.getMonth()]} ${targetDateObj.getFullYear()}`;
 
-        if (targetTitleEl) targetTitleEl.textContent = `Target Kas Acara (${dateStrFormatted})`;
+        if (targetTitleEl) targetTitleEl.textContent = `Target Kas (${dateStrFormatted})`;
+        if (targetStatLabelEl) targetStatLabelEl.textContent = `Target (${dateStrFormatted})`;
+        if (targetAmountDisplayEl) targetAmountDisplayEl.textContent = formatRupiah(targetAmount);
+        if (remainingDisplayEl) remainingDisplayEl.textContent = formatRupiah(remaining);
+        if (chartModalTitleEl) chartModalTitleEl.textContent = `Grafik Akumulasi Kas (s/d ${dateStrFormatted})`;
         if (targetPctEl) targetPctEl.textContent = `${pct}%`;
         if (progressBarEl) progressBarEl.style.width = `${pct}%`;
         if (targetMetaTextEl) targetMetaTextEl.innerHTML = `Terkumpul: <strong>${formatRupiah(totalAmount)}</strong> dari Target <strong>${formatRupiah(targetAmount)}</strong>`;
@@ -2662,44 +2676,6 @@
             });
         }
 
-        // Auth Modal Mode (Login vs Register)
-        let authModalMode = 'login';
-        const tabAuthLogin = $('#tab-auth-login');
-        const tabAuthRegister = $('#tab-auth-register');
-        const modalTitle = $('#kas-login-modal-title');
-
-        if (tabAuthLogin && tabAuthRegister) {
-            tabAuthLogin.addEventListener('click', () => {
-                authModalMode = 'login';
-                tabAuthLogin.classList.add('active');
-                tabAuthLogin.style.background = 'var(--accent, #3dba80)';
-                tabAuthLogin.style.color = '#ffffff';
-                tabAuthRegister.classList.remove('active');
-                tabAuthRegister.style.background = 'transparent';
-                tabAuthRegister.style.color = '#94a3b8';
-                if (modalTitle) modalTitle.textContent = 'Login Bendahara';
-                const btnText = $('#kas-login-submit')?.querySelector('.btn-text');
-                if (btnText) btnText.textContent = 'Masuk';
-                const errEl = $('#kas-login-error');
-                if (errEl) errEl.style.display = 'none';
-            });
-
-            tabAuthRegister.addEventListener('click', () => {
-                authModalMode = 'register';
-                tabAuthRegister.classList.add('active');
-                tabAuthRegister.style.background = 'var(--accent, #3dba80)';
-                tabAuthRegister.style.color = '#ffffff';
-                tabAuthLogin.classList.remove('active');
-                tabAuthLogin.style.background = 'transparent';
-                tabAuthLogin.style.color = '#94a3b8';
-                if (modalTitle) modalTitle.textContent = 'Daftar Akun Bendahara';
-                const btnText = $('#kas-login-submit')?.querySelector('.btn-text');
-                if (btnText) btnText.textContent = 'Daftar Akun Baru';
-                const errEl = $('#kas-login-error');
-                if (errEl) errEl.style.display = 'none';
-            });
-        }
-
         if (formLogin) {
             formLogin.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -2713,14 +2689,6 @@
                 if (!email || !password) {
                     if (errEl) {
                         errEl.textContent = 'Email dan kata sandi wajib diisi!';
-                        errEl.style.display = 'block';
-                    }
-                    return;
-                }
-
-                if (password.length < 6) {
-                    if (errEl) {
-                        errEl.textContent = 'Kata sandi minimal 6 karakter!';
                         errEl.style.display = 'block';
                     }
                     return;
@@ -2741,66 +2709,34 @@
                 if (errEl) errEl.style.display = 'none';
 
                 try {
-                    let authData = null;
+                    const { data, error } = await client.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
 
-                    if (authModalMode === 'register') {
-                        const { data, error } = await client.auth.signUp({
-                            email: email,
-                            password: password
-                        });
-
-                        if (error) {
-                            let errMsg = error.message;
-                            if (errMsg.includes('Password should be at least')) {
-                                errMsg = 'Kata sandi minimal 6 karakter.';
-                            } else if (errMsg.includes('already registered')) {
-                                errMsg = 'Email sudah terdaftar. Silakan pilih tab "Masuk".';
-                            }
-                            if (errEl) {
-                                errEl.textContent = errMsg;
-                                errEl.style.display = 'block';
-                            }
-                            showToast(errMsg, 'error');
-                            return;
+                    if (error) {
+                        let errMsg = error.message;
+                        if (errMsg.includes('Invalid login credentials')) {
+                            errMsg = 'Email atau kata sandi salah. Silakan periksa kembali akun Supabase Anda.';
+                        } else if (errMsg.includes('Email not confirmed')) {
+                            errMsg = 'Email belum dikonfirmasi di Supabase.';
                         }
-
-                        if (data?.user && !data?.session) {
-                            showToast('Akun berhasil didaftarkan! Silakan coba masuk sekarang.', 'success');
-                            tabAuthLogin?.click();
-                            return;
+                        if (errEl) {
+                            errEl.textContent = errMsg;
+                            errEl.style.display = 'block';
                         }
-                        authData = data;
-                    } else {
-                        const { data, error } = await client.auth.signInWithPassword({
-                            email: email,
-                            password: password
-                        });
-
-                        if (error) {
-                            let errMsg = error.message;
-                            if (errMsg.includes('Invalid login credentials')) {
-                                errMsg = 'Email atau kata sandi salah. Jika belum punya akun, klik tab "Daftar Akun Baru".';
-                            } else if (errMsg.includes('Email not confirmed')) {
-                                errMsg = 'Email belum dikonfirmasi di Supabase.';
-                            }
-                            if (errEl) {
-                                errEl.textContent = errMsg;
-                                errEl.style.display = 'block';
-                            }
-                            showToast(errMsg, 'error');
-                            return;
-                        }
-                        authData = data;
+                        showToast(errMsg, 'error');
+                        return;
                     }
 
-                    if (authData?.user) {
-                        currentBendaharaUser = authData.user;
+                    if (data?.user) {
+                        currentBendaharaUser = data.user;
                         closeKasLoginModal();
                         updateKasAuthUI();
                         renderKasMemberChecklist();
                         renderKasHistory();
                         renderKasTrackerUI();
-                        showToast(`Selamat datang, Bendahara (${authData.user.email})!`, 'success');
+                        showToast(`Selamat datang, Bendahara (${data.user.email})!`, 'success');
                         formLogin.reset();
                     }
                 } catch (err) {
@@ -2841,8 +2777,8 @@
         // Target Kas Modal Handlers
         $('#btn-edit-kas-target')?.addEventListener('click', () => {
             loadKasTarget();
-            if ($('#kas-target-amount-input')) $('#kas-target-amount-input').value = kasTarget.amount || 1600000;
-            if ($('#kas-target-date-input')) $('#kas-target-date-input').value = kasTarget.date || '2026-02-09';
+            if ($('#kas-target-amount-input')) $('#kas-target-amount-input').value = kasTarget.amount || 3600000;
+            if ($('#kas-target-date-input')) $('#kas-target-date-input').value = kasTarget.date || '2027-06-30';
             $('#kas-target-modal-overlay')?.classList.add('active');
         });
 
@@ -2862,13 +2798,13 @@
 
         $('#kas-target-form')?.addEventListener('submit', (e) => {
             e.preventDefault();
-            const amt = Number($('#kas-target-amount-input')?.value) || 1600000;
-            const dt = $('#kas-target-date-input')?.value || '2026-02-09';
+            const amt = Number($('#kas-target-amount-input')?.value) || 3600000;
+            const dt = $('#kas-target-date-input')?.value || '2027-06-30';
             kasTarget.amount = amt;
             kasTarget.date = dt;
             const targetDateObj = new Date(dt + 'T00:00:00');
-            const dateStrFormatted = isNaN(targetDateObj) ? '9 Februari' : `${targetDateObj.getDate()} ${MONTHS_ID[targetDateObj.getMonth()]}`;
-            kasTarget.title = `Target Kas Acara (${dateStrFormatted})`;
+            const dateStrFormatted = isNaN(targetDateObj) ? 'Akhir Juni 2027' : `${targetDateObj.getDate()} ${MONTHS_ID[targetDateObj.getMonth()]} ${targetDateObj.getFullYear()}`;
+            kasTarget.title = `Target Kas (${dateStrFormatted})`;
             saveKasTarget();
             $('#kas-target-modal-overlay')?.classList.remove('active');
             renderKasTrackerUI();
