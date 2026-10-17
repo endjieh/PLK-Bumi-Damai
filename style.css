@@ -3015,6 +3015,82 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   gap: var(--space-2);
 }
 
+/* Kas Auth & Bendahara Login */
+.kas-auth-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-subtle, rgba(61, 186, 128, 0.12));
+  border: 1px solid var(--accent, #3dba80);
+  padding: 4px 10px;
+  border-radius: var(--radius-full, 9999px);
+  font-size: 11px;
+  color: var(--accent, #3dba80);
+  font-weight: 600;
+  max-width: 220px;
+}
+
+.kas-auth-user {
+  max-width: 130px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.btn-kas-logout {
+  padding: 1px 6px !important;
+  font-size: 10px !important;
+  height: auto !important;
+  min-height: unset !important;
+  color: var(--fg-muted) !important;
+  border-radius: 4px !important;
+  cursor: pointer;
+  border: 1px solid transparent !important;
+}
+
+.btn-kas-logout:hover {
+  color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.12) !important;
+  border-color: rgba(239, 68, 68, 0.25) !important;
+}
+
+.kas-login-alert {
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #f87171;
+  font-size: 12px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+/* Y2K theme overrides for Kas Auth */
+[data-theme="y2k"] .kas-auth-badge {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  border: 2px solid #22c55e;
+  border-radius: 0;
+  background: #000;
+  color: #22c55e;
+}
+
+[data-theme="y2k"] .btn-kas-logout {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px !important;
+  color: #ff3366 !important;
+}
+
+[data-theme="y2k"] .kas-login-alert {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  border: 2px solid #ff3366;
+  border-radius: 0;
+  background: #2a0808;
+  color: #ff6688;
+}
+
 .kas-card-body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -3521,6 +3597,7 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
   .kas-header-actions,
   [data-theme="y2k"] .kas-header-actions {
     display: flex !important;
+    flex-wrap: wrap !important;
     width: 100% !important;
     gap: 8px !important;
     margin-top: 8px !important;
@@ -3529,13 +3606,22 @@ select option { background-color: var(--bg-raised); color: var(--fg); }
 
   .kas-header-actions .btn,
   [data-theme="y2k"] .kas-header-actions .btn {
-    flex: 1 1 50% !important;
+    flex: 1 1 calc(50% - 4px) !important;
     padding: 8px 4px !important;
     font-size: 0.52rem !important;
     text-align: center !important;
     white-space: nowrap !important;
     min-width: 0 !important;
     box-sizing: border-box !important;
+  }
+
+  .kas-header-actions .kas-auth-badge,
+  [data-theme="y2k"] .kas-header-actions .kas-auth-badge {
+    width: 100% !important;
+    justify-content: space-between !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 2px;
   }
 
   /* Fix Kas Stat Badge Wrapping on Mobile */

@@ -298,9 +298,19 @@
                         </div>
                     </div>
                     <div class="kas-header-actions">
-                        <button class="btn btn-sm btn-outline" id="btn-kas-history" type="button">Riwayat &
-                            Detail</button>
-                        <button class="btn btn-sm btn-primary" id="btn-add-kas" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>Bayar Kas</span></button>
+                        <button class="btn btn-sm btn-outline btn-kas-login-trigger" id="btn-kas-login" type="button">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>Login Bendahara</span>
+                        </button>
+                        <div class="kas-auth-badge" id="kas-auth-badge" style="display:none;">
+                            <span class="kas-auth-user" id="kas-auth-email" title="Akun Bendahara">👑 Bendahara</span>
+                            <button class="btn btn-xs btn-ghost btn-kas-logout" id="btn-kas-logout" title="Keluar / Kunci Akses" type="button">Keluar</button>
+                        </div>
+                        <button class="btn btn-sm btn-outline" id="btn-kas-history" type="button">Riwayat & Detail</button>
+                        <button class="btn btn-sm btn-primary" id="btn-add-kas" type="button" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>Bayar Kas</span></button>
                     </div>
                 </div>
                 <div class="kas-card-body">
@@ -716,7 +726,7 @@
                         <span class="kas-summary-label">Total Terkumpul:</span>
                         <strong class="kas-summary-value" id="history-total-amount">Rp 0</strong>
                     </div>
-                    <button class="btn btn-sm btn-primary" id="btn-add-kas-from-history" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>Catat Pembayaran</span></button>
+                    <button class="btn btn-sm btn-primary" id="btn-add-kas-from-history" type="button" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>Catat Pembayaran</span></button>
                 </div>
 
                 <!-- Tab 1: Status Pembayaran Per Anggota -->
@@ -780,6 +790,55 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-ghost" id="kas-target-cancel">Batal</button>
                     <button type="submit" class="btn btn-primary">Simpan Target</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== MODAL LOGIN BENDAHARA ===== -->
+    <div class="modal-overlay" id="kas-login-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="kas-login-modal-title">
+        <div class="modal modal-small">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div class="kas-icon" style="width:34px; height:34px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:var(--accent-subtle, rgba(61,186,128,0.15)); color:var(--accent,#3dba80);">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 id="kas-login-modal-title" style="margin:0; font-size:1.05rem;">Login Bendahara</h2>
+                        <span style="font-size:11px; color:var(--fg-muted);">Otorisasi pencatatan & penghapusan kas</span>
+                    </div>
+                </div>
+                <button class="btn-icon btn-ghost modal-close" id="kas-login-modal-close" aria-label="Tutup modal" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <form id="kas-login-form">
+                <div class="modal-body">
+                    <div id="kas-login-error" class="kas-login-alert" style="display:none;"></div>
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label for="kas-login-email">Email Bendahara <span class="required" aria-hidden="true">*</span></label>
+                        <input type="email" id="kas-login-email" class="form-control" placeholder="nama@email.com" autocomplete="email" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 8px;">
+                        <label for="kas-login-password">Kata Sandi <span class="required" aria-hidden="true">*</span></label>
+                        <input type="password" id="kas-login-password" class="form-control" placeholder="••••••••" autocomplete="current-password" required>
+                    </div>
+                    <small style="color:var(--fg-muted); font-size:11px; display:block; margin-top:6px; line-height:1.4;">
+                        Akun ini terdaftar di Supabase Auth untuk mengamankan data transaksi kas tim.
+                    </small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ghost" id="kas-login-cancel">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="kas-login-submit">
+                        <span class="btn-text">Masuk</span>
+                        <span class="btn-spinner" style="display:none;">Memproses...</span>
+                    </button>
                 </div>
             </form>
         </div>

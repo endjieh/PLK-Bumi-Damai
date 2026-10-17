@@ -265,6 +265,7 @@
         subscribeRealtime();
         loadProfile();
         loadKasData();
+        initKasAuth();
         injectSVGGradient();
         bindEvents();
         bindProfileEvents();
@@ -1761,9 +1762,93 @@
         showToast('Profil berhasil diperbarui!', 'success');
     }
 
-    // ====== Live Kas Tracker Logic ======
+    // ====== Live Kas Tracker Logic & Bendahara Auth ======
     const STORAGE_KEY_KAS = 'plk_tracker_kas';
     let kasList = [];
+    let currentBendaharaUser = null;
+
+    function isBendaharaLoggedIn() {
+        return Boolean(currentBendaharaUser);
+    }
+
+    function openKasLoginModal() {
+        const overlay = $('#kas-login-modal-overlay');
+        const errEl = $('#kas-login-error');
+        if (errEl) {
+            errEl.style.display = 'none';
+            errEl.textContent = '';
+        }
+        if (overlay) {
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                $('#kas-login-email')?.focus();
+            }, 100);
+        }
+    }
+
+    function closeKasLoginModal() {
+        const overlay = $('#kas-login-modal-overlay');
+        if (overlay) overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function updateKasAuthUI() {
+        const btnLogin = $('#btn-kas-login');
+        const authBadge = $('#kas-auth-badge');
+        const authEmail = $('#kas-auth-email');
+        const btnAdd = $('#btn-add-kas');
+        const btnAddHistory = $('#btn-add-kas-from-history');
+        const btnEditTarget = $('#btn-edit-kas-target');
+
+        const loggedIn = isBendaharaLoggedIn();
+
+        if (btnLogin) btnLogin.style.display = loggedIn ? 'none' : 'inline-flex';
+        if (authBadge) authBadge.style.display = loggedIn ? 'inline-flex' : 'none';
+        if (authEmail && loggedIn && currentBendaharaUser) {
+            const displayLabel = currentBendaharaUser.email ? currentBendaharaUser.email.split('@')[0] : 'Bendahara';
+            authEmail.textContent = `👑 ${displayLabel}`;
+            authEmail.title = `Login sebagai: ${currentBendaharaUser.email || 'Bendahara'}`;
+        }
+
+        if (btnAdd) btnAdd.style.display = loggedIn ? 'inline-flex' : 'none';
+        if (btnAddHistory) btnAddHistory.style.display = loggedIn ? 'inline-flex' : 'none';
+        if (btnEditTarget) btnEditTarget.style.display = loggedIn ? 'inline-flex' : 'none';
+    }
+
+    async function initKasAuth() {
+        const client = getSupabase();
+        if (!client) {
+            updateKasAuthUI();
+            return;
+        }
+
+        try {
+            const { data, error } = await client.auth.getSession();
+            if (!error && data?.session?.user) {
+                currentBendaharaUser = data.session.user;
+            } else {
+                currentBendaharaUser = null;
+            }
+        } catch (e) {
+            console.warn('Auth getSession error:', e);
+            currentBendaharaUser = null;
+        }
+
+        updateKasAuthUI();
+
+        try {
+            client.auth.onAuthStateChange((_event, session) => {
+                currentBendaharaUser = session?.user || null;
+                updateKasAuthUI();
+                renderKasMemberChecklist();
+                renderKasHistory();
+                renderKasTrackerUI();
+            });
+        } catch (e) {
+            console.warn('Auth state change listener error:', e);
+        }
+    }
 
     async function loadKasData() {
         const client = getSupabase();
@@ -1814,27 +1899,41 @@
 
     async function syncKasToSupabase(kasItem) {
         const client = getSupabase();
-        if (!client) return;
+        if (!client) return true;
         try {
-            await client.from('plk_kas').upsert({
+            const { error } = await client.from('plk_kas').upsert({
                 id: kasItem.id,
                 date: kasItem.date,
                 amount: kasItem.amount,
                 payer: kasItem.payer,
                 note: kasItem.note
             });
+            if (error) {
+                console.warn('Gagal sync kas ke Supabase:', error);
+                showToast('Gagal sinkron ke Supabase: ' + (error.message || 'Izin ditolak'), 'error');
+                return false;
+            }
+            return true;
         } catch (e) {
             console.warn('Gagal sync kas ke Supabase:', e);
+            return false;
         }
     }
 
     async function deleteKasFromSupabase(id) {
         const client = getSupabase();
-        if (!client) return;
+        if (!client) return true;
         try {
-            await client.from('plk_kas').delete().eq('id', id);
+            const { error } = await client.from('plk_kas').delete().eq('id', id);
+            if (error) {
+                console.warn('Gagal hapus kas dari Supabase:', error);
+                showToast('Gagal hapus dari Supabase: ' + (error.message || 'Izin ditolak'), 'error');
+                return false;
+            }
+            return true;
         } catch (e) {
             console.warn('Gagal hapus kas dari Supabase:', e);
+            return false;
         }
     }
 
@@ -2006,7 +2105,9 @@
                         <span class="kas-status-badge badge-success">✓ Lunas</span>
                     ` : `
                         <span class="kas-status-badge badge-urgent">Belum Bayar</span>
-                        <button class="btn btn-xs btn-primary btn-pay-member" data-name="${escapeHtml(memberName)}" type="button"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>Bayar</span></button>
+                        ${isBendaharaLoggedIn() ? `
+                            <button class="btn btn-xs btn-primary btn-pay-member" data-name="${escapeHtml(memberName)}" type="button"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span>Bayar</span></button>
+                        ` : ''}
                     `}
                 </div>
             `;
@@ -2021,6 +2122,12 @@
     }
 
     function openAddKasModal(presetName = '') {
+        if (!isBendaharaLoggedIn()) {
+            showToast('Hanya bendahara yang berwenang mencatat pembayaran kas.', 'error');
+            openKasLoginModal();
+            return;
+        }
+
         const overlay = $('#kas-modal-overlay');
         if (!overlay) return;
 
@@ -2108,12 +2215,14 @@
                 </div>
                 <div class="kas-history-right">
                     <span class="kas-history-amount">${formatRupiah(item.amount)}</span>
-                    <button class="btn-icon delete-btn kas-delete-btn" data-id="${item.id}" title="Hapus catatan" type="button">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="3 6 5 6 21 6"/>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                        </svg>
-                    </button>
+                    ${isBendaharaLoggedIn() ? `
+                        <button class="btn-icon delete-btn kas-delete-btn" data-id="${item.id}" title="Hapus catatan" type="button">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    ` : ''}
                 </div>
             `;
 
@@ -2125,10 +2234,20 @@
         });
     }
 
-    function deleteKasItem(id) {
+    async function deleteKasItem(id) {
+        if (!isBendaharaLoggedIn()) {
+            showToast('Akses ditolak: Hanya bendahara yang berhak menghapus catatan kas!', 'error');
+            openKasLoginModal();
+            return;
+        }
+
+        if (!confirm('Apakah Anda yakin ingin menghapus catatan kas ini?')) {
+            return;
+        }
+
         kasList = kasList.filter(item => item.id !== id);
         saveKasLocal();
-        deleteKasFromSupabase(id);
+        await deleteKasFromSupabase(id);
         renderKasHistory();
         renderKasMemberChecklist();
         renderKasTrackerUI();
@@ -2459,8 +2578,15 @@
         }
 
         if (formAdd) {
-            formAdd.addEventListener('submit', (e) => {
+            formAdd.addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                if (!isBendaharaLoggedIn()) {
+                    showToast('Akses ditolak: Hanya bendahara yang berwenang mencatat kas!', 'error');
+                    openKasLoginModal();
+                    return;
+                }
+
                 const dateVal = $('#kas-date')?.value;
                 const amountVal = parseInt($('#kas-amount')?.value) || 10000;
                 const payerVal = ($('#kas-payer')?.value || '').trim();
@@ -2493,10 +2619,122 @@
 
                 kasList.push(newItem);
                 saveKasLocal();
-                syncKasToSupabase(newItem);
+                await syncKasToSupabase(newItem);
                 renderKasTrackerUI();
                 closeAddKasModal();
                 showToast(`Pembayaran kas ${formatRupiah(amountVal)} (${payerVal}) berhasil dicatat!`, 'success');
+            });
+        }
+
+        // Login Bendahara Modal Handlers
+        const btnLogin = $('#btn-kas-login');
+        const modalLoginOverlay = $('#kas-login-modal-overlay');
+        const modalLoginClose = $('#kas-login-modal-close');
+        const modalLoginCancel = $('#kas-login-cancel');
+        const formLogin = $('#kas-login-form');
+        const btnLogout = $('#btn-kas-logout');
+
+        if (btnLogin) btnLogin.addEventListener('click', openKasLoginModal);
+        if (modalLoginClose) modalLoginClose.addEventListener('click', closeKasLoginModal);
+        if (modalLoginCancel) modalLoginCancel.addEventListener('click', closeKasLoginModal);
+        if (modalLoginOverlay) {
+            modalLoginOverlay.addEventListener('click', (e) => {
+                if (e.target === modalLoginOverlay) closeKasLoginModal();
+            });
+        }
+
+        if (btnLogout) {
+            btnLogout.addEventListener('click', async () => {
+                const client = getSupabase();
+                if (client) {
+                    try {
+                        await client.auth.signOut();
+                    } catch (e) {
+                        console.warn('Sign out error:', e);
+                    }
+                }
+                currentBendaharaUser = null;
+                updateKasAuthUI();
+                renderKasMemberChecklist();
+                renderKasHistory();
+                renderKasTrackerUI();
+                showToast('Akses bendahara ditutup (Logged out)', 'info');
+            });
+        }
+
+        if (formLogin) {
+            formLogin.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = $('#kas-login-email')?.value.trim();
+                const password = $('#kas-login-password')?.value;
+                const errEl = $('#kas-login-error');
+                const btnSubmit = $('#kas-login-submit');
+                const btnText = btnSubmit?.querySelector('.btn-text');
+                const btnSpinner = btnSubmit?.querySelector('.btn-spinner');
+
+                if (!email || !password) {
+                    if (errEl) {
+                        errEl.textContent = 'Email dan kata sandi wajib diisi!';
+                        errEl.style.display = 'block';
+                    }
+                    return;
+                }
+
+                const client = getSupabase();
+                if (!client) {
+                    if (errEl) {
+                        errEl.textContent = 'Koneksi Supabase belum terkonfigurasi di app.js.';
+                        errEl.style.display = 'block';
+                    }
+                    return;
+                }
+
+                if (btnSubmit) btnSubmit.disabled = true;
+                if (btnText) btnText.style.display = 'none';
+                if (btnSpinner) btnSpinner.style.display = 'inline';
+                if (errEl) errEl.style.display = 'none';
+
+                try {
+                    const { data, error } = await client.auth.signInWithPassword({
+                        email: email,
+                        password: password
+                    });
+
+                    if (error) {
+                        let errMsg = error.message;
+                        if (errMsg.includes('Invalid login credentials')) {
+                            errMsg = 'Email atau kata sandi salah. Pastikan akun sudah dibuat di Supabase Auth.';
+                        } else if (errMsg.includes('Email not confirmed')) {
+                            errMsg = 'Email belum dikonfirmasi di Supabase.';
+                        }
+                        if (errEl) {
+                            errEl.textContent = errMsg;
+                            errEl.style.display = 'block';
+                        }
+                        showToast(errMsg, 'error');
+                        return;
+                    }
+
+                    if (data?.user) {
+                        currentBendaharaUser = data.user;
+                        closeKasLoginModal();
+                        updateKasAuthUI();
+                        renderKasMemberChecklist();
+                        renderKasHistory();
+                        renderKasTrackerUI();
+                        showToast(`Selamat datang, Bendahara (${data.user.email})!`, 'success');
+                        formLogin.reset();
+                    }
+                } catch (err) {
+                    if (errEl) {
+                        errEl.textContent = 'Terjadi kesalahan: ' + (err.message || err);
+                        errEl.style.display = 'block';
+                    }
+                } finally {
+                    if (btnSubmit) btnSubmit.disabled = false;
+                    if (btnText) btnText.style.display = '';
+                    if (btnSpinner) btnSpinner.style.display = 'none';
+                }
             });
         }
 
@@ -2542,6 +2780,8 @@
                 const addModal = $('#kas-modal-overlay');
                 const historyModal = $('#kas-history-modal-overlay');
                 const targetModal = $('#kas-target-modal-overlay');
+                const loginModal = $('#kas-login-modal-overlay');
+                if (loginModal && loginModal.classList.contains('active')) closeKasLoginModal();
                 if (addModal && addModal.classList.contains('active')) closeAddKasModal();
                 if (historyModal && historyModal.classList.contains('active')) closeKasHistoryModal();
                 if (targetModal && targetModal.classList.contains('active')) targetModal.classList.remove('active');

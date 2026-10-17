@@ -160,12 +160,33 @@ create policy "plk_profiles_anon_all"
     using (true)
     with check (true);
 
+-- Kebijakan plk_kas:
+-- 1. Baca (SELECT): Publik (anon & authenticated) agar semua anggota tim bisa memantau
 drop policy if exists "plk_kas_anon_all" on public.plk_kas;
-create policy "plk_kas_anon_all"
-    on public.plk_kas
+drop policy if exists "plk_kas_read_all" on public.plk_kas;
+create policy "plk_kas_read_all"
+    on public.plk_kas for select
     to anon, authenticated
-    using (true)
+    using (true);
+
+-- 2. Tulis/Ubah/Hapus (INSERT/UPDATE/DELETE): Hanya user terautentikasi (Bendahara)
+drop policy if exists "plk_kas_bendahara_insert" on public.plk_kas;
+create policy "plk_kas_bendahara_insert"
+    on public.plk_kas for insert
+    to authenticated
     with check (true);
+
+drop policy if exists "plk_kas_bendahara_update" on public.plk_kas;
+create policy "plk_kas_bendahara_update"
+    on public.plk_kas for update
+    to authenticated
+    using (true);
+
+drop policy if exists "plk_kas_bendahara_delete" on public.plk_kas;
+create policy "plk_kas_bendahara_delete"
+    on public.plk_kas for delete
+    to authenticated
+    using (true);
 
 
 -- =============================================================================
