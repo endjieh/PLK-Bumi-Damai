@@ -2128,6 +2128,136 @@
         });
     }
 
+    // ====== Rekap Tunggakan Kas ======
+    // Hitung semua siklus minggu (Kamis–Rabu) dari pembayaran pertama hingga sekarang.
+    // Untuk setiap anggota, cek apakah ada pembayaran di masing-masing minggu.
+    function getAllWeekRanges() {
+        if (kasList.length === 0) return [];
+
+        // Cari tanggal kas paling awal
+        const dates = kasList.map(k => new Date(k.date + 'T00:00:00')).filter(d => !isNaN(d));
+        if (dates.length === 0) return [];
+        const earliest = new Date(Math.min(...dates));
+
+        // Cari Kamis pertama <= earliest
+        const dayOfWeek = earliest.getDay();
+        const diffToThu = (dayOfWeek + 3) % 7;
+        const firstThu = new Date(earliest);
+        firstThu.setDate(earliest.getDate() - diffToThu);
+        firstThu.setHours(0, 0, 0, 0);
+
+        // Minggu berjalan (Kamis terakhir <= hari ini)
+        const today = new Date();
+        const todayDow = today.getDay();
+        const diffNow = (todayDow + 3) % 7;
+        const currentThu = new Date(today);
+        currentThu.setDate(today.getDate() - diffNow);
+        currentThu.setHours(0, 0, 0, 0);
+
+        const weeks = [];
+        let cursor = new Date(firstThu);
+        while (cursor <= currentThu) {
+            const start = new Date(cursor);
+            const end = new Date(cursor);
+            end.setDate(end.getDate() + 6);
+            end.setHours(23, 59, 59, 999);
+            weeks.push({ start, end, label: `${start.getDate()} ${MONTHS_ID[start.getMonth()].substring(0,3)}` });
+            cursor.setDate(cursor.getDate() + 7);
+        }
+        return weeks;
+    }
+
+    function renderKasTunggakan() {
+        const listEl = $('#kas-tunggakan-list');
+        if (!listEl) return;
+
+        const weeks = getAllWeekRanges();
+        if (weeks.length === 0) {
+            listEl.innerHTML = '<div class="empty-state" style="padding:24px 12px;"><p>Belum ada data kas untuk dihitung</p></div>';
+            return;
+        }
+
+        const iuranPerMinggu = 10000;
+        listEl.innerHTML = '';
+
+        // Sortir: yang paling banyak nunggak di atas
+        const memberData = FIXED_KAS_MEMBERS.map(name => {
+            let missedWeeks = 0;
+            const missedDetails = [];
+            weeks.forEach(week => {
+                const paid = kasList.some(item => {
+                    if ((item.payer || '').trim().toLowerCase() !== name.trim().toLowerCase()) return false;
+                    if (!item.date) return false;
+                    const d = new Date(item.date + 'T00:00:00');
+                    return d >= week.start && d <= week.end;
+                });
+                if (!paid) {
+                    missedWeeks++;
+                    missedDetails.push(week.label);
+                }
+            });
+            return { name, missedWeeks, totalOwed: missedWeeks * iuranPerMinggu, missedDetails };
+        }).sort((a, b) => b.missedWeeks - a.missedWeeks);
+
+        memberData.forEach(m => {
+            const row = document.createElement('div');
+            row.className = 'kas-member-row';
+
+            let badgeClass, badgeText;
+            if (m.missedWeeks === 0) {
+                badgeClass = 'badge-success';
+                badgeText = '✓ Lunas Semua';
+            } else if (m.missedWeeks <= 2) {
+                badgeClass = 'badge-pending';
+                badgeText = `${m.missedWeeks}× belum bayar`;
+            } else {
+                badgeClass = 'badge-urgent';
+                badgeText = `${m.missedWeeks}× belum bayar`;
+            }
+
+            row.innerHTML = `
+                <div class="kas-member-info">
+                    <span class="kas-member-name">${escapeHtml(m.name)}</span>
+                    <span class="kas-member-subtitle">${m.missedWeeks > 0
+                        ? `Tunggakan: ${formatRupiah(m.totalOwed)} (${m.missedWeeks} dari ${weeks.length} minggu)`
+                        : `${weeks.length} minggu lunas semua`}</span>
+                </div>
+                <div class="kas-member-right">
+                    <span class="kas-status-badge ${badgeClass}">${badgeText}</span>
+                    ${m.missedWeeks > 0 && isBendaharaLoggedIn() ? `
+                        <button class="btn btn-xs btn-primary btn-pay-tunggakan" data-name="${escapeHtml(m.name)}" type="button" title="Bayar Kas untuk ${escapeHtml(m.name)}">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <span>Bayar</span>
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+
+            // Tombol bayar langsung dari tunggakan
+            row.querySelector('.btn-pay-tunggakan')?.addEventListener('click', () => {
+                closeKasHistoryModal();
+                openAddKasModal(m.name);
+            });
+
+            // Tooltip detail minggu yang missed (show on hover via title)
+            if (m.missedWeeks > 0 && m.missedDetails.length > 0) {
+                row.title = `Minggu belum bayar: ${m.missedDetails.join(', ')}`;
+            }
+
+            listEl.appendChild(row);
+        });
+
+        // Summary footer
+        const totalMissed = memberData.reduce((s, m) => s + m.missedWeeks, 0);
+        const totalOwed = memberData.reduce((s, m) => s + m.totalOwed, 0);
+        if (totalMissed > 0) {
+            const footer = document.createElement('div');
+            footer.style.cssText = 'margin-top:12px;padding:10px 12px;border-radius:var(--radius-sm);background:var(--bg-elevated);border:1px solid var(--border-subtle);font-size:12px;color:var(--fg-muted);';
+            footer.innerHTML = `Total tunggakan seluruh anggota: <strong style="color:var(--fg);">${formatRupiah(totalOwed)}</strong> (${totalMissed} pembayaran dari ${weeks.length * FIXED_KAS_MEMBERS.length} slot)`;
+            listEl.appendChild(footer);
+        }
+    }
+
     function openAddKasModal(presetName = '') {
         if (!isBendaharaLoggedIn()) {
             showToast('Hanya bendahara yang berwenang mencatat pembayaran kas.', 'error');
@@ -2488,6 +2618,34 @@
             }
         }
 
+        // Notice Tunggakan Keseluruhan
+        const noticeEl = $('#kas-delinquent-notice');
+        if (noticeEl) {
+            const allWeeks = getAllWeekRanges();
+            let delinquentMembersCount = 0;
+            if (allWeeks.length > 0) {
+                FIXED_KAS_MEMBERS.forEach(name => {
+                    const hasUnpaid = allWeeks.some(week => {
+                        return !kasList.some(item => {
+                            if ((item.payer || '').trim().toLowerCase() !== name.toLowerCase()) return false;
+                            if (!item.date) return false;
+                            const d = new Date(item.date + 'T00:00:00');
+                            return d >= week.start && d <= week.end;
+                        });
+                    });
+                    if (hasUnpaid) delinquentMembersCount++;
+                });
+            }
+
+            if (delinquentMembersCount === 0) {
+                noticeEl.className = 'kas-status-badge badge-success';
+                noticeEl.textContent = '✓ Semua Lunas';
+            } else {
+                noticeEl.className = 'kas-status-badge badge-urgent';
+                noticeEl.textContent = `⚠ ${delinquentMembersCount} Anggota Nunggak`;
+            }
+        }
+
         // Update Target Kas Progress UI
         const targetAmount = kasTarget.amount || 3600000;
         const pct = Math.min(Math.round((totalAmount / targetAmount) * 100), 100);
@@ -2536,42 +2694,28 @@
         // Modal Tab Switching
         const btnTabStatus = $('#tab-btn-kas-status');
         const btnTabHistory = $('#tab-btn-kas-history');
+        const btnTabTunggakan = $('#tab-btn-kas-tunggakan');
         const btnTabTarget = $('#tab-btn-kas-target');
         const tabStatus = $('#kas-tab-status');
         const tabHistory = $('#kas-tab-history');
+        const tabTunggakan = $('#kas-tab-tunggakan');
         const tabTarget = $('#kas-tab-target');
 
-        if (btnTabStatus && btnTabHistory) {
-            btnTabStatus.addEventListener('click', () => {
-                btnTabStatus.classList.add('active');
-                btnTabHistory.classList.remove('active');
-                if (btnTabTarget) btnTabTarget.classList.remove('active');
-                if (tabStatus) tabStatus.classList.add('active');
-                if (tabHistory) tabHistory.classList.remove('active');
-                if (tabTarget) tabTarget.classList.remove('active');
-                renderKasMemberChecklist();
-            });
-            btnTabHistory.addEventListener('click', () => {
-                btnTabHistory.classList.add('active');
-                btnTabStatus.classList.remove('active');
-                if (btnTabTarget) btnTabTarget.classList.remove('active');
-                if (tabHistory) tabHistory.classList.add('active');
-                if (tabStatus) tabStatus.classList.remove('active');
-                if (tabTarget) tabTarget.classList.remove('active');
-                renderKasHistory();
-            });
-            if (btnTabTarget) {
-                btnTabTarget.addEventListener('click', () => {
-                    btnTabTarget.classList.add('active');
-                    btnTabStatus.classList.remove('active');
-                    btnTabHistory.classList.remove('active');
-                    if (tabTarget) tabTarget.classList.add('active');
-                    if (tabStatus) tabStatus.classList.remove('active');
-                    if (tabHistory) tabHistory.classList.remove('active');
-                    renderKasProgressChart();
-                });
-            }
+        const allTabBtns = [btnTabStatus, btnTabHistory, btnTabTunggakan, btnTabTarget].filter(Boolean);
+        const allTabPanels = [tabStatus, tabHistory, tabTunggakan, tabTarget].filter(Boolean);
+
+        function switchKasTab(activeBtn, activePanel, renderFn) {
+            allTabBtns.forEach(b => b.classList.remove('active'));
+            allTabPanels.forEach(p => p.classList.remove('active'));
+            if (activeBtn) activeBtn.classList.add('active');
+            if (activePanel) activePanel.classList.add('active');
+            if (renderFn) renderFn();
         }
+
+        if (btnTabStatus) btnTabStatus.addEventListener('click', () => switchKasTab(btnTabStatus, tabStatus, renderKasMemberChecklist));
+        if (btnTabHistory) btnTabHistory.addEventListener('click', () => switchKasTab(btnTabHistory, tabHistory, renderKasHistory));
+        if (btnTabTunggakan) btnTabTunggakan.addEventListener('click', () => switchKasTab(btnTabTunggakan, tabTunggakan, renderKasTunggakan));
+        if (btnTabTarget) btnTabTarget.addEventListener('click', () => switchKasTab(btnTabTarget, tabTarget, renderKasProgressChart));
 
         if (btnAdd) btnAdd.addEventListener('click', () => openAddKasModal());
         if (btnHistory) btnHistory.addEventListener('click', openKasHistoryModal);

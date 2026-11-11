@@ -330,6 +330,10 @@
                         <span class="kas-stat-label">Status Minggu Ini</span>
                         <span class="kas-status-badge badge-pending" id="kas-weekly-status">Belum Bayar</span>
                     </div>
+                    <div class="kas-stat-box">
+                        <span class="kas-stat-label">Notice Tunggakan</span>
+                        <span class="kas-status-badge badge-success" id="kas-delinquent-notice">Semua Lunas</span>
+                    </div>
                 </div>
 
                 <!-- Integrated Sleek Target Progress Bar -->
@@ -718,6 +722,7 @@
                 <div class="kas-modal-tabs">
                     <button class="kas-tab-btn active" id="tab-btn-kas-status" type="button">Status Anggota (Minggu Ini)</button>
                     <button class="kas-tab-btn" id="tab-btn-kas-history" type="button">Riwayat Transaksi</button>
+                    <button class="kas-tab-btn" id="tab-btn-kas-tunggakan" type="button">Rekap Tunggakan</button>
                     <button class="kas-tab-btn" id="tab-btn-kas-target" type="button">Progres & Grafik Target</button>
                 </div>
 
@@ -743,7 +748,17 @@
                     </div>
                 </div>
 
-                <!-- Tab 3: Progres & Grafik Target -->
+                <!-- Tab 3: Rekap Tunggakan -->
+                <div class="kas-tab-content" id="kas-tab-tunggakan">
+                    <div style="margin-bottom:10px;">
+                        <span style="font-size:12px;color:var(--fg-muted);line-height:1.4;display:block;">Rekap minggu yang belum dibayar per anggota. Dihitung dari minggu pertama kas hingga minggu berjalan.</span>
+                    </div>
+                    <div class="kas-members-list" id="kas-tunggakan-list">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Tab 4: Progres & Grafik Target -->
                 <div class="kas-tab-content" id="kas-tab-target">
                     <div class="kas-chart-container" style="padding: 12px; background: var(--bg-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
                         <div class="kas-chart-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
