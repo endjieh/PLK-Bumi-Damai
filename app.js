@@ -2178,53 +2178,47 @@
         }
 
         const iuranPerMinggu = 10000;
+        const totalWeeks = weeks.length;
+        const totalExpectedPerMember = totalWeeks * iuranPerMinggu;
         listEl.innerHTML = '';
 
-        // Sortir: yang paling banyak nunggak di atas
+        // Saldo kumulatif: total bayar vs total yang seharusnya
         const memberData = FIXED_KAS_MEMBERS.map(name => {
-            let missedWeeks = 0;
-            const missedDetails = [];
-            weeks.forEach(week => {
-                const paid = kasList.some(item => {
-                    if ((item.payer || '').trim().toLowerCase() !== name.trim().toLowerCase()) return false;
-                    if (!item.date) return false;
-                    const d = new Date(item.date + 'T00:00:00');
-                    return d >= week.start && d <= week.end;
-                });
-                if (!paid) {
-                    missedWeeks++;
-                    missedDetails.push(week.label);
-                }
-            });
-            return { name, missedWeeks, totalOwed: missedWeeks * iuranPerMinggu, missedDetails };
-        }).sort((a, b) => b.missedWeeks - a.missedWeeks);
+            const totalPaid = kasList
+                .filter(item => (item.payer || '').trim().toLowerCase() === name.trim().toLowerCase())
+                .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+            const deficit = Math.max(0, totalExpectedPerMember - totalPaid);
+            const weeksBehind = Math.ceil(deficit / iuranPerMinggu);
+            const credit = Math.max(0, totalPaid - totalExpectedPerMember);
+            return { name, totalPaid, deficit, weeksBehind, credit };
+        }).sort((a, b) => b.deficit - a.deficit);
 
         memberData.forEach(m => {
             const row = document.createElement('div');
             row.className = 'kas-member-row';
 
             let badgeClass, badgeText;
-            if (m.missedWeeks === 0) {
+            if (m.deficit === 0) {
                 badgeClass = 'badge-success';
-                badgeText = '✓ Lunas Semua';
-            } else if (m.missedWeeks <= 2) {
+                badgeText = m.credit > 0 ? `✓ Lunas +${formatRupiah(m.credit)}` : '✓ Lunas Semua';
+            } else if (m.weeksBehind <= 2) {
                 badgeClass = 'badge-pending';
-                badgeText = `${m.missedWeeks}× belum bayar`;
+                badgeText = `${m.weeksBehind}× belum bayar`;
             } else {
                 badgeClass = 'badge-urgent';
-                badgeText = `${m.missedWeeks}× belum bayar`;
+                badgeText = `${m.weeksBehind}× belum bayar`;
             }
 
             row.innerHTML = `
                 <div class="kas-member-info">
                     <span class="kas-member-name">${escapeHtml(m.name)}</span>
-                    <span class="kas-member-subtitle">${m.missedWeeks > 0
-                        ? `Tunggakan: ${formatRupiah(m.totalOwed)} (${m.missedWeeks} dari ${weeks.length} minggu)`
-                        : `${weeks.length} minggu lunas semua`}</span>
+                    <span class="kas-member-subtitle">${m.deficit > 0
+                        ? `Tunggakan: ${formatRupiah(m.deficit)} · Sudah bayar: ${formatRupiah(m.totalPaid)} dari ${formatRupiah(totalExpectedPerMember)}`
+                        : `${totalWeeks} minggu lunas · Total bayar: ${formatRupiah(m.totalPaid)}`}</span>
                 </div>
                 <div class="kas-member-right">
                     <span class="kas-status-badge ${badgeClass}">${badgeText}</span>
-                    ${m.missedWeeks > 0 && isBendaharaLoggedIn() ? `
+                    ${m.deficit > 0 && isBendaharaLoggedIn() ? `
                         <button class="btn btn-xs btn-primary btn-pay-tunggakan" data-name="${escapeHtml(m.name)}" type="button" title="Bayar Kas untuk ${escapeHtml(m.name)}">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                             <span>Bayar</span>
@@ -2233,27 +2227,25 @@
                 </div>
             `;
 
-            // Tombol bayar langsung dari tunggakan
             row.querySelector('.btn-pay-tunggakan')?.addEventListener('click', () => {
                 closeKasHistoryModal();
                 openAddKasModal(m.name);
             });
 
-            // Tooltip detail minggu yang missed (show on hover via title)
-            if (m.missedWeeks > 0 && m.missedDetails.length > 0) {
-                row.title = `Minggu belum bayar: ${m.missedDetails.join(', ')}`;
+            if (m.deficit > 0) {
+                row.title = `Kurang ${formatRupiah(m.deficit)}: sudah bayar ${formatRupiah(m.totalPaid)}, seharusnya ${formatRupiah(totalExpectedPerMember)} (${totalWeeks} minggu × Rp 10.000)`;
             }
 
             listEl.appendChild(row);
         });
 
         // Summary footer
-        const totalMissed = memberData.reduce((s, m) => s + m.missedWeeks, 0);
-        const totalOwed = memberData.reduce((s, m) => s + m.totalOwed, 0);
-        if (totalMissed > 0) {
+        const totalDeficit = memberData.reduce((s, m) => s + m.deficit, 0);
+        const delinquentCount = memberData.filter(m => m.deficit > 0).length;
+        if (totalDeficit > 0) {
             const footer = document.createElement('div');
             footer.style.cssText = 'margin-top:12px;padding:10px 12px;border-radius:var(--radius-sm);background:var(--bg-elevated);border:1px solid var(--border-subtle);font-size:12px;color:var(--fg-muted);';
-            footer.innerHTML = `Total tunggakan seluruh anggota: <strong style="color:var(--fg);">${formatRupiah(totalOwed)}</strong> (${totalMissed} pembayaran dari ${weeks.length * FIXED_KAS_MEMBERS.length} slot)`;
+            footer.innerHTML = `Total tunggakan: <strong style="color:var(--fg);">${formatRupiah(totalDeficit)}</strong> dari ${delinquentCount} anggota · Periode: ${totalWeeks} minggu`;
             listEl.appendChild(footer);
         }
     }
@@ -2618,22 +2610,19 @@
             }
         }
 
-        // Notice Tunggakan Keseluruhan
+        // Notice Tunggakan Keseluruhan (saldo kumulatif)
         const noticeEl = $('#kas-delinquent-notice');
         if (noticeEl) {
             const allWeeks = getAllWeekRanges();
+            const iuran = 10000;
             let delinquentMembersCount = 0;
             if (allWeeks.length > 0) {
+                const expected = allWeeks.length * iuran;
                 FIXED_KAS_MEMBERS.forEach(name => {
-                    const hasUnpaid = allWeeks.some(week => {
-                        return !kasList.some(item => {
-                            if ((item.payer || '').trim().toLowerCase() !== name.toLowerCase()) return false;
-                            if (!item.date) return false;
-                            const d = new Date(item.date + 'T00:00:00');
-                            return d >= week.start && d <= week.end;
-                        });
-                    });
-                    if (hasUnpaid) delinquentMembersCount++;
+                    const paid = kasList
+                        .filter(item => (item.payer || '').trim().toLowerCase() === name.toLowerCase())
+                        .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+                    if (paid < expected) delinquentMembersCount++;
                 });
             }
 
